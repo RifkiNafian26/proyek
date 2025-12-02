@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Adopt - PetResQ</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Kreon:wght@300..700&family=Poppins:wght@100;300;400;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Feather Icon -->
+    <script src="https://unpkg.com/feather-icons"></script>
+
+    <!-- My Style -->
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/styleadopt.css" />
+  </head>
+  <body>
+    <!-- Navbar start -->
+    <nav class="navbar">
+      <a href="index.html" class="navbar-logo">Pet<span>ResQ</span></a>
+
+      <div class="navbar-nav">
+        <a href="adopt.html">Adopt</a>
+        <a href="#rehome">Rehome</a>
+        <a href="#care-guides">Care Guides</a>
+        <a href="#about">About</a>
+      </div>
+
+      <div class="navbar-extra" aria-label="Top right taskbar">
+        <a href="#" id="notification" aria-label="Notifications"
+          ><i data-feather="bell"></i
+        ></a>
+
+        <button
+          aria-label="User account"
+          class="user-profile"
+          id="user-profile"
+          type="button"
+        >
+          <div class="user-profile-inner">
+            <svg
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+            >
+              <g data-name="Layer 2" id="Layer_2">
+                <path
+                  d="m15.626 11.769a6 6 0 1 0 -7.252 0 9.008 9.008 0 0 0 -5.374 8.231 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 9.008 9.008 0 0 0 -5.374-8.231zm-7.626-4.769a4 4 0 1 1 4 4 4 4 0 0 1 -4-4zm10 14h-12a1 1 0 0 1 -1-1 7 7 0 0 1 14 0 1 1 0 0 1 -1 1z"
+                ></path>
+              </g>
+            </svg>
+            <span class="user-name">Log In</span>
+          </div>
+        </button>
+      </div>
+    </nav>
+    <!-- Navbar end -->
+
+    <!-- Login/Register Modal -->
+    <div class="modal" id="auth-modal">
+      <div class="modal-content modal-horizontal">
+        <!-- Foto Hewan Login -->
+        <div class="modal-image modal-image-login active">
+          <img src="icon/login2.jpg" alt="Login" />
+        </div>
+
+        <!-- Foto Hewan Register -->
+        <div class="modal-image modal-image-register">
+          <img src="icon/register.jpg" alt="Register" />
+        </div>
+
+        <!-- Form Container -->
+        <div class="modal-form-container">
+          <div class="modal-header">
+            <h2 id="modal-title">Login</h2>
+            <button class="close-btn" id="close-modal">&times;</button>
+          </div>
+
+          <!-- Login Form -->
+          <form class="tab-content active" id="login-tab">
+            <div class="form-group">
+              <label for="login-email">Email</label>
+              <input
+                type="email"
+                id="login-email"
+                placeholder="Enter your email"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="login-password">Password</label>
+              <input
+                type="password"
+                id="login-password"
+                placeholder="Enter your password"
+                required
+              />
+            </div>
+
+            <div class="form-group checkbox">
+              <input type="checkbox" id="remember-me" />
+              <label for="remember-me">Remember me</label>
+            </div>
+
+            <button type="submit" class="btn-submit">Login</button>
+
+            <p class="form-footer">
+              Don't have an account?
+              <a href="#" class="switch-tab" data-tab="register"
+                >Register here</a
+              >
+            </p>
+          </form>
+
+          <!-- Register Form -->
+          <form class="tab-content" id="register-tab">
+            <div class="form-group">
+              <label for="register-name">Full Name</label>
+              <input
+                type="text"
+                id="register-name"
+                placeholder="Enter your full name"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="register-email">Email</label>
+              <input
+                type="email"
+                id="register-email"
+                placeholder="Enter your email"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="register-password">Password</label>
+              <input
+                type="password"
+                id="register-password"
+                placeholder="Enter your password"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="register-confirm">Confirm Password</label>
+              <input
+                type="password"
+                id="register-confirm"
+                placeholder="Confirm your password"
+                required
+              />
+            </div>
+
+            <div class="form-group checkbox">
+              <input type="checkbox" id="agree-terms" required />
+              <label for="agree-terms">I agree to the Terms & Conditions</label>
+            </div>
+
+            <button type="submit" class="btn-submit">Register</button>
+
+            <p class="form-footer">
+              Already have an account?
+              <a href="#" class="switch-tab" data-tab="login">Login here</a>
+            </p>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Adopt Page -->
+    <main class="adopt-page">
+      <!-- Search/Hero Section -->
+      <section class="search-section">
+        <h2>Find an Animal to Adopt</h2>
+        <form class="search-box">
+          <input type="text" placeholder="Search by name or breed..." />
+          <button type="submit"><i data-feather="search"></i></button>
+        </form>
+      </section>
+
+      <!-- Main Content Container with Sidebar -->
+      <div class="adopt-container">
+        <!-- Filter Section (Sidebar) -->
+        <section class="filter-section">
+          <div class="filter-header">
+            <h3 class="filter-title">Filters</h3>
+            <button class="reset-filters">Reset Filters</button>
+          </div>
+
+          <div class="filter-controls">
+            <!-- Animal Type Filter -->
+            <div class="filter-group">
+              <label class="filter-label">Animal Type</label>
+              <div class="filter-options">
+                <div class="filter-option">
+                  <input type="checkbox" id="dog" name="animal" value="dog" />
+                  <label for="dog">Dog</label>
+                </div>
+                <div class="filter-option">
+                  <input type="checkbox" id="cat" name="animal" value="cat" />
+                  <label for="cat">Cat</label>
+                </div>
+                <div class="filter-option">
+                  <input
+                    type="checkbox"
+                    id="rabbit"
+                    name="animal"
+                    value="rabbit"
+                  />
+                  <label for="rabbit">Rabbit</label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Breed Filter -->
+            <div class="filter-group">
+              <label class="filter-label">Breed</label>
+              <div class="filter-options">
+                <div class="filter-option">
+                  <input
+                    type="checkbox"
+                    id="golden-retriever"
+                    name="breed"
+                    value="golden-retriever"
+                  />
+                  <label for="golden-retriever">Golden Retriever</label>
+                </div>
+                <div class="filter-option">
+                  <input
+                    type="checkbox"
+                    id="beagle"
+                    name="breed"
+                    value="beagle"
+                  />
+                  <label for="beagle">Beagle</label>
+                </div>
+                <div class="filter-option">
+                  <input
+                    type="checkbox"
+                    id="poodle"
+                    name="breed"
+                    value="poodle"
+                  />
+                  <label for="poodle">Poodle</label>
+                </div>
+                <div class="filter-option">
+                  <input
+                    type="checkbox"
+                    id="husky"
+                    name="breed"
+                    value="husky"
+                  />
+                  <label for="husky">Siberian Husky</label>
+                </div>
+                <div class="filter-option">
+                  <input
+                    type="checkbox"
+                    id="Shiba Inu"
+                    name="breed"
+                    value="shiba-inu"
+                  />
+                  <label for="Shiba Inu">Shiba Inu</label>
+                </div>
+                <div class="filter-option">
+                  <input
+                    type="checkbox"
+                    id="Bengal"
+                    name="breed"
+                    value="bengal"
+                  />
+                  <label for="Bengal">Bengal</label>
+                </div>
+                <div class="filter-option">
+                  <input
+                    type="checkbox"
+                    id="British Shorthair"
+                    name="breed"
+                    value="british-shorthair"
+                  />
+                  <label for="British Shorthair">British Shorthair</label>
+                </div>
+                <div class="filter-option">
+                  <input
+                    type="checkbox"
+                    id="Himalayan"
+                    name="breed"
+                    value="himalayan"
+                  />
+                  <label for="Himalayan">Himalayan</label>
+                </div>
+                <div class="filter-option">
+                  <input
+                    type="checkbox"
+                    id="Alaskan"
+                    name="breed"
+                    value="alaskan"
+                  />
+                  <label for="Alaskan">Alaskan</label>
+                </div>
+                <div class="filter-option">
+                  <input
+                    type="checkbox"
+                    id="Havana"
+                    name="breed"
+                    value="havana"
+                  />
+                  <label for="Havana">Havana</label>
+                </div>
+                <div class="filter-option">
+                  <input
+                    type="checkbox"
+                    id="Flemish Giant"
+                    name="breed"
+                    value="flemish-giant"
+                  />
+                  <label for="Flemish Giant">Flemish Giant</label>
+                </div>
+                <div class="filter-option">
+                  <input
+                    type="checkbox"
+                    id="Holland Hop"
+                    name="breed"
+                    value="holland-hop"
+                  />
+                  <label for="Holland Hop">Holland Hop</label>
+                </div>
+                <div class="filter-option">
+                  <input
+                    type="checkbox"
+                    id="Lionhead"
+                    name="breed"
+                    value="lionhead"
+                  />
+                  <label for="Lionhead">Lionhead</label>
+                </div>
+                <div class="filter-option">
+                  <input type="checkbox" id="Rex" name="breed" value="rex" />
+                  <label for="Rex">Rex</label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Color Filter -->
+            <div class="filter-group">
+              <label class="filter-label">Color</label>
+              <div class="filter-options">
+                <div class="filter-option">
+                  <input
+                    type="checkbox"
+                    id="golden"
+                    name="color"
+                    value="golden"
+                  />
+                  <label for="golden">Golden</label>
+                </div>
+                <div class="filter-option">
+                  <input
+                    type="checkbox"
+                    id="brown"
+                    name="color"
+                    value="brown"
+                  />
+                  <label for="brown">Brown</label>
+                </div>
+                <div class="filter-option">
+                  <input type="checkbox" id="Gray" name="color" value="gray" />
+                  <label for="Gray">Gray</label>
+                </div>
+                <div class="filter-option">
+                  <input
+                    type="checkbox"
+                    id="black"
+                    name="color"
+                    value="black"
+                  />
+                  <label for="black">Black</label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Age Filter -->
+            <div class="filter-group">
+              <label class="filter-label">Age</label>
+              <div class="filter-options">
+                <div class="filter-option">
+                  <input type="checkbox" id="young" name="age" value="young" />
+                  <label for="young">Young</label>
+                </div>
+                <div class="filter-option">
+                  <input type="checkbox" id="adult" name="age" value="adult" />
+                  <label for="adult">Adult</label>
+                </div>
+                <div class="filter-option">
+                  <input
+                    type="checkbox"
+                    id="senior"
+                    name="age"
+                    value="senior"
+                  />
+                  <label for="senior">Senior</label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <button class="apply-filter-btn">Apply Your Filter</button>
+        </section>
+
+        <!-- Animal Cards Grid -->
+        <section class="animals-section">
+          <div class="animal-grid">
+            <!-- Animal Card 1 -->
+            <div
+              class="animal-card"
+              data-animal="rabbit"
+              data-breed="holland-hop"
+              data-color="golden"
+              data-age="adult"
+            >
+              <div class="animal-photo">Animal Photo</div>
+              <div class="animal-info">
+                <div class="animal-name">Rex</div>
+                <div class="animal-description">
+                  Holland Hop - Golden, Adult
+                </div>
+              </div>
+            </div>
+
+            <!-- Animal Card 2 -->
+            <div
+              class="animal-card"
+              data-animal="cat"
+              data-breed="british-shorthair"
+              data-color="gray"
+              data-age="young"
+            >
+              <div class="animal-photo">Animal Photo</div>
+              <div class="animal-info">
+                <div class="animal-name">Luna</div>
+                <div class="animal-description">
+                  British Shorthair - Gray, Young
+                </div>
+              </div>
+            </div>
+
+            <!-- Animal Card 3 -->
+            <div
+              class="animal-card"
+              data-animal="dog"
+              data-breed="golden-retriever"
+              data-color="golden"
+              data-age="adult"
+            >
+              <div class="animal-photo">Animal Photo</div>
+              <div class="animal-info">
+                <div class="animal-name">Max</div>
+                <div class="animal-description">
+                  Golden Retriever - Golden, Adult
+                </div>
+              </div>
+            </div>
+
+            <!-- Animal Card 4 -->
+            <div
+              class="animal-card"
+              data-animal="dog"
+              data-breed="poodle"
+              data-color="white"
+              data-age="senior"
+            >
+              <div class="animal-photo">Animal Photo</div>
+              <div class="animal-info">
+                <div class="animal-name">Bella</div>
+                <div class="animal-description">Poodle - White, Senior</div>
+              </div>
+            </div>
+
+            <!-- Animal Card 5 -->
+            <div
+              class="animal-card"
+              data-animal="dog"
+              data-breed="husky"
+              data-color="gray"
+              data-age="adult"
+            >
+              <div class="animal-photo">Animal Photo</div>
+              <div class="animal-info">
+                <div class="animal-name">Charlie</div>
+                <div class="animal-description">
+                  Siberian Husky - Gray, Adult
+                </div>
+              </div>
+            </div>
+
+            <!-- Animal Card 6 -->
+            <div
+              class="animal-card"
+              data-animal="cat"
+              data-breed="bengal"
+              data-color="orange"
+              data-age="young"
+            >
+              <div class="animal-photo">Animal Photo</div>
+              <div class="animal-info">
+                <div class="animal-name">Daisy</div>
+                <div class="animal-description">Bengal - Orange, Young</div>
+              </div>
+            </div>
+
+            <!-- Animal Card 7 -->
+            <div
+              class="animal-card"
+              data-animal="dog"
+              data-breed="beagle"
+              data-color="brown"
+              data-age="adult"
+            >
+              <div class="animal-photo">Animal Photo</div>
+              <div class="animal-info">
+                <div class="animal-name">Buddy</div>
+                <div class="animal-description">Beagle - Brown, Adult</div>
+              </div>
+            </div>
+
+            <!-- Animal Card 8 -->
+            <div
+              class="animal-card"
+              data-animal="dog"
+              data-breed="shiba-inu"
+              data-color="red"
+              data-age="young"
+            >
+              <div class="animal-photo">Animal Photo</div>
+              <div class="animal-info">
+                <div class="animal-name">Mittens</div>
+                <div class="animal-description">Shiba Inu - Red, Young</div>
+              </div>
+            </div>
+
+            <!-- Animal Card 9 -->
+            <div
+              class="animal-card"
+              data-animal="dog"
+              data-breed="german-shepherd"
+              data-color="brown"
+              data-age="adult"
+            >
+              <div class="animal-photo">Animal Photo</div>
+              <div class="animal-info">
+                <div class="animal-name">Rocky</div>
+                <div class="animal-description">
+                  German Shepherd - Brown, Adult
+                </div>
+              </div>
+            </div>
+
+            <!-- Animal Card 10 -->
+            <div
+              class="animal-card"
+              data-animal="cat"
+              data-breed="persian"
+              data-color="white"
+              data-age="senior"
+            >
+              <div class="animal-photo">Animal Photo</div>
+              <div class="animal-info">
+                <div class="animal-name">Sophie</div>
+                <div class="animal-description">Persian - White, Senior</div>
+              </div>
+            </div>
+
+            <!-- Animal Card 11 -->
+            <div
+              class="animal-card"
+              data-animal="bird"
+              data-breed="cockatiel"
+              data-color="gray"
+              data-age="young"
+            >
+              <div class="animal-photo">Animal Photo</div>
+              <div class="animal-info">
+                <div class="animal-name">Oliver</div>
+                <div class="animal-description">Cockatiel - Gray, Young</div>
+              </div>
+            </div>
+
+            <!-- Animal Card 12 -->
+            <div
+              class="animal-card"
+              data-animal="dog"
+              data-breed="dachshund"
+              data-color="black"
+              data-age="adult"
+            >
+              <div class="animal-photo">Animal Photo</div>
+              <div class="animal-info">
+                <div class="animal-name">Lucy</div>
+                <div class="animal-description">Dachshund - Black, Adult</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Pagination -->
+        <section class="pagination-section">
+          <nav class="pagination">
+            <button class="pagination-btn prev">Prev</button>
+            <button class="pagination-btn">1</button>
+            <button class="pagination-btn active">2</button>
+            <button class="pagination-btn">3</button>
+            <button class="pagination-btn">4</button>
+            <button class="pagination-btn">5</button>
+            <button class="pagination-btn next">Next</button>
+          </nav>
+        </section>
+      </div>
+    </main>
+    <!-- Main Adopt Page end -->
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p>&copy; 2025 PetResQ. All rights reserved.</p>
+    </footer>
+
+    <!-- Feather Icons -->
+    <script>
+      feather.replace();
+    </script>
+
+    <!-- My Javascript -->
+    <script src="js/script.js"></script>
+  </body>
+</html>

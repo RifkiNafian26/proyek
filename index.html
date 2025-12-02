@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PetResQ</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Kreon:wght@300..700&family=Poppins:wght@100;300;400;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Feather Icon -->
+    <script src="https://unpkg.com/feather-icons"></script>
+
+    <!-- My Style -->
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <!-- Navbar start -->
+    <nav class="navbar">
+      <a href="#" class="navbar-logo">Pet<span>ResQ</span></a>
+
+      <div class="navbar-nav">
+        <a href="adopt.html">Adopt</a>
+
+        <a href="#rehome">Rehome</a>
+
+        <a href="#care-guides">Care Guides</a>
+
+        <a href="#about">About</a>
+      </div>
+
+      <div class="navbar-extra" aria-label="Top right taskbar">
+        <a href="#" id="notification" aria-label="Notifications"
+          ><i data-feather="bell"></i
+        ></a>
+
+        <button
+          aria-label="User account"
+          class="user-profile"
+          id="user-profile"
+          type="button"
+        >
+          <div class="user-profile-inner">
+            <svg
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+            >
+              <g data-name="Layer 2" id="Layer_2">
+                <path
+                  d="m15.626 11.769a6 6 0 1 0 -7.252 0 9.008 9.008 0 0 0 -5.374 8.231 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 9.008 9.008 0 0 0 -5.374-8.231zm-7.626-4.769a4 4 0 1 1 4 4 4 4 0 0 1 -4-4zm10 14h-12a1 1 0 0 1 -1-1 7 7 0 0 1 14 0 1 1 0 0 1 -1 1z"
+                ></path>
+              </g>
+            </svg>
+            <span class="user-name">Log In</span>
+          </div>
+        </button>
+      </div>
+    </nav>
+    <!-- Navbar end -->
+
+    <!-- Login/Register Modal -->
+    <div class="modal" id="auth-modal">
+      <div class="modal-content modal-horizontal">
+        <!-- Foto Hewan Login -->
+        <div class="modal-image modal-image-login active">
+          <img
+            src="icon/login2.jpg"
+            alt="Login"
+          />
+        </div>
+
+        <!-- Foto Hewan Register -->
+        <div class="modal-image modal-image-register">
+          <img
+            src="icon/register.jpg"
+            alt="Register"
+          />
+        </div>
+
+        <!-- Form Container -->
+        <div class="modal-form-container">
+          <div class="modal-header">
+            <h2 id="modal-title">Login</h2>
+            <button class="close-btn" id="close-modal">&times;</button>
+          </div>
+
+          <!-- Login Form -->
+          <form class="tab-content active" id="login-tab">
+            <div class="form-group">
+              <label for="login-email">Email</label>
+              <input
+                type="email"
+                id="login-email"
+                placeholder="Enter your email"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="login-password">Password</label>
+              <input
+                type="password"
+                id="login-password"
+                placeholder="Enter your password"
+                required
+              />
+            </div>
+
+            <div class="form-group checkbox">
+              <input type="checkbox" id="remember-me" />
+              <label for="remember-me">Remember me</label>
+            </div>
+
+            <button type="submit" class="btn-submit">Login</button>
+
+            <p class="form-footer">
+              Don't have an account?
+              <a href="#" class="switch-tab" data-tab="register"
+                >Register here</a
+              >
+            </p>
+          </form>
+
+          <!-- Register Form -->
+          <form class="tab-content" id="register-tab">
+            <div class="form-group">
+              <label for="register-name">Full Name</label>
+              <input
+                type="text"
+                id="register-name"
+                placeholder="Enter your full name"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="register-email">Email</label>
+              <input
+                type="email"
+                id="register-email"
+                placeholder="Enter your email"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="register-password">Password</label>
+              <input
+                type="password"
+                id="register-password"
+                placeholder="Enter your password"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="register-confirm">Confirm Password</label>
+              <input
+                type="password"
+                id="register-confirm"
+                placeholder="Confirm your password"
+                required
+              />
+            </div>
+
+            <div class="form-group checkbox">
+              <input type="checkbox" id="agree-terms" required />
+              <label for="agree-terms">I agree to the Terms & Conditions</label>
+            </div>
+
+            <button type="submit" class="btn-submit">Register</button>
+
+            <p class="form-footer">
+              Already have an account?
+              <a href="#" class="switch-tab" data-tab="login">Login here</a>
+            </p>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Banner start -->
+    <div class="banner">
+      <div class="bannerdetail">
+        <form action="#" class="search-box">
+          <input
+            type="text"
+            id="search-input"
+            placeholder="Find an Animal to Adopt..."
+          />
+          <button type="submit"><i data-feather="search"></i></button>
+        </form>
+      </div>
+
+      <div class="bannercontent">
+        <h1>Rescue. Rehabilitate. Rehome.</h1>
+        <p>Your trusted partner in pet adoption and care.</p>
+      </div>
+    </div>
+    <!-- Banner end -->
+
+    <!-- About Section -->
+    <div id="about" class="aboutsection">
+      <h2>PetResQ</h2>
+      <p>
+        is a dedicated online platform designed to connect animals in need with
+        caring individuals who are ready to adopt or provide a safe new home.
+        Our mission is to make the process of adopting and rehoming pets simple,
+        safe, and accessible for everyone.
+      </p>
+    </div>
+
+    <!-- Animal Choose Section -->
+    <div id="animals" class="sectionanimals">
+      <h3>Animal You Can Adopt</h3>
+      <div class="card-container">
+        <div class="card">
+          <img src="icon/dog-svgrepo-com.svg" alt="Dog" />
+          <p>DOG</p>
+        </div>
+
+        <div class="card">
+          <img src="icon/cat-svgrepo-com.svg" alt="Cat Icon" />
+          <p>CAT</p>
+        </div>
+
+        <div class="card">
+          <img src="icon/rabbit-3-svgrepo-com.svg" alt="Rabbit" />
+          <p>RABBIT</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Review Section -->
+    <div id="Review" class="sectionreview">
+      <h3>What People Say About Us</h3>
+      <div class="reviewcontainer">
+        <div class="review-card"></div>
+        <div class="review-card"></div>
+        <div class="review-card"></div>
+        <div class="review-card"></div>
+      </div>
+
+      <button class="review-button">Write a Review</button>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p>&copy; 2025 PetResQ. All rights reserved.</p>
+    </footer>
+
+    <!-- Feather Icons -->
+    <script>
+      feather.replace();
+    </script>
+
+    <!-- My Javascript -->
+    <script src="js/script.js"></script>
+  </body>
+</html>

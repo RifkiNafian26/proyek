@@ -34,30 +34,43 @@ html {
   height: 50px;
   padding: 0rem 7%;
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: center;
   z-index: 9999;
   transition: all 0.3s ease;
   background-color: var(--bg);
   border-bottom: 1px solid var(--primary);
-  gap: 2rem;
 }
 
 .navbar .navbar-logo {
   font-size: 2rem;
   font-weight: 700;
   color: #5f6f52;
+  flex-shrink: 0;
 }
 
 .navbar .navbar-logo span {
   color: #5f6f52;
 }
 
+.navbar .navbar-nav {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
 .navbar .navbar-nav a {
   color: #5f6f52;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   font-size: 1.2rem;
-  margin: 0 2rem;
+  padding: 0.5rem 1rem;
+  white-space: nowrap;
+  margin: 0 0.50rem;
 }
 
 .navbar .navbar-nav a:hover {
@@ -77,6 +90,19 @@ html {
   transform: scaleX(0.5);
   transition: transform 0.2s linear;
   background-color: rgba(95, 111, 82, 0.06);
+}
+
+.navbar .navbar-nav a.active {
+  color: white;
+  font-weight: 600;
+  background-color: var(--primary);
+  padding: 0.5rem 1.2rem;
+  border-radius: 8px;
+  position: relative;
+}
+
+.navbar .navbar-nav a.active::after {
+  display: none;
 }
 
 .navbar .navbar-extra {

@@ -36,8 +36,11 @@ if (mysqli_num_rows($result) > 0) {
     exit;
 }
 
-// Insert new user
-$query_sql = "INSERT INTO user (nama, email, password) VALUES ('$nama', '$email', '$password')";
+// Hash password with bcrypt
+$hashed_password = password_hash($password, PASSWORD_BCRYPT);
+
+// Insert new user with hashed password
+$query_sql = "INSERT INTO user (nama, email, password) VALUES ('$nama', '$email', '$hashed_password')";
 
 if (mysqli_query($conn, $query_sql)) {
     // Get the new user id

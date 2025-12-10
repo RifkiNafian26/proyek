@@ -19,18 +19,24 @@ if (empty($email) || empty($password)) {
     exit;
 }
 
-$query_sql = "SELECT * FROM user WHERE email='$email' AND password='$password'";
+// Get user by email only
+$query_sql = "SELECT * FROM user WHERE email='$email'";
 $result = mysqli_query($conn, $query_sql);
 
 if (mysqli_num_rows($result) == 1) {
     $row = mysqli_fetch_assoc($result);
     
-    // Store user info in session
-    $_SESSION['user_id'] = $row['id_user'];
-    $_SESSION['user_email'] = $row['email'];
-    $_SESSION['user_name'] = $row['nama'];
-    
-    echo json_encode(['success' => true, 'message' => 'Login successful']);
+    // Verify password using password_verify
+    if (password_verify($password, $row['password'])) {
+        // Store user info in session
+        $_SESSION['user_id'] = $row['id_user'];
+        $_SESSION['user_email'] = $row['email'];
+        $_SESSION['user_name'] = $row['nama'];
+        
+        echo json_encode(['success' => true, 'message' => 'Login successful']);
+    } else {
+        echo json_encode(['success' => false, 'message' => 'Invalid email or password']);
+    }
 } else {
     echo json_encode(['success' => false, 'message' => 'Invalid email or password']);
 }

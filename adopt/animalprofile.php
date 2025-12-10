@@ -1,9 +1,35 @@
+<?php
+session_start();
+require_once '../config.php';
+
+// Get animal ID from URL parameter
+$animalId = isset($_GET['id']) ? intval($_GET['id']) : 0;
+
+if ($animalId == 0) {
+    die("Animal ID not provided");
+}
+
+// Fetch animal data from database
+$query = "SELECT * FROM hewan WHERE id_hewan = ?";
+$stmt = mysqli_prepare($conn, $query);
+mysqli_stmt_bind_param($stmt, "i", $animalId);
+mysqli_stmt_execute($stmt);
+$result = mysqli_stmt_get_result($stmt);
+$animal = mysqli_fetch_assoc($result);
+
+if (!$animal) {
+    die("Animal not found");
+}
+
+// Build photo path
+$mainPhoto = !empty($animal['main_photo']) ? 'uploads/' . htmlspecialchars($animal['main_photo']) : 'icon/default-pet.jpg';
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Animal Profile - PetResQ</title>
+    <title><?php echo htmlspecialchars($animal['namaHewan']); ?> - PetResQ</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -27,7 +53,7 @@
 
       <div class="navbar-nav">
         <a href="../index.html">Home</a>
-        <a href="adopt.html">Adopt</a>
+        <a href="adopt.php">Adopt</a>
         <a href="#rehome">Rehome</a>
         <a href="#care-guides">Care Guides</a>
         <a href="#about">About</a>
@@ -209,8 +235,8 @@
         <div class="animal-header">
           <div class="animal-avatar"></div>
           <div class="animal-basic-info">
-            <div class="animal-name" id="profile-name">Animal Name</div>
-            <div class="animal-id" id="profile-id">Pet ID: 3210283</div>
+            <div class="animal-name" id="profile-name"><?php echo htmlspecialchars($animal['namaHewan']); ?></div>
+            <div class="animal-id" id="profile-id">Pet ID: <?php echo htmlspecialchars($animal['id_hewan']); ?></div>
           </div>
         </div>
 
@@ -220,7 +246,7 @@
           <div class="profile-left">
             <!-- Animal Photo -->
             <div class="animal-photo-section" id="profile-photo">
-              Animal Photo
+              <img src="<?php echo $mainPhoto; ?>" alt="<?php echo htmlspecialchars($animal['namaHewan']); ?>" onerror="this.src='icon/default-pet.jpg'" style="width: 100%; height: 100%; object-fit: cover;">
             </div>
 
             <!-- Image Gallery (4 small thumbnails) -->
@@ -235,27 +261,27 @@
             <div class="details-grid">
               <div class="detail-item">
                 <i data-feather="users"></i>
-                <span class="detail-label">Gender</span>
+                <span class="detail-label"><?php echo htmlspecialchars($animal['gender']); ?></span>
               </div>
               <div class="detail-item">
                 <i data-feather="heart"></i>
-                <span class="detail-label">Breed</span>
+                <span class="detail-label"><?php echo htmlspecialchars($animal['breed']); ?></span>
               </div>
               <div class="detail-item">
                 <i data-feather="clock"></i>
-                <span class="detail-label">Age</span>
+                <span class="detail-label"><?php echo htmlspecialchars($animal['age']); ?></span>
               </div>
               <div class="detail-item">
                 <i data-feather="droplet"></i>
-                <span class="detail-label">Color</span>
+                <span class="detail-label"><?php echo htmlspecialchars($animal['color']); ?></span>
               </div>
               <div class="detail-item">
                 <i data-feather="square"></i>
-                <span class="detail-label">Weight</span>
+                <span class="detail-label"><?php echo htmlspecialchars($animal['weight']); ?> kg</span>
               </div>
               <div class="detail-item">
                 <i data-feather="chevrons-up"></i>
-                <span class="detail-label">Height</span>
+                <span class="detail-label"><?php echo htmlspecialchars($animal['height']); ?> cm</span>
               </div>
             </div>
 
@@ -264,16 +290,16 @@
               <div class="vaccination-header">Vaccinated</div>
               <div class="vaccination-table">
                 <div class="vac-row">
-                  <div class="vac-col">Vaksin</div>
-                  <div class="vac-col">Vaksin</div>
-                  <div class="vac-col">Vaksin</div>
-                  <div class="vac-col">Vaksin</div>
+                  <div class="vac-col">Vaksin 1</div>
+                  <div class="vac-col">Vaksin 2</div>
+                  <div class="vac-col">Vaksin 3</div>
+                  <div class="vac-col">Vaksin 4</div>
                 </div>
                 <div class="vac-row">
-                  <div class="vac-col">Vaksin</div>
-                  <div class="vac-col">Vaksin</div>
-                  <div class="vac-col">Vaksin</div>
-                  <div class="vac-col">Vaksin</div>
+                  <div class="vac-col">Vaksin 5</div>
+                  <div class="vac-col">Vaksin 6</div>
+                  <div class="vac-col">Vaksin 7</div>
+                  <div class="vac-col">Vaksin 8</div>
                 </div>
               </div>
             </div>
@@ -287,7 +313,7 @@
               <div class="story-content" id="profile-story">
                 <div class="story-item">
                   <i data-feather="eye"></i>
-                  <span>Can live with other children of any age</span>
+                  <span><?php echo htmlspecialchars($animal['description']); ?></span>
                 </div>
                 <div class="story-item">
                   <i data-feather="shield"></i>

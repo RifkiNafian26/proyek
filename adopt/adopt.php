@@ -1,3 +1,7 @@
+<?php
+session_start();
+require_once '../config.php';
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -17,8 +21,8 @@
     <script src="https://unpkg.com/feather-icons"></script>
 
     <!-- My Style -->
-    <link rel="stylesheet" href="../css/style.css" />
-    <link rel="stylesheet" href="styleadopt.css" />
+    <link rel="stylesheet" href="../css/style.css?v=2" />
+    <link rel="stylesheet" href="styleadopt.css?v=2" />
   </head>
   <body>
     <!-- Navbar start -->
@@ -26,7 +30,8 @@
       <a href="../index.html" class="navbar-logo">Pet<span>ResQ</span></a>
 
       <div class="navbar-nav">
-        <a href="adopt.html">Adopt</a>
+        <a href="../index.html">Home</a>
+        <a href="adopt.php">Adopt</a>
         <a href="#rehome">Rehome</a>
         <a href="#care-guides">Care Guides</a>
         <a href="#about">About</a>
@@ -203,8 +208,8 @@
       <!-- Search/Hero Section -->
       <section class="search-section">
         <h2>Find an Animal to Adopt</h2>
-        <form class="search-box">
-          <input type="text" placeholder="Search by name or breed..." />
+        <form class="search-box" id="search-form">
+          <input type="text" id="search-input" placeholder="Search by name or breed..." />
           <button type="submit"><i data-feather="search"></i></button>
         </form>
       </section>
@@ -262,7 +267,7 @@
                     type="checkbox"
                     id="golden-retriever"
                     name="breed"
-                    value="golden-retriever"
+                    value="Golden Retriever"
                   />
                   <label for="golden-retriever">Golden Retriever</label>
                 </div>
@@ -271,7 +276,7 @@
                     type="checkbox"
                     id="beagle"
                     name="breed"
-                    value="beagle"
+                    value="Beagle"
                   />
                   <label for="beagle">Beagle</label>
                 </div>
@@ -280,7 +285,7 @@
                     type="checkbox"
                     id="poodle"
                     name="breed"
-                    value="poodle"
+                    value="Poodle"
                   />
                   <label for="poodle">Poodle</label>
                 </div>
@@ -289,7 +294,7 @@
                     type="checkbox"
                     id="husky"
                     name="breed"
-                    value="husky"
+                    value="Siberian Husky"
                   />
                   <label for="husky">Siberian Husky</label>
                 </div>
@@ -298,7 +303,7 @@
                     type="checkbox"
                     id="Shiba Inu"
                     name="breed"
-                    value="shiba-inu"
+                    value="Shiba Inu"
                   />
                   <label for="Shiba Inu">Shiba Inu</label>
                 </div>
@@ -307,7 +312,7 @@
                     type="checkbox"
                     id="Bengal"
                     name="breed"
-                    value="bengal"
+                    value="Bengal"
                   />
                   <label for="Bengal">Bengal</label>
                 </div>
@@ -316,7 +321,7 @@
                     type="checkbox"
                     id="British Shorthair"
                     name="breed"
-                    value="british-shorthair"
+                    value="British Shorthair"
                   />
                   <label for="British Shorthair">British Shorthair</label>
                 </div>
@@ -325,7 +330,7 @@
                     type="checkbox"
                     id="Himalayan"
                     name="breed"
-                    value="himalayan"
+                    value="Himalayan"
                   />
                   <label for="Himalayan">Himalayan</label>
                 </div>
@@ -334,7 +339,7 @@
                     type="checkbox"
                     id="Alaskan"
                     name="breed"
-                    value="alaskan"
+                    value="Alaskan"
                   />
                   <label for="Alaskan">Alaskan</label>
                 </div>
@@ -343,7 +348,7 @@
                     type="checkbox"
                     id="Havana"
                     name="breed"
-                    value="havana"
+                    value="Havana"
                   />
                   <label for="Havana">Havana</label>
                 </div>
@@ -352,7 +357,7 @@
                     type="checkbox"
                     id="Flemish Giant"
                     name="breed"
-                    value="flemish-giant"
+                    value="Flemish Giant"
                   />
                   <label for="Flemish Giant">Flemish Giant</label>
                 </div>
@@ -361,7 +366,7 @@
                     type="checkbox"
                     id="Holland Hop"
                     name="breed"
-                    value="holland-hop"
+                    value="Holland Hop"
                   />
                   <label for="Holland Hop">Holland Hop</label>
                 </div>
@@ -370,12 +375,12 @@
                     type="checkbox"
                     id="Lionhead"
                     name="breed"
-                    value="lionhead"
+                    value="Lionhead"
                   />
                   <label for="Lionhead">Lionhead</label>
                 </div>
                 <div class="filter-option">
-                  <input type="checkbox" id="Rex" name="breed" value="rex" />
+                  <input type="checkbox" id="Rex" name="breed" value="Rex" />
                   <label for="Rex">Rex</label>
                 </div>
               </div>
@@ -395,7 +400,7 @@
                     type="checkbox"
                     id="golden"
                     name="color"
-                    value="golden"
+                    value="Golden"
                   />
                   <label for="golden">Golden</label>
                 </div>
@@ -404,12 +409,12 @@
                     type="checkbox"
                     id="brown"
                     name="color"
-                    value="brown"
+                    value="Brown"
                   />
                   <label for="brown">Brown</label>
                 </div>
                 <div class="filter-option">
-                  <input type="checkbox" id="Gray" name="color" value="gray" />
+                  <input type="checkbox" id="Gray" name="color" value="Gray" />
                   <label for="Gray">Gray</label>
                 </div>
                 <div class="filter-option">
@@ -417,7 +422,7 @@
                     type="checkbox"
                     id="black"
                     name="color"
-                    value="black"
+                    value="Black"
                   />
                   <label for="black">Black</label>
                 </div>
@@ -434,11 +439,11 @@
               </div>
               <div class="filter-options">
                 <div class="filter-option">
-                  <input type="checkbox" id="young" name="age" value="young" />
+                  <input type="checkbox" id="young" name="age" value="Young" />
                   <label for="young">Young</label>
                 </div>
                 <div class="filter-option">
-                  <input type="checkbox" id="adult" name="age" value="adult" />
+                  <input type="checkbox" id="adult" name="age" value="Adult" />
                   <label for="adult">Adult</label>
                 </div>
                 <div class="filter-option">
@@ -446,7 +451,7 @@
                     type="checkbox"
                     id="senior"
                     name="age"
-                    value="senior"
+                    value="Senior"
                   />
                   <label for="senior">Senior</label>
                 </div>
@@ -462,196 +467,8 @@
 
         <!-- Animal Cards Grid -->
         <section class="animals-section">
-          <div class="animal-grid">
-            <!-- Animal Card 1 -->
-            <div
-              class="animal-card"
-              data-animal="rabbit"
-              data-breed="holland-hop"
-              data-color="golden"
-              data-age="adult"
-            >
-              <div class="animal-photo">Animal Photo</div>
-              <div class="animal-info">
-                <div class="animal-name">Rex</div>
-                <div class="animal-description">
-                  Holland Hop - Golden, Adult
-                </div>
-              </div>
-            </div>
-
-            <!-- Animal Card 2 -->
-            <div
-              class="animal-card"
-              data-animal="cat"
-              data-breed="british-shorthair"
-              data-color="gray"
-              data-age="young"
-            >
-              <div class="animal-photo">Animal Photo</div>
-              <div class="animal-info">
-                <div class="animal-name">Luna</div>
-                <div class="animal-description">
-                  British Shorthair - Gray, Young
-                </div>
-              </div>
-            </div>
-
-            <!-- Animal Card 3 -->
-            <div
-              class="animal-card"
-              data-animal="dog"
-              data-breed="golden-retriever"
-              data-color="golden"
-              data-age="adult"
-            >
-              <div class="animal-photo">Animal Photo</div>
-              <div class="animal-info">
-                <div class="animal-name">Max</div>
-                <div class="animal-description">
-                  Golden Retriever - Golden, Adult
-                </div>
-              </div>
-            </div>
-
-            <!-- Animal Card 4 -->
-            <div
-              class="animal-card"
-              data-animal="dog"
-              data-breed="poodle"
-              data-color="white"
-              data-age="senior"
-            >
-              <div class="animal-photo">Animal Photo</div>
-              <div class="animal-info">
-                <div class="animal-name">Bella</div>
-                <div class="animal-description">Poodle - White, Senior</div>
-              </div>
-            </div>
-
-            <!-- Animal Card 5 -->
-            <div
-              class="animal-card"
-              data-animal="dog"
-              data-breed="husky"
-              data-color="gray"
-              data-age="adult"
-            >
-              <div class="animal-photo">Animal Photo</div>
-              <div class="animal-info">
-                <div class="animal-name">Charlie</div>
-                <div class="animal-description">
-                  Siberian Husky - Gray, Adult
-                </div>
-              </div>
-            </div>
-
-            <!-- Animal Card 6 -->
-            <div
-              class="animal-card"
-              data-animal="cat"
-              data-breed="bengal"
-              data-color="orange"
-              data-age="young"
-            >
-              <div class="animal-photo">Animal Photo</div>
-              <div class="animal-info">
-                <div class="animal-name">Daisy</div>
-                <div class="animal-description">Bengal - Orange, Young</div>
-              </div>
-            </div>
-
-            <!-- Animal Card 7 -->
-            <div
-              class="animal-card"
-              data-animal="dog"
-              data-breed="beagle"
-              data-color="brown"
-              data-age="adult"
-            >
-              <div class="animal-photo">Animal Photo</div>
-              <div class="animal-info">
-                <div class="animal-name">Buddy</div>
-                <div class="animal-description">Beagle - Brown, Adult</div>
-              </div>
-            </div>
-
-            <!-- Animal Card 8 -->
-            <div
-              class="animal-card"
-              data-animal="dog"
-              data-breed="shiba-inu"
-              data-color="red"
-              data-age="young"
-            >
-              <div class="animal-photo">Animal Photo</div>
-              <div class="animal-info">
-                <div class="animal-name">Mittens</div>
-                <div class="animal-description">Shiba Inu - Red, Young</div>
-              </div>
-            </div>
-
-            <!-- Animal Card 9 -->
-            <div
-              class="animal-card"
-              data-animal="dog"
-              data-breed="german-shepherd"
-              data-color="brown"
-              data-age="adult"
-            >
-              <div class="animal-photo">Animal Photo</div>
-              <div class="animal-info">
-                <div class="animal-name">Rocky</div>
-                <div class="animal-description">
-                  German Shepherd - Brown, Adult
-                </div>
-              </div>
-            </div>
-
-            <!-- Animal Card 10 -->
-            <div
-              class="animal-card"
-              data-animal="cat"
-              data-breed="persian"
-              data-color="white"
-              data-age="senior"
-            >
-              <div class="animal-photo">Animal Photo</div>
-              <div class="animal-info">
-                <div class="animal-name">Sophie</div>
-                <div class="animal-description">Persian - White, Senior</div>
-              </div>
-            </div>
-
-            <!-- Animal Card 11 -->
-            <div
-              class="animal-card"
-              data-animal="bird"
-              data-breed="cockatiel"
-              data-color="gray"
-              data-age="young"
-            >
-              <div class="animal-photo">Animal Photo</div>
-              <div class="animal-info">
-                <div class="animal-name">Oliver</div>
-                <div class="animal-description">Cockatiel - Gray, Young</div>
-              </div>
-            </div>
-
-            <!-- Animal Card 12 -->
-            <div
-              class="animal-card"
-              data-animal="dog"
-              data-breed="dachshund"
-              data-color="black"
-              data-age="adult"
-            >
-              <div class="animal-photo">Animal Photo</div>
-              <div class="animal-info">
-                <div class="animal-name">Lucy</div>
-                <div class="animal-description">Dachshund - Black, Adult</div>
-              </div>
-            </div>
+          <div class="animal-grid" id="animal-grid">
+            <!-- Animals will be loaded here by JavaScript -->
           </div>
         </section>
 
@@ -659,8 +476,8 @@
         <section class="pagination-section">
           <nav class="pagination">
             <button class="pagination-btn prev">Prev</button>
-            <button class="pagination-btn">1</button>
-            <button class="pagination-btn active">2</button>
+            <button class="pagination-btn active">1</button>
+            <button class="pagination-btn">2</button>
             <button class="pagination-btn">3</button>
             <button class="pagination-btn">4</button>
             <button class="pagination-btn">5</button>
@@ -683,5 +500,6 @@
 
     <!-- My Javascript -->
     <script src="../js/script.js"></script>
+    <script src="adopt-filter.js"></script>
   </body>
 </html>

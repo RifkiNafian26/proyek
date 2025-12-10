@@ -76,13 +76,71 @@ function setupFilterCollapse() {
       const filterOptions = this.parentElement.nextElementSibling;
 
       if (filterOptions && filterOptions.classList.contains("filter-options")) {
-        filterOptions.classList.toggle("collapsed");
-        this.setAttribute(
-          "aria-expanded",
-          this.getAttribute("aria-expanded") === "true" ? "false" : "true"
-        );
+        const isExpanded = this.getAttribute("aria-expanded") === "true";
+
+        if (isExpanded) {
+          // Collapsing - set exact height first for smooth transition
+          filterOptions.style.maxHeight = filterOptions.scrollHeight + "px";
+          requestAnimationFrame(() => {
+            filterOptions.classList.add("collapsed");
+          });
+        } else {
+          // Expanding - remove collapsed class and set height
+          filterOptions.classList.remove("collapsed");
+          filterOptions.style.maxHeight = filterOptions.scrollHeight + "px";
+
+          // Reset max-height after transition to allow dynamic content
+          setTimeout(() => {
+            if (!filterOptions.classList.contains("collapsed")) {
+              filterOptions.style.maxHeight = "1000px";
+            }
+          }, 400);
+        }
+
+        this.setAttribute("aria-expanded", isExpanded ? "false" : "true");
       }
     });
+  });
+}
+
+// Set active navbar link based on current page
+function setActiveNavLink() {
+  const currentPath = window.location.pathname;
+  const currentPage = currentPath.split("/").pop() || "index.html";
+  const navLinks = document.querySelectorAll(".navbar-nav a");
+
+  console.log("Current page:", currentPage); // Debug
+
+  navLinks.forEach((link) => {
+    const linkHref = link.getAttribute("href");
+    const linkText = link.textContent.trim();
+
+    link.classList.remove("active");
+
+    // Match logic based on current page
+    if (
+      currentPage === "index.html" ||
+      currentPage === "" ||
+      currentPage === "PetResQ"
+    ) {
+      // Home page
+      if (linkText === "Home") {
+        link.classList.add("active");
+        console.log("Set active: Home"); // Debug
+      }
+    } else if (currentPage === "adopt.html") {
+      // Adopt page
+      if (linkText === "Adopt") {
+        link.classList.add("active");
+        console.log("Set active: Adopt"); // Debug
+      }
+    } else if (currentPage === "animalprofile.html") {
+      // Animal profile page - also highlight Adopt
+      if (linkText === "Adopt") {
+        link.classList.add("active");
+        console.log("Set active: Adopt (from profile)"); // Debug
+      }
+    }
   });
 }
 
@@ -98,6 +156,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Setup filter collapse
   setupFilterCollapse();
+
+  // Set active navbar link
+  setActiveNavLink();
 });
 
 // Reset Filter Button

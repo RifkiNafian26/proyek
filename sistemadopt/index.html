@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PetResQ - Formulir Adopsi</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Kreon:wght@300..700&family=Poppins:wght@100;300;400;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Feather Icon -->
+    <script src="https://unpkg.com/feather-icons"></script>
+
+    <!-- My Style -->
+    <link rel="stylesheet" href="../css/style.css?v=2" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- Navbar start -->
+    <nav class="navbar">
+      <a href="../index.html" class="navbar-logo">Pet<span>ResQ</span></a>
+
+      <div class="navbar-nav">
+        <a href="../index.html">Home</a>
+        <a href="../adopt/adopt.php">Adopt</a>
+        <a href="../rehome/rehome.html">Rehome</a>
+        <a href="#care-guides">Care Guides</a>
+        <a href="#about">About</a>
+      </div>
+
+      <div class="navbar-extra" aria-label="Top right taskbar">
+        <a href="#" id="notification" aria-label="Notifications"
+          ><i data-feather="bell"></i
+        ></a>
+
+        <button
+          aria-label="User account"
+          class="user-profile"
+          id="user-profile"
+          type="button"
+        >
+          <div class="user-profile-inner">
+            <svg
+              class="profile-icon"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+            >
+              <g data-name="Layer 2" id="Layer_2">
+                <path
+                  d="m15.626 11.769a6 6 0 1 0 -7.252 0 9.008 9.008 0 0 0 -5.374 8.231 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 9.008 9.008 0 0 0 -5.374-8.231zm-7.626-4.769a4 4 0 1 1 4 4 4 4 0 0 1 -4-4zm10 14h-12a1 1 0 0 1 -1-1 7 7 0 0 1 14 0 1 1 0 0 1 -1 1z"
+                ></path>
+              </g>
+            </svg>
+            <span class="user-name">LOGIN</span>
+            <span class="user-initial" id="user-initial"></span>
+          </div>
+        </button>
+
+        <!-- Profile Dropdown Menu -->
+        <div class="profile-dropdown" id="profile-dropdown">
+          <div class="dropdown-header">
+            <div class="dropdown-user-name" id="dropdown-name"></div>
+            <div class="dropdown-user-email" id="dropdown-email"></div>
+          </div>
+          <hr class="dropdown-divider" />
+          <a href="#" id="logout-btn" class="dropdown-item">Logout</a>
+        </div>
+      </div>
+    </nav>
+    <!-- Navbar end -->
+
+    <main>
+      <div class="adoption-form-container">
+        <div class="progress-bar">
+          <div class="step current-step" data-step="1">
+            <span class="icon-circle"
+              ><i class="fa-solid fa-share-from-square"></i
+            ></span>
+            <span class="step-label">Start</span>
+          </div>
+          <div class="step" data-step="2">
+            <span class="icon-circle"
+              ><i class="fa-solid fa-location-dot"></i
+            ></span>
+            <span class="step-label">Address</span>
+          </div>
+          <div class="step" data-step="3">
+            <span class="icon-circle"><i class="fa-solid fa-house"></i></span>
+            <span class="step-label">Home</span>
+          </div>
+          <div class="step" data-step="4">
+            <span class="icon-circle"><i class="fa-solid fa-camera"></i></span>
+            <span class="step-label">Home Picture</span>
+          </div>
+          <div class="step" data-step="5">
+            <span class="icon-circle"
+              ><i class="fa-solid fa-people-roof"></i
+            ></span>
+            <span class="step-label">Roommate</span>
+          </div>
+          <div class="step" data-step="6">
+            <span class="icon-circle"><i class="fa-solid fa-paw"></i></span>
+            <span class="step-label">Other Animals</span>
+          </div>
+          <div class="step" data-step="7">
+            <span class="icon-circle"><i class="fa-solid fa-check"></i></span>
+            <span class="step-label">Confirm</span>
+          </div>
+          <div class="step" data-step="8">
+            <span class="icon-circle"><i class="fa-solid fa-heart"></i></span>
+            <span class="step-label">Thank You</span>
+          </div>
+        </div>
+
+        <div class="form-content">
+          <div class="form-step active" id="step-1">
+            <div class="profile-info-box">
+              <div class="profile-header">
+                <img
+                  src="images/kelinci.png"
+                  alt="Profile Picture"
+                  class="profile-pic"
+                  onerror="this.src='images/kelinci.png'"
+                />
+                <div class="profile-details">
+                  <p>Email/Username: **darelian32@gmail.com**</p>
+                  <p>First Name: **Darelian**</p>
+                  <p>Last Name: **Rachmansyah**</p>
+                </div>
+              </div>
+            </div>
+            <div class="centered-content">
+              <p class="instruction">
+                To apply for <strong>Adopt a pet</strong>, click
+                <strong>Start</strong> to begin your application.
+              </p>
+            </div>
+            <button class="start-button next-step">Start</button>
+          </div>
+
+          <div class="form-step" id="step-2">
+            <p class="note">
+              Please note, all these details must be complete in order to apply
+              for adopt a pet.
+            </p>
+            <div class="form-grid">
+              <div class="form-group full-width">
+                <label for="address">Address *</label>
+                <input type="text" id="address" placeholder="Address" />
+              </div>
+              <div class="form-group">
+                <label for="postcode">Postcode *</label>
+                <input
+                  type="text"
+                  id="postcode"
+                  class="numeric-only"
+                  inputmode="numeric"
+                  pattern="\d*"
+                  placeholder="Postcode"
+                />
+              </div>
+              <!-- Telephone field is already present above; duplicate removed -->
+              <div class="form-group">
+                <label for="telephone">Telephone Number *</label>
+                <input
+                  type="text"
+                  id="telephone"
+                  class="numeric-only"
+                  inputmode="numeric"
+                  pattern="\d*"
+                  placeholder="Landline Telephone"
+                />
+              </div>
+              <!-- Mobile input removed (not used) -->
+            </div>
+
+            <!-- Similar Pets removed for simplified application flow -->
+
+            <div class="navigation-buttons">
+              <button class="back-step">
+                <i class="fa-solid fa-arrow-left"></i> Back
+              </button>
+              <button class="next-step">
+                Continue <i class="fa-solid fa-arrow-right"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="form-step" id="step-3">
+            <div class="form-group-inline">
+              <label>Do you have a garden? *</label>
+              <label class="radio-label"
+                ><input type="radio" name="garden" value="Yes" /> Yes</label
+              >
+              <label class="radio-label"
+                ><input type="radio" name="garden" value="No" /> No</label
+              >
+            </div>
+
+            <div class="form-group">
+              <label for="living-situation"
+                >Please describe your living/home situation *</label
+              >
+              <input type="text" id="living-situation" />
+            </div>
+
+            <div class="form-group">
+              <label for="household-setting"
+                >Can you describe your household setting? *</label
+              >
+              <input type="text" id="household-setting" />
+            </div>
+
+            <div class="form-group">
+              <label for="household-activity"
+                >Can you describe the household typical activity level? *</label
+              >
+              <input type="text" id="household-activity" />
+            </div>
+
+            <div class="navigation-buttons">
+              <button class="back-step">
+                <i class="fa-solid fa-arrow-left"></i> Back
+              </button>
+              <button class="next-step">
+                Continue <i class="fa-solid fa-arrow-right"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="form-step" id="step-4">
+            <p>
+              Please add **4 photos** of your home and any outside space as it
+              helps the pet's current owner to visualize the home you are
+              offering. (**A minimum of 2 photos are required but uploading 4 is
+              better!**)
+            </p>
+            <p>The image format should be **(.jpg, .png, .jpeg)**.</p>
+            <p>
+              The Image measurements must be **square in shape**, with
+              dimensions of **600 x 600 pixels**.
+            </p>
+            <p>The maximum & minimum image size is **1024 and 240 KB**.</p>
+
+            <div class="image-upload-grid">
+              <div class="upload-box" data-index="0">
+                <i class="fa-solid fa-camera"></i>
+                <input
+                  type="file"
+                  accept="image/*"
+                  class="home-photo-input"
+                  style="display: none"
+                />
+              </div>
+              <div class="upload-box" data-index="1">
+                <i class="fa-solid fa-camera"></i>
+                <input
+                  type="file"
+                  accept="image/*"
+                  class="home-photo-input"
+                  style="display: none"
+                />
+              </div>
+              <div class="upload-box" data-index="2">
+                <i class="fa-solid fa-camera"></i>
+                <input
+                  type="file"
+                  accept="image/*"
+                  class="home-photo-input"
+                  style="display: none"
+                />
+              </div>
+              <div class="upload-box" data-index="3">
+                <i class="fa-solid fa-camera"></i>
+                <input
+                  type="file"
+                  accept="image/*"
+                  class="home-photo-input"
+                  style="display: none"
+                />
+              </div>
+            </div>
+
+            <div class="navigation-buttons">
+              <button class="back-step">
+                <i class="fa-solid fa-arrow-left"></i> Back
+              </button>
+              <button class="next-step">
+                Continue <i class="fa-solid fa-arrow-right"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="form-step" id="step-5">
+            <div class="form-grid-2-col">
+              <!-- Row: adults / children / ages (aligned horizontally) -->
+              <div class="form-row-horizontal">
+                <div class="form-group">
+                  <label for="adults"
+                    >Number of adults
+                    <span style="color: #5f6f52; font-weight: 600"
+                      >*</span
+                    ></label
+                  >
+                  <input type="number" id="adults" value="1" min="1" required />
+                  <small style="color: #5f6f52"
+                    >At least one adult must be living in your household</small
+                  >
+                </div>
+
+                <div class="form-group">
+                  <label for="children">Number of children</label>
+                  <input type="number" id="children" value="0" min="0" />
+                </div>
+
+                <div class="form-group">
+                  <label for="age-youngest">Ages of children</label>
+                  <select id="age-youngest">
+                    <option value="no-children">No child</option>
+                    <option value="0-5">0-5 years</option>
+                    <option value="6-12">6-12 years</option>
+                    <option value="13-17">13-17 years</option>
+                  </select>
+                </div>
+              </div>
+              <!-- moved visiting children & visiting ages below the grid so these won't sit beside the three-column row -->
+              <!-- flatmates moved below visiting children -->
+            </div>
+
+            <!-- visiting children moved out of the three-column grid so it appears below -->
+            <div class="mb-6" id="visiting-children-block">
+              <div class="form-group-inline">
+                <label>Any visiting children?</label>
+                <label class="radio-label"
+                  ><input type="radio" name="visiting-children" value="Yes" />
+                  Yes</label
+                >
+                <label class="radio-label"
+                  ><input type="radio" name="visiting-children" value="No" />
+                  No</label
+                >
+              </div>
+
+              <div
+                class="form-group"
+                id="visiting-ages-wrapper"
+                style="display: none; margin-top: 10px"
+              >
+                <label for="ages-visiting">Ages of visiting children?</label>
+                <select id="ages-visiting">
+                  <option value="under5">Under 5 years</option>
+                  <option value="over5">Over 5 years</option>
+                  <option value="all">All ages</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Flatmates block moved below visiting children -->
+            <div class="mb-6" id="flatmates-block">
+              <div class="form-group-inline">
+                <label>Do you have any flatmates or lodgers?</label>
+                <label class="radio-label"
+                  ><input type="radio" name="flatmates" value="Yes" />
+                  Yes</label
+                >
+                <label class="radio-label"
+                  ><input type="radio" name="flatmates" value="No" /> No</label
+                >
+              </div>
+              <!-- follow-up: show this only when flatmates === Yes -->
+              <div
+                class="form-group"
+                id="flatmates-consent-wrapper"
+                style="display: none; margin-top: 10px"
+              >
+                <label for="flatmates-consent"
+                  >Would they mind if you adopted a pet?</label
+                >
+                <select id="flatmates-consent" class="input-select">
+                  <option value="Yes">Yes</option>
+                  <option value="No">No</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="navigation-buttons">
+              <button class="back-step">
+                <i class="fa-solid fa-arrow-left"></i> Back
+              </button>
+              <button class="next-step">
+                Continue <i class="fa-solid fa-arrow-right"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="form-step" id="step-6">
+            <div class="form-group">
+              <label for="allergies"
+                >Does anyone in the household have any allergies to pets?
+                *</label
+              >
+              <input type="text" id="allergies" />
+            </div>
+
+            <div class="form-group-inline">
+              <label>Are there any other animals at your home? *</label>
+              <label class="radio-label"
+                ><input type="radio" name="other-animals" value="Yes" />
+                Yes</label
+              >
+              <label class="radio-label"
+                ><input type="radio" name="other-animals" value="No" />
+                No</label
+              >
+              <label class="radio-label"
+                ><input
+                  type="radio"
+                  name="other-animals"
+                  value="Not Applicable"
+                />
+                Not Applicable</label
+              >
+            </div>
+
+            <div class="form-group-inline">
+              <label
+                >If yes, have they been vaccinated in the last 12 months?
+                *</label
+              >
+              <label class="radio-label"
+                ><input type="radio" name="vaccinated" value="Yes" /> Yes</label
+              >
+              <label class="radio-label"
+                ><input type="radio" name="vaccinated" value="No" /> No</label
+              >
+              <label class="radio-label"
+                ><input type="radio" name="vaccinated" value="Not Applicable" />
+                Not Applicable</label
+              >
+            </div>
+
+            <div class="form-group">
+              <label for="experience"
+                >Please describe your experience of any previous pet ownership
+                and tell us about the type of home you plan to offer your new
+                pet</label
+              >
+              <textarea id="experience"></textarea>
+            </div>
+
+            <div class="navigation-buttons">
+              <button class="back-step">
+                <i class="fa-solid fa-arrow-left"></i> Back
+              </button>
+              <button class="next-step">
+                Continue <i class="fa-solid fa-arrow-right"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="form-step" id="step-7">
+            <h2>Review & Confirm</h2>
+            <p class="note">
+              Please review your information and confirm that all details are
+              correct before submitting your adoption application.
+            </p>
+
+            <div class="confirm-review-section">
+              <div class="form-group">
+                <h3>Personal Information</h3>
+                <div class="review-item">
+                  <strong>Name:</strong>
+                  <span id="review-name">Darelian Rachmansyah</span>
+                </div>
+                <div class="review-item">
+                  <strong>Email:</strong>
+                  <span id="review-email">darelian32@gmail.com</span>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <h3>Address Information</h3>
+                <div class="review-item">
+                  <strong>Address:</strong> <span id="review-address">-</span>
+                </div>
+                <div class="review-item">
+                  <strong>Postcode:</strong> <span id="review-postcode">-</span>
+                </div>
+                <div class="review-item">
+                  <strong>Telephone:</strong>
+                  <span id="review-telephone">-</span>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <h3>Home Information</h3>
+                <div class="review-item">
+                  <strong>Has Garden:</strong> <span id="review-garden">-</span>
+                </div>
+                <div class="review-item">
+                  <strong>Living Situation:</strong>
+                  <span id="review-living">-</span>
+                </div>
+                <div class="review-item">
+                  <strong>Household Setting:</strong>
+                  <span id="review-household-setting">-</span>
+                </div>
+                <div class="review-item">
+                  <strong>Household Activity Level:</strong>
+                  <span id="review-household-activity">-</span>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <h3>Roommate Information</h3>
+                <div class="review-item">
+                  <strong>Number of Adults:</strong>
+                  <span id="review-adults">-</span>
+                </div>
+                <div class="review-item">
+                  <strong>Number of Children:</strong>
+                  <span id="review-children">-</span>
+                </div>
+                <div class="review-item">
+                  <strong>Ages of Children:</strong>
+                  <span id="review-children-ages">-</span>
+                </div>
+                <div class="review-item">
+                  <strong>Any Visiting Children:</strong>
+                  <span id="review-visiting-children">-</span>
+                </div>
+                <div
+                  class="review-item"
+                  id="review-visiting-ages-item"
+                  style="display: none"
+                >
+                  <strong>Ages of Visiting Children:</strong>
+                  <span id="review-visiting-ages">-</span>
+                </div>
+                <div class="review-item">
+                  <strong>Flatmates or Lodgers:</strong>
+                  <span id="review-flatmates">-</span>
+                </div>
+                <div
+                  class="review-item"
+                  id="review-flatmates-consent-item"
+                  style="display: none"
+                >
+                  <strong>Flatmates Consent:</strong>
+                  <span id="review-flatmates-consent">-</span>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <h3>Other Animal Information</h3>
+                <div class="review-item">
+                  <strong>Allergies to Pets:</strong>
+                  <span id="review-allergies">-</span>
+                </div>
+                <div class="review-item">
+                  <strong>Other Animals at Home:</strong>
+                  <span id="review-other-animals">-</span>
+                </div>
+                <div class="review-item">
+                  <strong>Vaccinated in Last 12 Months:</strong>
+                  <span id="review-vaccinated">-</span>
+                </div>
+                <div class="review-item">
+                  <strong>Previous Pet Ownership Experience:</strong>
+                  <span id="review-experience">-</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="confirm-checkbox-label">
+                <input type="checkbox" id="confirm-data" required />
+                <span
+                  >I confirm that all the information provided is accurate and
+                  complete. I understand that false information may result in
+                  rejection of my adoption application.</span
+                >
+              </label>
+            </div>
+
+            <div class="form-group">
+              <label class="confirm-checkbox-label">
+                <input type="checkbox" id="confirm-commitment" required />
+                <span
+                  >I am committed to providing a loving and caring home for the
+                  pet I wish to adopt.</span
+                >
+              </label>
+            </div>
+
+            <div class="navigation-buttons">
+              <button class="back-step">
+                <i class="fa-solid fa-arrow-left"></i> Back
+              </button>
+              <button class="send-application-button next-step">
+                <i class="fa-solid fa-paper-plane"></i> Send Application to Pet
+                Owner
+              </button>
+            </div>
+          </div>
+
+          <div class="form-step" id="step-8">
+            <h2>Thanks for submitting</h2>
+            <p class="confirm-note">
+              The pet's current owner will be sent a link to your profile<br />when
+              your application has been approved by PetResQ
+            </p>
+
+            <div class="thank-you-message">
+              <h1>GOODBYE</h1>
+              <img src="anjing.jpg" alt="Anjing waving" class="kitten-image" />
+            </div>
+
+            <div style="text-align: center; margin-top: 6px">
+              <button class="profile-button" style="margin-top: 8px">
+                Go To My Profile
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="faq-footer">
+      <h2>FAQ</h2>
+    </footer>
+
+    <!-- Modal Login/Register -->
+    <div class="modal" id="authModal">
+      <div class="modal-content">
+        <div class="modal-left">
+          <span class="close">&times;</span>
+          <div id="loginForm" class="form-container active">
+            <h2>Login</h2>
+            <p class="form-subtitle">
+              Don't have an account?
+              <a href="#" id="showRegister">Register here</a>
+            </p>
+            <form id="login-form">
+              <label for="login-email">Email</label>
+              <input
+                type="email"
+                id="login-email"
+                name="email"
+                placeholder="name@email.com"
+                required
+              />
+
+              <label for="login-password">Password</label>
+              <input
+                type="password"
+                id="login-password"
+                name="password"
+                placeholder="Enter password"
+                required
+              />
+
+              <p class="error-message" id="login-error"></p>
+
+              <button type="submit">Login</button>
+            </form>
+          </div>
+
+          <div id="registerForm" class="form-container">
+            <h2>Register</h2>
+            <p class="form-subtitle">
+              Already have an account? <a href="#" id="showLogin">Login here</a>
+            </p>
+            <form id="register-form">
+              <label for="register-name">Full Name</label>
+              <input
+                type="text"
+                id="register-name"
+                name="name"
+                placeholder="Enter your name"
+                required
+              />
+
+              <label for="register-email">Email</label>
+              <input
+                type="email"
+                id="register-email"
+                name="email"
+                placeholder="name@email.com"
+                required
+              />
+
+              <label for="register-password">Password</label>
+              <input
+                type="password"
+                id="register-password"
+                name="password"
+                placeholder="Enter password"
+                required
+              />
+
+              <label for="register-confirm-password">Confirm Password</label>
+              <input
+                type="password"
+                id="register-confirm-password"
+                name="confirm_password"
+                placeholder="Confirm password"
+                required
+              />
+
+              <p class="error-message" id="register-error"></p>
+
+              <button type="submit">Register</button>
+            </form>
+          </div>
+        </div>
+
+        <div class="modal-right">
+          <img src="../icon/loginregister.jpg" alt="Pet" />
+        </div>
+      </div>
+    </div>
+
+    <!-- My Script -->
+    <script src="../js/script.js"></script>
+    <script>
+      feather.replace();
+    </script>
+    <script src="script.js"></script>
+  </body>
+</html>

@@ -1,0 +1,1410 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PetResQ - Rehome Process</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Kavoon&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- Global Styles --- */
+        :root {
+            --color-primary-green: #5F6F52;
+            --color-dark-text: #2c3e50;
+            --color-medium-gray: #4a4a4a;
+            --color-background: #FEFAE0;
+            --color-dark-bg: #333333;
+            --color-card-bg: #FEFAE0;
+            --color-text-light: #fefefe;
+            --color-progress-orange: #d1784c;
+            --color-light-border: #ddd;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--color-background);
+            color: var(--color-dark-text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            line-height: 1.6;
+        }
+
+        /* --- Header Styling --- */
+        .main-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 40px;
+            background-color: var(--color-background);
+            border-bottom: 1px solid rgba(0,0,0,0.03);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+        }
+
+        .logo {
+            font-family: 'Kavoon', cursive;
+            font-size: 56px;
+            font-weight: 400;
+            color: var(--color-primary-green);
+            line-height: 1;
+            letter-spacing: 0;
+        }
+
+        .main-nav a {
+            margin: 0 12px;
+            text-decoration: none;
+            color: var(--color-medium-gray);
+            font-weight: 500;
+            font-size: 15px;
+            position: relative;
+            transition: color 0.2s ease, background-color 0.2s ease;
+            padding: 6px 8px;
+        }
+
+        .main-nav a:hover {
+            color: var(--color-primary-green);
+        }
+
+        /* Active nav appears as a green rounded pill with white text */
+        .main-nav a.active {
+            color: #ffffff;
+            background-color: var(--color-primary-green);
+            font-weight: 600;
+            padding: 8px 16px;
+            border-radius: 20px;
+        }
+
+        /* small green circular indicator to the right of the active pill (matches UI) */
+        /* removed circular indicator ::after to keep only the green pill */
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .notification-icon {
+            font-size: 20px;
+            color: var(--color-medium-gray);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .user-avatar {
+            font-size: 24px;
+            color: var(--color-medium-gray);
+        }
+
+        .user-profile .username {
+            background-color: var(--color-primary-green);
+            color: white;
+            padding: 7px 14px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        /* --- Main Container & Stepper --- */
+        .rehome-container {
+            flex-grow: 1;
+            padding: 40px;
+            background-color: var(--color-background);
+        }
+        
+        .section-title {
+            margin-bottom: 30px;
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--color-dark-text);
+            text-align: center;
+        }
+
+        .stepper {
+            margin-bottom: 30px;
+            position: relative;
+            padding: 12px 20px;
+            width: 100%;
+            max-width: 100%;
+            margin-left: auto;
+            margin-right: auto;
+            background-color: #e8e8e8;
+            border-radius: 8px;
+        }
+
+        .stepper ol {
+            display: flex;
+            justify-content: space-between;
+            padding: 0;
+            list-style: none;
+            position: relative;
+            margin: 0;
+        }
+
+
+        .stepper ol .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            width: 10%;
+            z-index: 1; 
+        }
+
+        .stepper .icon-wrapper {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background-color: #e0e0e0;
+            color: var(--color-primary-green);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px;
+            border: 2px solid var(--color-primary-green);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .stepper .step-label {
+            margin-top: 10px;
+            font-size: 12px;
+            color: var(--color-medium-gray);
+            text-align: center;
+            font-weight: 500;
+        }
+
+        /* Style for COMPLETED steps */
+        .stepper .step.completed .icon-wrapper {
+            background-color: var(--color-primary-green);
+            color: var(--color-text-light);
+        }
+
+        .stepper .step.completed .step-label {
+            color: var(--color-dark-text);
+            font-weight: 600;
+        }
+
+        /* Style for CURRENT step */
+        .stepper .step.current .icon-wrapper {
+            background-color: var(--color-progress-orange);
+            color: var(--color-text-light);
+            border: 3px solid var(--color-primary-green);
+            transform: scale(1.1);
+        }
+
+        /* Rabbit Icon above step icons */
+        .stepper-pet-icon {
+            position: absolute;
+            top: -45px; /* lowered so it doesn't cover the step icons */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 48px;
+            height: auto;
+            display: none;
+            z-index: 2;
+        }
+
+        .stepper .step.current .stepper-pet-icon {
+            display: block;
+        }
+
+
+        /* Ensure icon wrappers sit normally (no extra offset) */
+        .icon-wrapper {
+            position: relative;
+            top: 0;
+            display: inline-block;
+        }
+
+        /* --- Content Styling --- */
+        .content-wrapper {
+            max-width: 850px;
+            margin: 0 auto;
+            padding: 40px;
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .form-step {
+            display: none;
+        }
+
+        .form-step.active {
+            display: block;
+        }
+
+        /* --- Tahap 1: START Styling --- */
+        .user-info-card {
+            display: flex;
+            align-items: center;
+            background-color: var(--color-primary-green);
+            border: none;
+            padding: 28px 36px;
+            border-radius: 18px;
+            margin-bottom: 30px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+        }
+
+        .user-avatar-lg {
+            width: 108px;
+            height: 108px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-right: 28px;
+            border: 6px solid #ffffff;
+            background-color: transparent;
+            flex-shrink: 0;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+        }
+
+        .user-avatar-lg img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .user-details p {
+            margin: 6px 0;
+            font-size: 18px;
+            color: #ffffff;
+            line-height: 1.4;
+        }
+
+        .user-details strong {
+            color: #ffffff;
+            font-weight: 700;
+        }
+
+        .terms-check {
+            margin-bottom: 15px;
+        }
+
+        .terms-check label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            color: var(--color-dark-text);
+        }
+
+        .terms-check input[type="checkbox"] {
+            margin-right: 10px;
+            width: 18px;
+            height: 18px;
+            accent-color: var(--color-primary-green);
+        }
+
+        /* .apply-note removed — paragraph deleted from HTML */
+
+        /* --- Form General Styles --- */
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--color-dark-text);
+            font-size: 15px;
+        }
+
+        .form-group select,
+        .form-group input[type="text"],
+        .form-group input[type="number"],
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--color-light-border);
+            border-radius: 6px;
+            font-size: 15px;
+            background-color: #ffffff;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .form-group select:focus,
+        .form-group input[type="text"]:focus,
+        .form-group input[type="number"]:focus,
+        .form-group textarea:focus {
+            border-color: var(--color-primary-green);
+            box-shadow: 0 0 0 3px rgba(104, 181, 52, 0.2);
+            outline: none;
+        }
+        
+        /* Radio Button Styling (Questions & Key Facts) */
+        .radio-options {
+            display: flex;
+            gap: 20px;
+            margin-top: 5px;
+        }
+
+        .radio-options label {
+            display: inline-flex;
+            align-items: center;
+            font-weight: normal;
+            cursor: pointer;
+        }
+
+        .radio-options input[type="radio"] {
+            margin-right: 5px;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #aaa;
+            border-radius: 50%;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .radio-options input[type="radio"]:checked {
+            border: 6px solid var(--color-primary-green);
+        }
+
+        .row-group {
+            border-bottom: 1px solid #eee;
+            padding-bottom: 15px;
+            margin-bottom: 15px;
+        }
+        
+        /* --- Tahap 3: Pet's Images Styling --- */
+        .image-note {
+            text-align: center;
+            margin-bottom: 25px;
+            line-height: 1.6;
+            color: var(--color-medium-gray);
+        }
+
+        .image-upload-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin: 0 auto;
+            max-width: 500px;
+        }
+
+        .image-upload-box {
+            height: 150px;
+            border: 2px dashed #aaa;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #aaa;
+            position: relative;
+            cursor: pointer;
+            transition: border-color 0.2s;
+            background-color: #fcfcfc;
+        }
+
+        .image-upload-box:hover {
+            border-color: var(--color-primary-green);
+        }
+
+        .image-upload-box i {
+            font-size: 30px;
+            margin-bottom: 5px;
+        }
+
+        .image-upload-box input[type="file"] {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        /* Style untuk box yang sudah ada gambar */
+        .image-upload-box.has-image {
+            border: 2px solid var(--color-primary-green);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .image-upload-box.has-image::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.3);
+            transition: background-color 0.2s;
+        }
+        .image-upload-box.has-image:hover::after {
+            background-color: rgba(0,0,0,0.1);
+        }
+
+        .image-upload-box.has-image .remove-image-btn {
+            display: block;
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background-color: rgba(255, 0, 0, 0.7);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 14px;
+            cursor: pointer;
+            z-index: 10;
+            transition: background-color 0.2s;
+        }
+        .image-upload-box.has-image .remove-image-btn:hover {
+            background-color: red;
+        }
+
+        /* Error highlight for image upload boxes */
+        .image-upload-box.error {
+            border-color: var(--color-progress-orange);
+            box-shadow: 0 0 0 3px rgba(209, 120, 76, 0.25);
+        }
+
+        /* --- Tahap 4 & 6: Grid Layout (Characteristics & Location) --- */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr; 
+            gap: 20px 30px;
+        }
+
+        .age-note .note {
+            font-size: 12px;
+            color: #777;
+            margin-top: 5px;
+        }
+        
+        /* --- Tahap 5: Key Facts Styling --- */
+        .key-facts-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .key-facts-table tr {
+            border-bottom: 1px solid #eee;
+        }
+        
+        .key-facts-table th, .key-facts-table td {
+            padding: 10px 0;
+            text-align: left;
+        }
+        
+        .key-facts-table th {
+            font-weight: normal;
+            color: var(--color-dark-text);
+            padding-left: 10px;
+        }
+
+        .key-facts-table .radio-options {
+            gap: 15px;
+            margin: 0;
+        }
+
+        /* --- Tahap 7: Pet's Story --- */
+        .story-note {
+            margin-bottom: 20px;
+            padding-left: 15px;
+            border-left: 3px solid var(--color-primary-green);
+            line-height: 1.5;
+            font-size: 14px;
+        }
+        
+        .story-note ul {
+            margin-top: 10px;
+            list-style-type: disc;
+            padding-left: 20px;
+        }
+        
+        .story-note li {
+            margin-bottom: 5px;
+        }
+
+        .story-textarea {
+            min-height: 180px;
+            resize: vertical;
+        }
+
+        /* --- Tahap 9: Confirm & Done Styling --- */
+        .thanks-message {
+            text-align: center;
+            padding: 60px 0;
+        }
+        
+        .thanks-message h3 {
+            font-size: 32px;
+            color: var(--color-primary-green);
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .thanks-message p {
+            font-size: 16px;
+            max-width: 550px;
+            margin: 0 auto 30px;
+            line-height: 1.6;
+            color: var(--color-medium-gray);
+        }
+        
+        .thanks-message .pet-image-done {
+            width: 180px;
+            height: auto;
+            margin: 40px 0;
+        }
+        
+        .btn-profile {
+            background-color: var(--color-progress-orange);
+            color: white;
+            padding: 14px 30px;
+            text-transform: uppercase;
+            font-size: 16px;
+            border-radius: 8px;
+        }
+        
+        .btn-profile:hover {
+            background-color: #c0673f;
+        }
+
+        /* --- Confirm Summary --- */
+        .confirm-summary {
+            background-color: #f7f7f7;
+            border-radius: 10px;
+            padding: 20px 24px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .confirm-title {
+            color: var(--color-primary-green);
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        .summary-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin: 20px 0 28px 0;
+        }
+
+        .summary-item {
+            color: var(--color-dark-text);
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        .summary-item strong {
+            font-weight: 700;
+            color: var(--color-dark-text);
+        }
+
+        .summary-item span {
+            font-weight: normal;
+            color: var(--color-dark-text);
+        }
+
+        .confirm-agree {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        .confirm-agree input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--color-primary-green);
+        }
+
+        .confirm-agree.error {
+            padding: 8px 10px;
+            border: 1px solid var(--color-progress-orange);
+            border-radius: 6px;
+            background: rgba(209, 120, 76, 0.08);
+        }
+
+        /* --- Buttons --- */
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 30px;
+        }
+
+        .form-actions.center {
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.2s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .btn-start {
+            background-color: #555; 
+            color: white;
+        }
+
+        .btn-start:enabled {
+            background-color: var(--color-primary-green);
+            cursor: pointer;
+        }
+
+        .btn-start:enabled:hover {
+            background-color: #569e2c;
+        }
+        
+        .btn-back {
+            background-color: #e0e0e0;
+            color: var(--color-medium-gray);
+            margin-right: 10px;
+        }
+
+        .btn-back:hover {
+            background-color: #ccc;
+        }
+
+        .btn-continue {
+            background-color: var(--color-primary-green);
+            color: white;
+        }
+
+        .btn-continue:hover {
+            background-color: #569e2c;
+        }
+
+        .btn-continue:disabled {
+            background-color: #ccc;
+            color: #999;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .btn-continue:disabled:hover {
+            background-color: #ccc;
+        }
+
+        .btn-back i, .btn-continue i {
+            margin: 0 5px;
+        }
+
+        /* --- Kucing Image Styling --- */
+        .cat-decoration {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* --- Footer Styling --- */
+        .main-footer {
+            background-color: var(--color-dark-bg);
+            color: var(--color-text-light);
+            padding: 40px 40px;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        .faq-section {
+            font-size: 26px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="logo">PetResQ</div>
+        <nav class="main-nav">
+            <a href="#">Adopt</a>
+            <a href="#" class="active">Rehome</a>
+            <a href="#">Care Guides</a>
+            <a href="#">About Us</a>
+        </nav>
+        <div class="user-profile">
+            <span class="notification-icon"><i class="fas fa-bell"></i></span>
+            <span class="user-avatar"><i class="fas fa-user-circle"></i></span>
+            <span class="username">Darelian</span>
+        </div>
+    </header>
+
+    <main class="rehome-container">
+        <div class="content-wrapper">
+            <nav class="stepper step-1">
+                <ol>
+                    <li class="step current completed" data-step="1">
+                        <div class="icon-wrapper">
+                            <i class="fas fa-arrow-right"></i>
+                            <img src="kelinci.png" alt="Rabbit Icon" class="stepper-pet-icon">
+                        </div>
+                        <span class="step-label">Start</span>
+                    </li>
+
+                    <li class="step" data-step="2">
+                        <div class="icon-wrapper">
+                            <i class="fas fa-question"></i>
+                            <img src="kelinci.png" alt="Rabbit Icon" class="stepper-pet-icon">
+                        </div>
+                        <span class="step-label">Quetions</span>
+                    </li>
+
+                    <li class="step" data-step="3">
+                        <div class="icon-wrapper">
+                            <i class="fas fa-image"></i>
+                            <img src="kelinci.png" alt="Rabbit Icon" class="stepper-pet-icon">
+                        </div>
+                        <span class="step-label">Pet's Images</span>
+                    </li>
+
+                    <li class="step" data-step="4">
+                        <div class="icon-wrapper">
+                            <i class="fas fa-paw"></i>
+                            <img src="kelinci.png" alt="Rabbit Icon" class="stepper-pet-icon">
+                        </div>
+                        <span class="step-label">Characteristics</span>
+                    </li>
+
+                    <li class="step" data-step="5">
+                        <div class="icon-wrapper">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <img src="kelinci.png" alt="Rabbit Icon" class="stepper-pet-icon">
+                        </div>
+                        <span class="step-label">Pet's Location</span>
+                    </li>
+
+                    <li class="step" data-step="6">
+                        <div class="icon-wrapper">
+                            <i class="fas fa-book-open"></i>
+                            <img src="kelinci.png" alt="Rabbit Icon" class="stepper-pet-icon">
+                        </div>
+                        <span class="step-label">Pet's Story</span>
+                    </li>
+
+                    <li class="step" data-step="7">
+                        <div class="icon-wrapper">
+                            <i class="fas fa-file-alt"></i>
+                            <img src="kelinci.png" alt="Rabbit Icon" class="stepper-pet-icon">
+                        </div>
+                        <span class="step-label">Documents</span>
+                    </li>
+
+                    <li class="step" data-step="8">
+                        <div class="icon-wrapper">
+                            <i class="fas fa-check"></i>
+                            <img src="kelinci.png" alt="Rabbit Icon" class="stepper-pet-icon">
+                        </div>
+                        <span class="step-label">Confirm</span>
+                    </li>
+
+                <li class="step" data-step="9">
+                    <div class="icon-wrapper">
+                        <i class="fas fa-hand-holding-heart"></i>
+                        <img src="kelinci.png" alt="Rabbit Icon" class="stepper-pet-icon">
+                    </div>
+                    <span class="step-label">Thank U</span>
+                </li>
+                </ol>
+            </nav>
+            
+            <section id="step-1" class="form-step active" data-title="REHOME / START">
+                <div class="user-info-card">
+                    <div class="user-avatar-lg">
+                        <img src="https://i.ibb.co/mB8J210/dark-profile.png" alt="User Profile Image">
+                    </div>
+                    <div class="user-details">
+                        <p>Email/Username: <strong>darelian32@gmail.com</strong></p>
+                        <p>First Name: <strong>Darelian</strong></p>
+                        <p>Last Name: <strong>Rachmansyah</strong></p>
+                    </div>
+                </div>
+
+                
+
+                <div class="form-actions center">
+                    <button class="btn btn-start" id="start-button">Start</button>
+                </div>
+
+            </section>
+            
+            <section id="step-2" class="form-step" data-title="REHOME / QUETIONS">
+                <form id="questions-form">
+                    <div class="form-group row-group">
+                        <label>Are you rehoming a dog, cat or rabbit?</label>
+                        <div class="radio-options">
+                            <label><input type="radio" name="pet_type" value="Dog" required> Dog</label>
+                            <label><input type="radio" name="pet_type" value="Cat"> Cat</label>
+                            <label><input type="radio" name="pet_type" value="Rabbit"> Rabbit</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group row-group">
+                        <label>Is your pet spayed or neutered?</label>
+                        <div class="radio-options">
+                            <label><input type="radio" name="spayed_neutered" value="Yes" required> Yes</label>
+                            <label><input type="radio" name="spayed_neutered" value="No"> No</label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="rehome_reason">Why do you need to rehome your pet?</label>
+                        <select id="rehome_reason" name="rehome_reason" required>
+                            <option value="">Pick a value</option>
+                            <option value="Moving">Moving</option>
+                            <option value="Allergy">Allergy</option>
+                            <option value="Financial">Financial</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="keep_duration">How long are you able to keep your pet while we help find a suitable new home?</label>
+                        <select id="keep_duration" name="keep_duration" required>
+                            <option value="">Please select</option>
+                            <option value="1_month">Up to 1 month</option>
+                            <option value="3_months">Up to 3 months</option>
+                            <option value="6_months">Up to 6 months</option>
+                        </select>
+                    </div>
+
+                    <div class="form-actions">
+                        <button class="btn btn-back" type="button" onclick="goToStep(1)">
+                            <i class="fas fa-arrow-left"></i> Back
+                        </button>
+                        <button class="btn btn-continue" type="submit">
+                            Continue <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </form>
+            </section>
+            
+            <section id="step-3" class="form-step" data-title="REHOME / PET'S IMAGES">
+                <p class="image-note">The image format should (.jpg, .png, .jpeg).<br>The image measurements must be square in shape, with dimensions of 600 x 600 pixels.<br>The maximum & minimum image size is 1024 and 240 KB.</p>
+                
+                <div class="image-upload-grid">
+                    <div class="image-upload-box">
+                        <i class="fas fa-camera"></i>
+                        <p>1024 KB</p>
+                        <input type="file" accept="image/*" multiple>
+                    </div>
+                    <div class="image-upload-box">
+                        <i class="fas fa-camera"></i>
+                        <input type="file" accept="image/*" multiple>
+                    </div>
+                    <div class="image-upload-box">
+                        <i class="fas fa-camera"></i>
+                        <input type="file" accept="image/*" multiple>
+                    </div>
+                    <div class="image-upload-box">
+                        <i class="fas fa-camera"></i>
+                        <input type="file" accept="image/*" multiple>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button class="btn btn-back" type="button" onclick="goToStep(2)">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </button>
+                    <button class="btn btn-continue" type="button" id="images-continue-button">
+                        Continue <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </section>
+            
+            <section id="step-4" class="form-step" data-title="REHOME / CHARACTERISTICS">
+                <form id="characteristics-form">
+                    <div class="form-group">
+                        <label for="pet_name">Pet's Name *</label>
+                        <input type="text" id="pet_name" name="pet_name" required>
+                    </div>
+                    
+                    <div class="form-group age-note">
+                        <label for="age_years">Age (Years) *</label>
+                        <input type="number" id="age_years" name="age_years" value="0" min="0" required>
+                        <p class="note">If your pet is a puppy then still their age as 0</p>
+                    </div>
+
+        <div class="form-group">
+            <label for="breed">Breed(s) *</label>
+            <input type="text" id="breed" name="breed" required>
+        </div>
+
+        <div class="form-group">
+            <label for="color">Color *</label>
+            <input type="text" id="color" name="color" required>
+        </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="size">Size *</label>
+                            <select id="size" name="size" required>
+                                <option value="">Please Select</option>
+                                <option value="small">Small</option>
+                                <option value="medium">Medium</option>
+                                <option value="large">Large</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="gender">Gender *</label>
+                            <select id="gender" name="gender" required>
+                                <option value="">Please Select</option>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button class="btn btn-back" type="button" onclick="goToStep(3)">
+                            <i class="fas fa-arrow-left"></i> Back
+                        </button>
+                        <button class="btn btn-continue" type="submit">
+                            Continue <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </form>
+            </section>
+            
+            <section id="step-5" class="form-step" data-title="REHOME / PET'S LOCATION">
+                <form id="location-form">
+                    <div class="form-group">
+                        <label for="address_line1">Address line 1 *</label>
+                        <input type="text" id="address_line1" name="address_line1" required>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="city">City *</label>
+                            <input type="text" id="city" name="city" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="location_postcode">Postcode *</label>
+                            <input type="text" id="location_postcode" name="location_postcode" inputmode="numeric" pattern="[0-9]*" required>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button class="btn btn-back" type="button" onclick="goToStep(4)">
+                            <i class="fas fa-arrow-left"></i> Back
+                        </button>
+                        <button class="btn btn-continue" type="submit">
+                            Continue <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </form>
+            </section>
+            
+
+                <section id="step-6" class="form-step" data-title="REHOME / PET'S STORY">
+                <form id="story-form">
+                    <div class="story-note">
+                        Share anything here about your pet. (Your pet profile will be visible to the public. For your safety, do not include any personal details or contact information). Include information such as:
+                        <ul>
+                            <li>Your pet's history: how long you've had them, where you got them from and why you need to rehome them</li>
+                            <li>Details about who your pet has lived with, eg children and other pets</li>
+                            <li>Your pet's favourite activities</li>
+                            <li>A description of their personality, preferences and habits</li>
+                            <li>Anything they're scared of such as fireworks, people in uniform, other animals</li>
+                            <li>The type of food they eat including the brand and amount.</li>
+                            <li>Allergies, health conditions, and any medications your pet takes</li>
+                            <li>If you are listing a bonded pair, make sure you include details about both pets</li>
+                        </ul>
+                    </div>
+                    <div class="form-group">
+                        <textarea id="pet_story" name="pet_story" class="story-textarea" placeholder="Type here..." required></textarea>
+                    </div>
+
+                    <div class="form-actions">
+                        <button class="btn btn-back" type="button" onclick="goToStep(5)">
+                            <i class="fas fa-arrow-left"></i> Back
+                        </button>
+                        <button class="btn btn-continue" type="submit">
+                            Continue <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </form>
+            </section>
+
+            <section id="step-7" class="form-step" data-title="REHOME / DOCUMENTS">
+                <p class="image-note">
+                    This will never be visible to the public and will be only shared to the adopter when you complete Rehome Process. For your safety, we recommend you to black out any personal information on any documents.
+                </p>
+                <p class="image-note" style="margin-top: -10px;">
+                    If you have any vaccine history, proof of spay or neuter, and/or microchip info, please upload below.
+                    The image format should (.jpg, .png, .jpeg).
+                    The image measurements must be square in shape, with dimensions of 600 x 600 pixels.
+                    The maximum & minimum image size is 1024 and 240 KB.
+                </p>
+                
+                <div class="image-upload-grid">
+                    <div class="image-upload-box">
+                        <i class="fas fa-file-upload"></i>
+                        <p>Document 1</p>
+                        <input type="file" accept="image/*,.pdf" multiple>
+                    </div>
+                    <div class="image-upload-box">
+                        <i class="fas fa-file-upload"></i>
+                        <p>Document 2</p>
+                        <input type="file" accept="image/*,.pdf" multiple>
+                    </div>
+                    <div class="image-upload-box">
+                        <i class="fas fa-file-upload"></i>
+                        <p>Document 3</p>
+                        <input type="file" accept="image/*,.pdf" multiple>
+                    </div>
+                    <div class="image-upload-box">
+                        <i class="fas fa-file-upload"></i>
+                        <p>Document 4</p>
+                        <input type="file" accept="image/*,.pdf" multiple>
+                    </div>
+                </div>
+
+                    <div class="form-actions">
+                        <button class="btn btn-back" type="button" onclick="goToStep(6)">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </button>
+                    <button class="btn btn-continue" type="button" onclick="goToStep(8)">
+                        Continue <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </section>
+            
+            <section id="step-8" class="form-step" data-title="REHOME / CONFIRM">
+                <div class="confirm-summary">
+                    <h3 class="confirm-title">Review And Confirm Your Pet Details</h3>
+                    <div class="summary-list">
+                        <div class="summary-item"><strong>Pet's Name:</strong> <span id="summary-pet-name">-</span></div>
+                        <div class="summary-item"><strong>Age (Years):</strong> <span id="summary-age">-</span></div>
+                        <div class="summary-item"><strong>Breed(s):</strong> <span id="summary-breed">-</span></div>
+                        <div class="summary-item"><strong>Color:</strong> <span id="summary-color">-</span></div>
+                        <div class="summary-item"><strong>Size:</strong> <span id="summary-size">-</span></div>
+                        <div class="summary-item"><strong>Gender:</strong> <span id="summary-gender">-</span></div>
+                        <div class="summary-item"><strong>City:</strong> <span id="summary-city">-</span></div>
+                        <div class="summary-item"><strong>Postcode:</strong> <span id="summary-postcode">-</span></div>
+                        <div class="summary-item"><strong>Address:</strong> <span id="summary-address">-</span></div>
+                        <div class="summary-item"><strong>Pet Type:</strong> <span id="summary-pet-type">-</span></div>
+                        <div class="summary-item"><strong>Spayed/Neutered:</strong> <span id="summary-spayed">-</span></div>
+                        <div class="summary-item"><strong>Reason to Rehome:</strong> <span id="summary-reason">-</span></div>
+                        <div class="summary-item"><strong>Keep Duration:</strong> <span id="summary-keep">-</span></div>
+                    </div>
+
+                    <div class="form-group confirm-agree" id="confirm-agree-wrapper">
+                        <input type="checkbox" id="confirm-agree">
+                        <label for="confirm-agree">I confirm that the above data is correct and I am ready to proceed with the rehome process.</label>
+                    </div>
+
+                    <div class="form-actions center">
+                        <button class="btn btn-back" type="button" onclick="goToStep(7)">
+                            <i class="fas fa-arrow-left"></i> Back
+                        </button>
+                        <button class="btn btn-continue" type="button" id="confirm-continue-button" disabled>
+                            Submit Your Pet
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <section id="step-9" class="form-step" data-title="REHOME / THANK U">
+                <div class="thanks-message">
+                    <h3>Thanks for submitting!</h3>
+                    <p>We'll be in touch once we've reviewed your pet's profile. We want to make sure we give you the best chance of finding the right home for your pet.</p>
+                    <div style="text-align: center; margin: -20px 0 5px 0;">
+                        <h2 style="font-size: 36px; font-weight: bold; color: #2c3e50; margin-bottom: -25px; letter-spacing: 2px;">GOODBYE</h2>
+                        <img src="anjing.jpg" alt="Goodbye Pet" class="pet-image-done cat-decoration" style="width: 320px; height: auto;">
+                    </div>
+                    <div class="form-actions center">
+                        <button class="btn btn-profile" type="button">
+                            Go To My Profile
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+        
+    </main>
+
+    <footer class="main-footer">
+        <div class="faq-section">FAQ</div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- Elemen Global ---
+            const startButton = document.getElementById('start-button');
+            const questionsForm = document.getElementById('questions-form');
+            const characteristicsForm = document.getElementById('characteristics-form');
+            const locationForm = document.getElementById('location-form');
+            const storyForm = document.getElementById('story-form');
+            const imagesContinueBtn = document.getElementById('images-continue-button');
+            const confirmContinueBtn = document.getElementById('confirm-continue-button');
+            const confirmAgreeCheckbox = document.getElementById('confirm-agree');
+            const confirmAgreeWrapper = document.getElementById('confirm-agree-wrapper');
+            
+            const stepperNav = document.querySelector('.stepper');
+            const titleHeader = document.getElementById('rehome-title');
+            
+            // Simpan step sebelumnya untuk animasi lompat
+            let previousStep = 1;
+
+            // --- Fungsi Navigasi (Inti dari Multi-Step Form) ---
+            window.goToStep = (stepNumber) => {
+                const steps = document.querySelectorAll('.form-step');
+                const stepperItems = document.querySelectorAll('.stepper .step');
+                
+                steps.forEach(step => step.classList.remove('active'));
+                const targetStep = document.getElementById(`step-${stepNumber}`);
+
+                if (targetStep) {
+                    targetStep.classList.add('active');
+                    // titleHeader.textContent = targetStep.getAttribute('data-title');
+                }
+
+                stepperItems.forEach((item, index) => {
+                    const currentStep = index + 1;
+                    item.classList.remove('current');
+
+                    if (currentStep < stepNumber) {
+                        item.classList.add('completed');
+                    } else if (currentStep === stepNumber) {
+                        item.classList.add('current');
+                        item.classList.add('completed'); 
+                    } else {
+                        item.classList.remove('completed');
+                    }
+                });
+                
+                stepperNav.className = 'stepper';
+                stepperNav.classList.add(`step-${stepNumber}`);
+
+                previousStep = stepNumber;
+
+                if (stepNumber === 8) {
+                    updateSummary();
+                    // Reset checkbox dan disable button saat masuk ke halaman confirm
+                    confirmAgreeCheckbox.checked = false;
+                    confirmContinueBtn.disabled = true;
+                }
+            };
+
+            // --- Fungsi Upload Gambar (Baru!) ---
+            const setupImageUpload = (containerId) => {
+                const uploadBoxes = document.querySelectorAll(`#${containerId} .image-upload-box`);
+
+                uploadBoxes.forEach(box => {
+                    const input = box.querySelector('input[type="file"]');
+                    
+                    // Cek apakah tombol hapus sudah ada, jika belum buat
+                    let removeBtn = box.querySelector('.remove-image-btn');
+                    if (!removeBtn) {
+                        removeBtn = document.createElement('button');
+                        removeBtn.classList.add('remove-image-btn');
+                        removeBtn.innerHTML = '<i class="fas fa-times"></i>';
+                        removeBtn.style.display = 'none';
+                        box.appendChild(removeBtn);
+                    }
+
+                    input.addEventListener('change', (event) => {
+                        const file = event.target.files[0];
+                        if (file) {
+                            const reader = new FileReader();
+                            reader.onload = (e) => {
+                                box.style.backgroundImage = `url('${e.target.result}')`;
+                                box.classList.add('has-image');
+                                removeBtn.style.display = 'flex';
+                            };
+                            reader.readAsDataURL(file);
+                        }
+                    });
+
+                    removeBtn.addEventListener('click', (event) => {
+                        event.stopPropagation();
+                        event.preventDefault();
+                        box.style.backgroundImage = 'none';
+                        box.classList.remove('has-image');
+                        input.value = '';
+                        removeBtn.style.display = 'none';
+                    });
+                });
+            };
+
+            // Pastikan 4 gambar diunggah sebelum lanjut
+            const allImagesUploaded = () => {
+                const inputs = document.querySelectorAll('#step-3 .image-upload-box input[type="file"]');
+                if (inputs.length < 4) return false;
+                return Array.from(inputs).every(input => {
+                    const hasFile = input.files && input.files.length > 0;
+                    const hasImageClass = input.closest('.image-upload-box')?.classList.contains('has-image');
+                    return hasFile || hasImageClass;
+                });
+            };
+
+            // Panggil fungsi setupImageUpload untuk Tahap 3 dan Tahap 7 (documents)
+            setupImageUpload('step-3'); 
+            setupImageUpload('step-7');
+
+            // Ambil nilai helper
+            const getValue = (id) => (document.getElementById(id)?.value || '').trim();
+            const getRadioValue = (name) => {
+                const el = document.querySelector(`input[name="${name}"]:checked`);
+                return el ? el.value : '';
+            };
+
+            // Perbarui ringkasan konfirmasi
+            const updateSummary = () => {
+                const setText = (id, value) => {
+                    const el = document.getElementById(id);
+                    if (el) el.textContent = value || '-';
+                };
+
+                setText('summary-pet-name', getValue('pet_name'));
+                setText('summary-age', getValue('age_years'));
+                setText('summary-breed', getValue('breed'));
+                setText('summary-color', getValue('color'));
+                setText('summary-size', getValue('size'));
+                setText('summary-gender', getValue('gender'));
+                setText('summary-city', getValue('city'));
+                setText('summary-postcode', getValue('location_postcode'));
+                setText('summary-address', getValue('address_line1'));
+                setText('summary-pet-type', getRadioValue('pet_type'));
+                setText('summary-spayed', getRadioValue('spayed_neutered'));
+                setText('summary-reason', getValue('rehome_reason'));
+                setText('summary-keep', getValue('keep_duration'));
+            };
+
+            // --- Logika Tahap 1: START ---
+            // Start button is enabled by default since the terms checkbox was removed
+            startButton.addEventListener('click', (e) => {
+                if (!startButton.disabled) {
+                    goToStep(2); 
+                }
+            });
+            
+            // --- Logika Tahap 2: QUESTIONS ---
+            questionsForm.addEventListener('submit', (e) => {
+                e.preventDefault(); 
+                if (questionsForm.checkValidity()) {
+                    goToStep(3); 
+                } else {
+                    alert("Mohon lengkapi semua isian yang wajib di Tahap Questions.");
+                }
+            });
+
+            // --- Logika Tahap 3: PET'S IMAGES ---
+            imagesContinueBtn.addEventListener('click', () => {
+                const inputs = document.querySelectorAll('#step-3 .image-upload-box input[type="file"]');
+                const boxes = document.querySelectorAll('#step-3 .image-upload-box');
+                boxes.forEach(box => box.classList.remove('error'));
+
+                const missing = [];
+                inputs.forEach(input => {
+                    const box = input.closest('.image-upload-box');
+                    const hasFile = input.files && input.files.length > 0;
+                    const hasImageClass = box?.classList.contains('has-image');
+                    if (!(hasFile || hasImageClass)) {
+                        missing.push(box);
+                    }
+                });
+
+                if (missing.length === 0) {
+                    goToStep(4);
+                } else {
+                    missing.forEach(box => box?.classList.add('error'));
+                }
+            });
+
+            // --- Logika Tahap 4: CHARACTERISTICS ---
+            characteristicsForm.addEventListener('submit', (e) => {
+                e.preventDefault(); 
+                if (characteristicsForm.checkValidity()) {
+                    goToStep(5); 
+                } else {
+                    alert("Mohon lengkapi semua isian yang wajib di Tahap Characteristics.");
+                }
+            });
+            
+            // --- Logika Tahap 5: PET'S LOCATION ---
+            locationForm.addEventListener('submit', (e) => {
+                e.preventDefault(); 
+                if (locationForm.checkValidity()) {
+                    goToStep(6); 
+                } else {
+                    alert("Mohon lengkapi semua isian yang wajib di Tahap Location.");
+                }
+            });
+            
+            // --- Logika Tahap 6: PET'S STORY ---
+            storyForm.addEventListener('submit', (e) => {
+                e.preventDefault(); 
+                if (storyForm.checkValidity()) {
+                    goToStep(7); 
+                } else {
+                    alert("Mohon lengkapi Pet's Story.");
+                }
+            });
+
+            // --- Logika Tahap 8: CONFIRM ---
+            // Enable/disable button berdasarkan checkbox
+            confirmAgreeCheckbox.addEventListener('change', () => {
+                confirmContinueBtn.disabled = !confirmAgreeCheckbox.checked;
+            });
+
+            confirmContinueBtn.addEventListener('click', () => {
+                confirmAgreeWrapper.classList.remove('error');
+                if (confirmAgreeCheckbox.checked) {
+                    goToStep(9);
+                } else {
+                    confirmAgreeWrapper.classList.add('error');
+                    confirmAgreeCheckbox.focus();
+                }
+            });
+
+            // Validasi postcode hanya angka
+            const postcodeInput = document.getElementById('location_postcode');
+            if (postcodeInput) {
+                postcodeInput.addEventListener('input', (e) => {
+                    // Hanya izinkan angka
+                    e.target.value = e.target.value.replace(/[^0-9]/g, '');
+                });
+
+                postcodeInput.addEventListener('keypress', (e) => {
+                    // Cegah input non-numeric
+                    if (!/[0-9]/.test(e.key) && !['Backspace', 'Delete', 'Tab', 'Enter', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
+                        e.preventDefault();
+                    }
+                });
+            }
+
+            // Mulai dari tahap 1 saat halaman dimuat
+            goToStep(1);
+        });
+    </script>
+
+</body>
+</html>

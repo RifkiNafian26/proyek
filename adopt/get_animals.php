@@ -22,10 +22,10 @@ if (!empty($search)) {
     $types .= 'ss';
 }
 
-// Add animal type filter (jenis_hewan)
+// Add animal type filter using correct column 'jenis'
 if (!empty($animalType) && is_array($animalType)) {
     $placeholders = str_repeat('?,', count($animalType) - 1) . '?';
-    $conditions[] = "jenis_hewan IN ($placeholders)";
+    $conditions[] = "jenis IN ($placeholders)";
     foreach ($animalType as $type) {
         $params[] = $type;
         $types .= 's';
@@ -82,11 +82,9 @@ if (!empty($params)) {
 // Fetch animals
 $animals = [];
 while ($row = mysqli_fetch_assoc($result)) {
-    // Build photo path from uploads folder
-    if (!empty($row['main_photo'])) {
-        $row['main_photo'] = 'uploads/' . htmlspecialchars($row['main_photo']);
-    } else {
-        $row['main_photo'] = 'icon/default-pet.jpg';
+    // Use main_photo path directly from database
+    if (empty($row['main_photo'])) {
+        $row['main_photo'] = '';
     }
     $animals[] = $row;
 }

@@ -53,6 +53,13 @@
   font-weight: 500;
 }
 
+.animal-type {
+  font-size: 0.9rem;
+  color: #888;
+  font-style: italic;
+  text-transform: capitalize;
+}
+
 /* Main Content Grid */
 .profile-content {
   display: grid;
@@ -182,6 +189,7 @@
   border-radius: 12px;
   padding: 1.5rem;
   color: white;
+  min-height: 250px;
 }
 
 .story-header {
@@ -195,6 +203,14 @@
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
+}
+
+.story-content p {
+  margin: 0;
+  line-height: 1.6;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: white;
 }
 
 .story-item {

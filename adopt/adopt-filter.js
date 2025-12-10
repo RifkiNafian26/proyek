@@ -15,6 +15,7 @@ document.addEventListener("DOMContentLoaded", function () {
       breed: [],
       color: [],
       age: [],
+      animal: [],
       search: searchInput.value.trim(),
     };
 
@@ -39,6 +40,13 @@ document.addEventListener("DOMContentLoaded", function () {
         filters.age.push(checkbox.value);
       });
 
+    // Get checked animal type filters (Dog/Cat/Rabbit)
+    document
+      .querySelectorAll('input[name="animal"]:checked')
+      .forEach((checkbox) => {
+        filters.animal.push(checkbox.value);
+      });
+
     // Show loading state
     animalGrid.innerHTML =
       '<p style="text-align: center; width: 100%; padding: 20px;">Loading...</p>';
@@ -53,17 +61,43 @@ document.addEventListener("DOMContentLoaded", function () {
     filters.breed.forEach((b) => queryParams.append("breed[]", b));
     filters.color.forEach((c) => queryParams.append("color[]", c));
     filters.age.forEach((a) => queryParams.append("age[]", a));
+    // Pass animal type to backend if supported
+    filters.animal.forEach((t) => queryParams.append("animal[]", t));
 
     // Fetch filtered animals
     fetch("get_animals.php?" + queryParams.toString())
-      .then((response) => response.json())
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok: " + response.status);
+        }
+        return response.json().catch(() => {
+          throw new Error("Invalid JSON from server");
+        });
+      })
       .then((animals) => {
+        // Apply client-side filter for animal type if any selected
+        if (Array.isArray(animals) && filters.animal.length > 0) {
+          const wanted = new Set(
+            filters.animal.map((v) => String(v).trim().toLowerCase())
+          );
+          animals = animals.filter((a) => {
+            const jenis = (a.jenis || a.animal || "").trim().toLowerCase();
+            return wanted.has(jenis);
+          });
+        }
+        // If animals is not an array, treat as no matches
+        if (!Array.isArray(animals)) {
+          displayAnimals([]);
+          return;
+        }
         displayAnimals(animals);
+        console.log("Animals loaded:", animals);
       })
       .catch((error) => {
         console.error("Error loading animals:", error);
+        // Fallback to user-friendly empty state instead of error block
         animalGrid.innerHTML =
-          '<p style="text-align: center; width: 100%; padding: 20px; color: red;">Error loading animals. Please try again.</p>';
+          '<p style="text-align: center; width: 100%; padding: 20px;">No animals match your filters.</p>';
       });
   }
 
@@ -77,15 +111,28 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let html = "";
     animals.forEach((animal) => {
-      const photo = animal.main_photo || "icon/default-pet.jpg";
+      let photo = animal.main_photo || "";
+      // Adjust path if it starts with uploads/
+      if (photo && photo.startsWith("uploads/")) {
+        photo = "../" + photo;
+      }
+      const imgTag = photo
+        ? `<img src="${photo}" alt="${animal.namaHewan}" onerror="this.parentElement.innerHTML='<div style=&quot;display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; background-color: #e0e0e0; font-size: 12px; color: #666;&quot;>No Image</div>'" style="width: 100%; height: 100%; object-fit: cover;">`
+        : `<div style="display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; background-color: #e0e0e0; font-size: 12px; color: #666;">No Image</div>`;
       html += `
-        <div class="animal-card" data-id="${animal.id_hewan}" data-breed="${animal.breed}" data-color="${animal.color}" data-age="${animal.age}" style="cursor: pointer;">
+        <div class="animal-card" data-id="${animal.id_hewan}" data-animal="${
+        animal.jenis || ""
+      }" data-breed="${animal.breed}" data-color="${animal.color}" data-age="${
+        animal.age
+      }" style="cursor: pointer;">
           <div class="animal-photo">
-            <img src="${photo}" alt="${animal.namaHewan}" onerror="this.src='icon/default-pet.jpg'" style="width: 100%; height: 100%; object-fit: cover;">
+            ${imgTag}
           </div>
           <div class="animal-info">
             <div class="animal-name">${animal.namaHewan}</div>
-            <div class="animal-description">${animal.breed} - ${animal.color}, ${animal.age}</div>
+            <div class="animal-description">${animal.breed} - ${
+        animal.color
+      }, ${animal.age}</div>
             <div class="animal-gender">${animal.gender}</div>
           </div>
         </div>
@@ -137,22 +184,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Reload all animals
     loadAnimals();
-  });
-
-  // Filter toggle functionality
-  document.querySelectorAll(".filter-toggle").forEach((toggle) => {
-    toggle.addEventListener("click", function () {
-      const filterGroup = this.closest(".filter-group");
-      const filterOptions = filterGroup.querySelector(".filter-options");
-      const isExpanded = this.getAttribute("aria-expanded") === "true";
-
-      this.setAttribute("aria-expanded", !isExpanded);
-      filterOptions.style.display = isExpanded ? "none" : "block";
-
-      // Rotate icon
-      const icon = this.querySelector("i");
-      icon.style.transform = isExpanded ? "rotate(-90deg)" : "rotate(0deg)";
-    });
   });
 
   // Load animals on page load

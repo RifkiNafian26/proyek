@@ -22,7 +22,7 @@ require_once '../config.php';
 
     <!-- My Style -->
     <link rel="stylesheet" href="../css/style.css?v=2" />
-    <link rel="stylesheet" href="styleadopt.css?v=2" />
+    <link rel="stylesheet" href="styleadopt.css?v=3" />
   </head>
   <body>
     <!-- Navbar start -->
@@ -32,7 +32,7 @@ require_once '../config.php';
       <div class="navbar-nav">
         <a href="../index.html">Home</a>
         <a href="adopt.php">Adopt</a>
-        <a href="#rehome">Rehome</a>
+        <a href="../rehome/rehome.html">Rehome</a>
         <a href="#care-guides">Care Guides</a>
         <a href="#about">About</a>
       </div>
@@ -234,11 +234,11 @@ require_once '../config.php';
               </div>
               <div class="filter-options">
                 <div class="filter-option">
-                  <input type="checkbox" id="dog" name="animal" value="dog" />
+                  <input type="checkbox" id="dog" name="animal" value="Dog" />
                   <label for="dog">Dog</label>
                 </div>
                 <div class="filter-option">
-                  <input type="checkbox" id="cat" name="animal" value="cat" />
+                  <input type="checkbox" id="cat" name="animal" value="Cat" />
                   <label for="cat">Cat</label>
                 </div>
                 <div class="filter-option">
@@ -246,7 +246,7 @@ require_once '../config.php';
                     type="checkbox"
                     id="rabbit"
                     name="animal"
-                    value="rabbit"
+                    value="Rabbit"
                   />
                   <label for="rabbit">Rabbit</label>
                 </div>
@@ -499,7 +499,7 @@ require_once '../config.php';
     </script>
 
     <!-- My Javascript -->
-    <script src="../js/script.js"></script>
-    <script src="adopt-filter.js"></script>
+    <script src="../js/script.js?v=3"></script>
+    <script src="adopt-filter.js?v=3"></script>
   </body>
 </html>

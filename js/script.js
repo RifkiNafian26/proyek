@@ -26,12 +26,13 @@ function applyFilters() {
   allCards.forEach((card) => {
     let shouldShow = true;
 
-    // Cek animal type
-    if (
-      checkedFilters.animal.length > 0 &&
-      !checkedFilters.animal.includes(card.dataset.animal)
-    ) {
-      shouldShow = false;
+    // Cek animal type (normalize to lowercase)
+    if (checkedFilters.animal.length > 0) {
+      const cardAnimal = (card.dataset.animal || "").toLowerCase();
+      const selectedAnimals = checkedFilters.animal.map((a) => a.toLowerCase());
+      if (!selectedAnimals.includes(cardAnimal)) {
+        shouldShow = false;
+      }
     }
 
     // Cek breed
@@ -69,35 +70,53 @@ function applyFilters() {
 // Filter collapse/expand functionality
 function setupFilterCollapse() {
   const filterToggles = document.querySelectorAll(".filter-toggle");
+  const allOptions = document.querySelectorAll(".filter-options");
+
+  // Initialize: ensure open groups have a usable max-height
+  allOptions.forEach((opts) => {
+    const header = opts.previousElementSibling;
+    const toggle = header ? header.querySelector(".filter-toggle") : null;
+    const isExpanded =
+      toggle && toggle.getAttribute("aria-expanded") === "true";
+    if (isExpanded && !opts.classList.contains("collapsed")) {
+      opts.style.maxHeight = "2000px";
+    }
+  });
 
   filterToggles.forEach((toggle) => {
     toggle.addEventListener("click", function (e) {
       e.preventDefault();
-      const filterOptions = this.parentElement.nextElementSibling;
+      const filterGroup = this.closest(".filter-group");
+      const filterOptions = filterGroup
+        ? filterGroup.querySelector(".filter-options")
+        : null;
 
-      if (filterOptions && filterOptions.classList.contains("filter-options")) {
-        const isExpanded = this.getAttribute("aria-expanded") === "true";
+      if (!filterOptions) return;
 
-        if (isExpanded) {
-          // Collapsing - set exact height first for smooth transition
-          filterOptions.style.maxHeight = filterOptions.scrollHeight + "px";
-          requestAnimationFrame(() => {
+      const isCollapsed = filterOptions.classList.contains("collapsed");
+
+      if (isCollapsed) {
+        // Expanding: remove collapsed, set to large max-height
+        filterOptions.classList.remove("collapsed");
+        filterOptions.style.maxHeight = "2000px";
+        this.setAttribute("aria-expanded", "true");
+      } else {
+        // Collapsing: set to exact current height, then animate to 0
+        const currentHeight = filterOptions.scrollHeight;
+        filterOptions.style.maxHeight = currentHeight + "px";
+        // Force reflow
+        filterOptions.offsetHeight;
+        requestAnimationFrame(() => {
+          filterOptions.style.maxHeight = "0px";
+        });
+        const onCollapseEnd = (evt) => {
+          if (evt.propertyName === "max-height") {
             filterOptions.classList.add("collapsed");
-          });
-        } else {
-          // Expanding - remove collapsed class and set height
-          filterOptions.classList.remove("collapsed");
-          filterOptions.style.maxHeight = filterOptions.scrollHeight + "px";
-
-          // Reset max-height after transition to allow dynamic content
-          setTimeout(() => {
-            if (!filterOptions.classList.contains("collapsed")) {
-              filterOptions.style.maxHeight = "1000px";
-            }
-          }, 400);
-        }
-
-        this.setAttribute("aria-expanded", isExpanded ? "false" : "true");
+            filterOptions.removeEventListener("transitionend", onCollapseEnd);
+          }
+        };
+        filterOptions.addEventListener("transitionend", onCollapseEnd);
+        this.setAttribute("aria-expanded", "false");
       }
     });
   });
@@ -128,13 +147,16 @@ function setActiveNavLink() {
         link.classList.add("active");
         console.log("Set active: Home"); // Debug
       }
-    } else if (currentPage === "adopt.html") {
+    } else if (currentPage === "adopt.html" || currentPage === "adopt.php") {
       // Adopt page
       if (linkText === "Adopt") {
         link.classList.add("active");
         console.log("Set active: Adopt"); // Debug
       }
-    } else if (currentPage === "animalprofile.html") {
+    } else if (
+      currentPage === "animalprofile.html" ||
+      currentPage === "animalprofile.php"
+    ) {
       // Animal profile page - also highlight Adopt
       if (linkText === "Adopt") {
         link.classList.add("active");
@@ -451,7 +473,7 @@ function setupAnimalCardListeners() {
       // Use index as animal ID (1-based)
       const animalId = index + 1;
       // Navigate to animal profile with ID
-      window.location.href = `animalprofile.html?id=${animalId}`;
+      window.location.href = `animalprofile.php?id=${animalId}`;
     });
 
     // Add hover effect

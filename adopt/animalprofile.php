@@ -2,6 +2,11 @@
 session_start();
 require_once '../config.php';
 
+// Prevent caching
+header("Cache-Control: no-cache, no-store, must-revalidate");
+header("Pragma: no-cache");
+header("Expires: 0");
+
 // Get animal ID from URL parameter
 $animalId = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
@@ -21,8 +26,21 @@ if (!$animal) {
     die("Animal not found");
 }
 
-// Build photo path
-$mainPhoto = !empty($animal['main_photo']) ? 'uploads/' . htmlspecialchars($animal['main_photo']) : 'icon/default-pet.jpg';
+// Debug: log the fetched data
+error_log("Fetched animal: " . json_encode($animal));
+
+// Build photo path - adjust for relative path from adopt folder
+$mainPhoto = '';
+if (!empty($animal['main_photo'])) {
+    // If path starts with uploads/, add ../ to go up one level from adopt folder
+    $photoPath = $animal['main_photo'];
+    if (strpos($photoPath, 'uploads/') === 0) {
+        $mainPhoto = '../' . $photoPath;
+    } else {
+        $mainPhoto = $photoPath;
+    }
+    $mainPhoto = htmlspecialchars($mainPhoto);
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -54,7 +72,7 @@ $mainPhoto = !empty($animal['main_photo']) ? 'uploads/' . htmlspecialchars($anim
       <div class="navbar-nav">
         <a href="../index.html">Home</a>
         <a href="adopt.php">Adopt</a>
-        <a href="#rehome">Rehome</a>
+        <a href="../rehome/rehome.html">Rehome</a>
         <a href="#care-guides">Care Guides</a>
         <a href="#about">About</a>
       </div>
@@ -237,6 +255,7 @@ $mainPhoto = !empty($animal['main_photo']) ? 'uploads/' . htmlspecialchars($anim
           <div class="animal-basic-info">
             <div class="animal-name" id="profile-name"><?php echo htmlspecialchars($animal['namaHewan']); ?></div>
             <div class="animal-id" id="profile-id">Pet ID: <?php echo htmlspecialchars($animal['id_hewan']); ?></div>
+            <div class="animal-type" id="profile-type"><?php echo htmlspecialchars($animal['jenis']); ?></div>
           </div>
         </div>
 
@@ -246,42 +265,56 @@ $mainPhoto = !empty($animal['main_photo']) ? 'uploads/' . htmlspecialchars($anim
           <div class="profile-left">
             <!-- Animal Photo -->
             <div class="animal-photo-section" id="profile-photo">
-              <img src="<?php echo $mainPhoto; ?>" alt="<?php echo htmlspecialchars($animal['namaHewan']); ?>" onerror="this.src='icon/default-pet.jpg'" style="width: 100%; height: 100%; object-fit: cover;">
-            </div>
-
-            <!-- Image Gallery (4 small thumbnails) -->
-            <div class="image-gallery">
-              <div class="gallery-item"></div>
-              <div class="gallery-item"></div>
-              <div class="gallery-item"></div>
-              <div class="gallery-item"></div>
+              <?php if (!empty($mainPhoto)): ?>
+                <img src="<?php echo $mainPhoto; ?>" alt="<?php echo htmlspecialchars($animal['namaHewan']); ?>" onerror="this.parentElement.innerHTML='<div style=&quot;display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; background-color: #e0e0e0; font-size: 18px; color: #666;&quot;>No Image Available</div>';" style="width: 100%; height: 100%; object-fit: cover;">
+              <?php else: ?>
+                <div style="display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; background-color: #e0e0e0; font-size: 18px; color: #666;">No Image Available</div>
+              <?php endif; ?>
             </div>
 
             <!-- Animal Details Grid -->
             <div class="details-grid">
               <div class="detail-item">
                 <i data-feather="users"></i>
-                <span class="detail-label"><?php echo htmlspecialchars($animal['gender']); ?></span>
+                <div>
+                  <div class="detail-label-title">Gender</div>
+                  <span class="detail-label"><?php echo htmlspecialchars($animal['gender']); ?></span>
+                </div>
               </div>
               <div class="detail-item">
                 <i data-feather="heart"></i>
-                <span class="detail-label"><?php echo htmlspecialchars($animal['breed']); ?></span>
+                <div>
+                  <div class="detail-label-title">Breed</div>
+                  <span class="detail-label"><?php echo htmlspecialchars($animal['breed']); ?></span>
+                </div>
               </div>
               <div class="detail-item">
                 <i data-feather="clock"></i>
-                <span class="detail-label"><?php echo htmlspecialchars($animal['age']); ?></span>
+                <div>
+                  <div class="detail-label-title">Age</div>
+                  <span class="detail-label"><?php echo htmlspecialchars($animal['age']); ?></span>
+                </div>
               </div>
               <div class="detail-item">
                 <i data-feather="droplet"></i>
-                <span class="detail-label"><?php echo htmlspecialchars($animal['color']); ?></span>
+                <div>
+                  <div class="detail-label-title">Color</div>
+                  <span class="detail-label"><?php echo htmlspecialchars($animal['color']); ?></span>
+                </div>
               </div>
               <div class="detail-item">
                 <i data-feather="square"></i>
-                <span class="detail-label"><?php echo htmlspecialchars($animal['weight']); ?> kg</span>
+                <div>
+                  <div class="detail-label-title">Weight</div>
+                  <span class="detail-label"><?php echo htmlspecialchars($animal['weight']); ?> kg</span>
+                </div>
               </div>
               <div class="detail-item">
                 <i data-feather="chevrons-up"></i>
-                <span class="detail-label"><?php echo htmlspecialchars($animal['height']); ?> cm</span>
+                <div>
+                  <div class="detail-label-title">Height</div>
+                  <span class="detail-label"><?php echo htmlspecialchars($animal['height']); ?> cm</span>
+                </div>
               </div>
             </div>
 
@@ -311,26 +344,7 @@ $mainPhoto = !empty($animal['main_photo']) ? 'uploads/' . htmlspecialchars($anim
             <div class="story-section">
               <div class="story-header">Animal Story</div>
               <div class="story-content" id="profile-story">
-                <div class="story-item">
-                  <i data-feather="eye"></i>
-                  <span><?php echo htmlspecialchars($animal['description']); ?></span>
-                </div>
-                <div class="story-item">
-                  <i data-feather="shield"></i>
-                  <span>Vaccinated</span>
-                </div>
-                <div class="story-item">
-                  <i data-feather="home"></i>
-                  <span>House-Trained</span>
-                </div>
-                <div class="story-item">
-                  <i data-feather="lock"></i>
-                  <span>Neutered</span>
-                </div>
-                <div class="story-item">
-                  <i data-feather="camera"></i>
-                  <span>Shots up to date</span>
-                </div>
+                <p><?php echo nl2br(htmlspecialchars($animal['description'])); ?></p>
               </div>
             </div>
 
@@ -342,7 +356,7 @@ $mainPhoto = !empty($animal['main_photo']) ? 'uploads/' . htmlspecialchars($anim
               <div class="adoption-question">
                 If you are interested to adopt
               </div>
-              <button class="btn-get-started">Get started</button>
+              <a href="../sistemadopt/index.html" class="btn-get-started">Get started</a>
             </div>
           </div>
         </div>
@@ -358,10 +372,20 @@ $mainPhoto = !empty($animal['main_photo']) ? 'uploads/' . htmlspecialchars($anim
     <!-- Feather Icons -->
     <script>
       feather.replace();
+      
+      // Log animal data to console
+      const animalData = <?php echo json_encode($animal); ?>;
+      console.log('Animal Data:', animalData);
+      console.log('Animal Name:', animalData.namaHewan);
+      console.log('Animal Breed:', animalData.breed);
+      console.log('Animal Gender:', animalData.gender);
+      console.log('Animal Age:', animalData.age);
+      console.log('Animal Color:', animalData.color);
+      console.log('Animal Weight:', animalData.weight);
+      console.log('Animal Height:', animalData.height);
     </script>
 
     <!-- My Javascript -->
     <script src="../js/script.js"></script>
-    <script src="profilescript.js"></script>
   </body>
 </html>

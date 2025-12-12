@@ -42,7 +42,7 @@ body {
 }
 
 .logo {
-  font-family: "Kavoon", cursive;
+  font-family: "Kreon", cursive;
   font-size: 56px;
   font-weight: 400;
   color: var(--color-primary-green);
@@ -384,10 +384,10 @@ main.rehome-container {
 
 .image-upload-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: 1fr;
   gap: 20px;
   margin: 0 auto;
-  max-width: 500px;
+  max-width: 300px;
 }
 
 .image-upload-box {

@@ -18,7 +18,15 @@
     <!-- My Style -->
     <link rel="stylesheet" href="../css/style.css?v=2" />
     <link rel="stylesheet" href="stylerehome.css" />
-  </head>
+              return response.json().then(json => {
+                // If not OK, throw with server message for clarity
+                if (!response.ok) {
+                  const msg = json?.message || 'Server error';
+                  const detail = json?.detail ? `\nDetail: ${json.detail}` : '';
+                  throw new Error(`${msg}${detail}`);
+                }
+                return json;
+              }).catch(err => {
   <body>
     <!-- Navbar start -->
     <nav class="navbar">
@@ -105,7 +113,7 @@
                   class="stepper-pet-icon"
                 />
               </div>
-              <span class="step-label">Quetions</span>
+              <span class="step-label">Questions</span>
             </li>
 
             <li class="step" data-step="3">
@@ -211,7 +219,7 @@
           </div>
         </section>
 
-        <section id="step-2" class="form-step" data-title="REHOME / QUETIONS">
+        <section id="step-2" class="form-step" data-title="REHOME / QUESTIONS">
           <form id="questions-form">
             <div class="form-group row-group">
               <label>Are you rehoming a dog, cat or rabbit?</label>
@@ -262,16 +270,7 @@
             </div>
 
             <div class="form-group">
-              <label for="keep_duration"
-                >How long are you able to keep your pet while we help find a
-                suitable new home?</label
-              >
-              <select id="keep_duration" name="keep_duration" required>
-                <option value="">Please select</option>
-                <option value="1_month">Up to 1 month</option>
-                <option value="3_months">Up to 3 months</option>
-                <option value="6_months">Up to 6 months</option>
-              </select>
+              <!-- Keep Duration field removed as requested -->
             </div>
 
             <div class="form-actions">
@@ -300,19 +299,7 @@
             <div class="image-upload-box">
               <i class="fas fa-camera"></i>
               <p>1024 KB</p>
-              <input type="file" accept="image/*" multiple />
-            </div>
-            <div class="image-upload-box">
-              <i class="fas fa-camera"></i>
-              <input type="file" accept="image/*" multiple />
-            </div>
-            <div class="image-upload-box">
-              <i class="fas fa-camera"></i>
-              <input type="file" accept="image/*" multiple />
-            </div>
-            <div class="image-upload-box">
-              <i class="fas fa-camera"></i>
-              <input type="file" accept="image/*" multiple />
+              <input type="file" id="pet_image" accept="image/*" />
             </div>
           </div>
 
@@ -341,7 +328,7 @@
               <input type="text" id="pet_name" name="pet_name" required />
             </div>
 
-            <div class="form-group age-note">
+            <div class="form-group">
               <label for="age_years">Age (Years) *</label>
               <input
                 type="number"
@@ -351,9 +338,6 @@
                 min="0"
                 required
               />
-              <p class="note">
-                If your pet is a puppy then still their age as 0
-              </p>
             </div>
 
             <div class="form-group">
@@ -368,22 +352,36 @@
 
             <div class="form-grid">
               <div class="form-group">
-                <label for="size">Size *</label>
-                <select id="size" name="size" required>
-                  <option value="">Please Select</option>
-                  <option value="small">Small</option>
-                  <option value="medium">Medium</option>
-                  <option value="large">Large</option>
-                </select>
+                <label for="weight">Weight (kg) *</label>
+                <input
+                  type="number"
+                  id="weight"
+                  name="weight"
+                  step="0.1"
+                  min="0"
+                  required
+                />
               </div>
               <div class="form-group">
-                <label for="gender">Gender *</label>
-                <select id="gender" name="gender" required>
-                  <option value="">Please Select</option>
-                  <option value="male">Male</option>
-                  <option value="female">Female</option>
-                </select>
+                <label for="height">Height (cm) *</label>
+                <input
+                  type="number"
+                  id="height"
+                  name="height"
+                  step="0.1"
+                  min="0"
+                  required
+                />
               </div>
+            </div>
+
+            <div class="form-group">
+              <label for="gender">Gender *</label>
+              <select id="gender" name="gender" required>
+                <option value="">Please Select</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+              </select>
             </div>
 
             <div class="form-actions">
@@ -523,7 +521,7 @@
             <div class="image-upload-box">
               <i class="fas fa-file-upload"></i>
               <p>Document 1</p>
-              <input type="file" accept="image/*,.pdf" multiple />
+              <input type="file" id="pet_documents" accept="image/*,.pdf" multiple />
             </div>
             <div class="image-upload-box">
               <i class="fas fa-file-upload"></i>
@@ -574,7 +572,10 @@
                 <strong>Color:</strong> <span id="summary-color">-</span>
               </div>
               <div class="summary-item">
-                <strong>Size:</strong> <span id="summary-size">-</span>
+                <strong>Weight (kg):</strong> <span id="summary-weight">-</span>
+              </div>
+              <div class="summary-item">
+                <strong>Height (cm):</strong> <span id="summary-height">-</span>
               </div>
               <div class="summary-item">
                 <strong>Gender:</strong> <span id="summary-gender">-</span>
@@ -867,7 +868,8 @@
           setText("summary-age", getValue("age_years"));
           setText("summary-breed", getValue("breed"));
           setText("summary-color", getValue("color"));
-          setText("summary-size", getValue("size"));
+          setText("summary-weight", getValue("weight"));
+          setText("summary-height", getValue("height"));
           setText("summary-gender", getValue("gender"));
           setText("summary-city", getValue("city"));
           setText("summary-postcode", getValue("location_postcode"));
@@ -875,7 +877,7 @@
           setText("summary-pet-type", getRadioValue("pet_type"));
           setText("summary-spayed", getRadioValue("spayed_neutered"));
           setText("summary-reason", getValue("rehome_reason"));
-          setText("summary-keep", getValue("keep_duration"));
+          // removed keep duration
         };
 
         // --- Logika Tahap 1: START ---
@@ -962,7 +964,145 @@
         confirmContinueBtn.addEventListener("click", () => {
           confirmAgreeWrapper.classList.remove("error");
           if (confirmAgreeCheckbox.checked) {
-            goToStep(9);
+            // Kumpulkan data dari semua steps
+            const formData = new FormData();
+
+            // Step 2: Questions
+            formData.append(
+              "pet_type",
+              document.querySelector('input[name="pet_type"]:checked')?.value ||
+                ""
+            );
+            formData.append(
+              "spayed_neutered",
+              document.querySelector('input[name="spayed_neutered"]:checked')
+                ?.value || ""
+            );
+            formData.append(
+              "rehome_reason",
+              document.getElementById("rehome_reason")?.value || ""
+            );
+
+            // Step 3: Pet Image
+            const petImageInput = document.getElementById("pet_image");
+            if (petImageInput?.files?.length > 0) {
+              formData.append("pet_image", petImageInput.files[0]);
+            }
+
+            // Step 4: Characteristics
+            formData.append(
+              "pet_name",
+              document.getElementById("pet_name")?.value || ""
+            );
+            formData.append(
+              "age_years",
+              document.getElementById("age_years")?.value || ""
+            );
+            formData.append(
+              "breed",
+              document.getElementById("breed")?.value || ""
+            );
+            formData.append(
+              "color",
+              document.getElementById("color")?.value || ""
+            );
+            formData.append(
+              "weight",
+              document.getElementById("weight")?.value || ""
+            );
+            formData.append(
+              "height",
+              document.getElementById("height")?.value || ""
+            );
+            formData.append(
+              "gender",
+              document.getElementById("gender")?.value || ""
+            );
+
+            // Step 5: Location
+            formData.append(
+              "address_line1",
+              document.getElementById("address_line1")?.value || ""
+            );
+            formData.append(
+              "city",
+              document.getElementById("city")?.value || ""
+            );
+            formData.append(
+              "postcode",
+              document.getElementById("location_postcode")?.value || ""
+            );
+
+            // Step 6: Pet Story
+            formData.append(
+              "pet_story",
+              document.getElementById("pet_story")?.value || ""
+            );
+
+            // Step 7: Documents
+            const documentsInput = document.getElementById("pet_documents");
+            if (documentsInput?.files?.length > 0) {
+              for (let i = 0; i < documentsInput.files.length; i++) {
+                formData.append("documents[]", documentsInput.files[i]);
+              }
+            }
+
+            // Submit ke backend
+            fetch("/PetResQ/rehome/submit_rehome.php", {
+              method: "POST",
+              body: formData,
+              credentials: "include",
+            })
+              .then((response) => {
+                // Log response status and content type
+                console.log("Response status:", response.status);
+                console.log(
+                  "Response content-type:",
+                  response.headers.get("content-type")
+                );
+
+                // Check if response is JSON
+                if (
+                  !response.headers
+                    .get("content-type")
+                    ?.includes("application/json")
+                ) {
+                  throw new Error(
+                    "Server did not return JSON. Status: " + response.status
+                  );
+                }
+
+                return response
+                  .json()
+                  .then((json) => {
+                    if (!response.ok) {
+                      const msg = json?.message || "Server error";
+                      const detail = json?.detail ? "\nDetail: " + json.detail : "";
+                      throw new Error(msg + detail);
+                    }
+                    return json;
+                  })
+                  .catch(async (err) => {
+                    let raw = "";
+                    try {
+                      raw = await response.text();
+                    } catch {}
+                    const hint = raw ? "\nRaw: " + raw.substring(0, 500) : "";
+                    throw new Error("Failed to parse JSON response: " + err.message + hint);
+                  });
+              })
+              .then((data) => {
+                if (data.success) {
+                  console.log("Submission successful:", data);
+                  goToStep(9);
+                } else {
+                  alert("Error: " + (data.message || "Failed to submit"));
+                }
+              })
+              .catch((error) => {
+                console.error("Submission error:", error);
+                alert("Error submitting form: " + error.message);
+              });
           } else {
             confirmAgreeWrapper.classList.add("error");
             confirmAgreeCheckbox.focus();

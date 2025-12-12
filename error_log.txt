@@ -1,0 +1,15 @@
+[12-Dec-2025 09:35:32 Europe/Berlin] PHP Fatal error:  Uncaught mysqli_sql_exception: Column count doesn't match value count at row 1 in C:\xampp\htdocs\PetResQ\rehome\submit_rehome.php:157
+Stack trace:
+#0 C:\xampp\htdocs\PetResQ\rehome\submit_rehome.php(157): mysqli_prepare(Object(mysqli), 'INSERT INTO reh...')
+#1 {main}
+  thrown in C:\xampp\htdocs\PetResQ\rehome\submit_rehome.php on line 157
+[12-Dec-2025 09:35:35 Europe/Berlin] PHP Fatal error:  Uncaught mysqli_sql_exception: Column count doesn't match value count at row 1 in C:\xampp\htdocs\PetResQ\rehome\submit_rehome.php:157
+Stack trace:
+#0 C:\xampp\htdocs\PetResQ\rehome\submit_rehome.php(157): mysqli_prepare(Object(mysqli), 'INSERT INTO reh...')
+#1 {main}
+  thrown in C:\xampp\htdocs\PetResQ\rehome\submit_rehome.php on line 157
+[12-Dec-2025 10:06:37 Europe/Berlin] PHP Fatal error:  Uncaught mysqli_sql_exception: Column count doesn't match value count at row 1 in C:\xampp\htdocs\PetResQ\rehome\submit_rehome.php:157
+Stack trace:
+#0 C:\xampp\htdocs\PetResQ\rehome\submit_rehome.php(157): mysqli_prepare(Object(mysqli), 'INSERT INTO reh...')
+#1 {main}
+  thrown in C:\xampp\htdocs\PetResQ\rehome\submit_rehome.php on line 157

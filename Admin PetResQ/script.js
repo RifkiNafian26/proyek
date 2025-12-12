@@ -711,6 +711,26 @@ function initializeDashboard() {
             </div>
             <div class="submissions-grid" id="submissions-grid"></div>
         `,
+    "rehome-submissions": `
+            <div class="submissions-header">
+                <h3>Rehome Submissions</h3>
+                <div class="filter-tabs">
+                    <button class="filter-tab active" data-filter="all" onclick="renderRehomeSubmissions('all')">
+                        <i class="fas fa-list"></i> All
+                    </button>
+                    <button class="filter-tab" data-filter="submitted" onclick="renderRehomeSubmissions('submitted')">
+                        <i class="fas fa-hourglass-start"></i> Pending
+                    </button>
+                    <button class="filter-tab" data-filter="approved" onclick="renderRehomeSubmissions('approved')">
+                        <i class="fas fa-check-circle"></i> Approved
+                    </button>
+                    <button class="filter-tab" data-filter="rejected" onclick="renderRehomeSubmissions('rejected')">
+                        <i class="fas fa-times-circle"></i> Rejected
+                    </button>
+                </div>
+            </div>
+            <div class="submissions-grid" id="rehome-submissions-grid"></div>
+        `,
   };
 
   // --- FUNGSI NAVIGASI UTAMA ---
@@ -798,6 +818,30 @@ function initializeDashboard() {
           console.warn("Failed to load submissions:", err);
           // Fallback to current mock state if API fails
           renderSubmissions("all");
+        });
+    }
+
+    if (pageId === "rehome-submissions") {
+      // Load rehome submissions from backend before rendering
+      const grid = document.getElementById("rehome-submissions-grid");
+      if (grid) {
+        grid.innerHTML =
+          '<div style="grid-column:1 / -1; text-align:center; color:#777; padding:16px;"><i class="fas fa-spinner fa-spin"></i> Loading rehome submissions...</div>';
+      }
+      loadRehomeSubmissionsFromBackend()
+        .then(() => {
+          if (!mockRehomeSubmissions || mockRehomeSubmissions.length === 0) {
+            if (grid) {
+              grid.innerHTML =
+                '<div class="empty-submissions" style="grid-column: 1 / -1; text-align:center; color:#888; padding:16px;"><i class="fas fa-clipboard-list"></i> No rehome submissions found. If you expect data, verify the API and database.</div>';
+            }
+          }
+          renderRehomeSubmissions("all");
+        })
+        .catch((err) => {
+          console.warn("Failed to load rehome submissions:", err);
+          // Fallback to current mock state if API fails
+          renderRehomeSubmissions("all");
         });
     }
   }
@@ -1044,3 +1088,124 @@ async function loadSubmissionsFromBackend() {
     // Leave mockSubmissions as-is
   }
 }
+
+// =========================================================
+// --- REHOME SUBMISSIONS ---
+// =========================================================
+let mockRehomeSubmissions = [];
+
+async function loadRehomeSubmissionsFromBackend() {
+  try {
+    const resp = await fetch("/PetResQ/admin/rehome_submissions.php", {
+      credentials: "include",
+    });
+    if (!resp.ok) throw new Error("Failed to load rehome submissions");
+    const json = await resp.json();
+    if (json && Array.isArray(json.data)) {
+      mockRehomeSubmissions = json.data.map((it) => ({
+        id: it.id,
+        ownerName: it.nama_user,
+        ownerEmail: it.email_user,
+        petName: it.pet_name,
+        petType: it.pet_type,
+        age: it.age_years,
+        breed: it.breed,
+        gender: it.gender,
+        city: it.city,
+        postcode: it.postcode,
+        date: it.submitted_at,
+        status: it.status,
+      }));
+      console.log("Loaded rehome submissions:", mockRehomeSubmissions.length);
+    }
+  } catch (e) {
+    console.warn("Rehome submissions API error:", e);
+    // Leave mockRehomeSubmissions as-is
+  }
+}
+
+function renderRehomeSubmissions(filter = "all") {
+  const grid = document.getElementById("rehome-submissions-grid");
+  if (!grid) return;
+
+  let filtered = mockRehomeSubmissions;
+  if (filter === "submitted") {
+    filtered = mockRehomeSubmissions.filter((s) => s.status === "submitted");
+  } else if (filter === "approved") {
+    filtered = mockRehomeSubmissions.filter((s) => s.status === "approved");
+  } else if (filter === "rejected") {
+    filtered = mockRehomeSubmissions.filter((s) => s.status === "rejected");
+  }
+
+  if (filtered.length === 0) {
+    grid.innerHTML = `
+      <div class="empty-submissions" style="grid-column: 1 / -1;">
+        <i class="fas fa-clipboard-list"></i>
+        <p style="font-size: 1.1em;">No rehome submissions found for "${filter}" filter.</p>
+        <p style="margin-top: 10px; color: #aaa;">Rehome submission forms akan muncul di sini setelah koneksi database.</p>
+      </div>
+    `;
+    return;
+  }
+
+  grid.innerHTML = filtered
+    .map((submission) => {
+      let statusClass =
+        submission.status === "approved"
+          ? "status-approved"
+          : submission.status === "rejected"
+          ? "status-rejected"
+          : "status-pending";
+
+      return `
+        <div class="submission-card">
+          <div class="submission-card-header">
+            <div class="submission-id">#${submission.id
+              .toString()
+              .padStart(3, "0")}</div>
+            <span class="${statusClass}">${submission.status.toUpperCase()}</span>
+          </div>
+          <div class="submission-card-body">
+            <div class="submission-info">
+              <i class="fas fa-user"></i>
+              <span>${submission.ownerName}</span>
+            </div>
+            <div class="submission-info">
+              <i class="fas fa-paw"></i>
+              <span>${submission.petName} (${submission.petType})</span>
+            </div>
+            <div class="submission-info">
+              <i class="fas fa-envelope"></i>
+              <span>${submission.ownerEmail}</span>
+            </div>
+            <div class="submission-info">
+              <i class="fas fa-map-marker-alt"></i>
+              <span>${submission.city}</span>
+            </div>
+          </div>
+          <div class="submission-card-footer">
+            <div class="submission-date">
+              <i class="fas fa-calendar"></i> ${new Date(
+                submission.date
+              ).toLocaleDateString("id-ID", {
+                day: "numeric",
+                month: "short",
+                year: "numeric",
+              })}
+            </div>
+          </div>
+        </div>
+      `;
+    })
+    .join("");
+
+  // Update filter tabs
+  document.querySelectorAll(".filter-tab").forEach((tab) => {
+    tab.classList.remove("active");
+    if (tab.dataset.filter === filter) {
+      tab.classList.add("active");
+    }
+  });
+}
+
+window.renderRehomeSubmissions = renderRehomeSubmissions;

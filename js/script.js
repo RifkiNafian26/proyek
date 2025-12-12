@@ -129,6 +129,7 @@ function setActiveNavLink() {
   const navLinks = document.querySelectorAll(".navbar-nav a");
 
   console.log("Current page:", currentPage); // Debug
+  console.log("Current path:", currentPath); // Debug
 
   navLinks.forEach((link) => {
     const linkHref = link.getAttribute("href");
@@ -142,8 +143,8 @@ function setActiveNavLink() {
       currentPage === "" ||
       currentPage === "PetResQ"
     ) {
-      // Home page
-      if (linkText === "Home") {
+      // Home page - but exclude sistemadopt
+      if (!currentPath.includes("sistemadopt") && linkText === "Home") {
         link.classList.add("active");
         console.log("Set active: Home"); // Debug
       }
@@ -161,6 +162,12 @@ function setActiveNavLink() {
       if (linkText === "Adopt") {
         link.classList.add("active");
         console.log("Set active: Adopt (from profile)"); // Debug
+      }
+    } else if (currentPath.includes("sistemadopt")) {
+      // Sistem adopt page - highlight Adopt
+      if (linkText === "Adopt") {
+        link.classList.add("active");
+        console.log("Set active: Adopt (from sistemadopt)"); // Debug
       }
     }
   });
@@ -214,84 +221,87 @@ if (applyFilterBtn) {
   applyFilterBtn.style.display = "none";
 }
 
-// Login/Register Modal
-const modal = document.getElementById("auth-modal");
-const userProfileBtn = document.getElementById("user-profile");
-const closeModalBtn = document.getElementById("close-modal");
-const switchTabLinks = document.querySelectorAll(".switch-tab");
-const loginImage = document.querySelector(".modal-image-login");
-const registerImage = document.querySelector(".modal-image-register");
-const modalTitle = document.getElementById("modal-title");
+// Function to setup modal event listeners (called on DOMContentLoaded)
+function setupModalListeners() {
+  const modal = document.getElementById("auth-modal");
+  const closeModalBtn = document.getElementById("close-modal");
+  const switchTabLinks = document.querySelectorAll(".switch-tab");
+  const loginImage = document.querySelector(".modal-image-login");
+  const registerImage = document.querySelector(".modal-image-register");
+  const modalTitle = document.getElementById("modal-title");
 
-// Event listener untuk profile button akan diatur oleh checkUserLogin()
-// (tidak ditambahkan di sini agar tidak konflik dengan login/logout logic)
-
-// Close modal when clicking close button
-if (closeModalBtn) {
-  closeModalBtn.addEventListener("click", function () {
-    modal.classList.remove("active");
-  });
-}
-
-// Close modal when clicking outside
-if (modal) {
-  modal.addEventListener("click", function (e) {
-    if (e.target === modal) {
-      modal.classList.remove("active");
-    }
-  });
-}
-
-// Switch tab via link
-switchTabLinks.forEach((link) => {
-  link.addEventListener("click", function (e) {
-    e.preventDefault();
-    const tabName = this.getAttribute("data-tab");
-
-    // Get all tab contents
-    const tabContents = document.querySelectorAll(".tab-content");
-
-    // Remove active class from all contents
-    tabContents.forEach((content) => content.classList.remove("active"));
-
-    // Add active class to target content
-    document.getElementById(tabName + "-tab").classList.add("active");
-
-    // Clear error message
-    const errorDiv = document.getElementById("form-error");
-    if (errorDiv) {
-      errorDiv.style.display = "none";
-      errorDiv.textContent = "";
-    }
-
-    // Switch images
-    if (tabName === "login") {
-      if (loginImage) loginImage.classList.add("active");
-      if (registerImage) registerImage.classList.remove("active");
-      // Update title
-      if (modalTitle) modalTitle.textContent = "Login";
-    } else if (tabName === "register") {
-      if (loginImage) loginImage.classList.remove("active");
-      if (registerImage) registerImage.classList.add("active");
-      // Update title
-      if (modalTitle) modalTitle.textContent = "Register";
-    }
-  });
-});
-
-// Prevent closing modal when clicking inside content
-if (modal) {
-  const modalContent = modal.querySelector(".modal-content");
-  if (modalContent) {
-    modalContent.addEventListener("click", function (e) {
-      e.stopPropagation();
+  // Close modal when clicking close button
+  if (closeModalBtn) {
+    closeModalBtn.addEventListener("click", function () {
+      if (modal) {
+        modal.classList.remove("active");
+      }
     });
   }
-}
 
-// Reinitialize Feather Icons after DOM changes
-if (typeof feather !== "undefined") {
-  feather.replace();
+  // Close modal when clicking outside
+  if (modal) {
+    modal.addEventListener("click", function (e) {
+      if (e.target === modal) {
+        modal.classList.remove("active");
+      }
+    });
+  }
+
+  // Switch tab via link
+  switchTabLinks.forEach((link) => {
+    link.addEventListener("click", function (e) {
+      e.preventDefault();
+      const tabName = this.getAttribute("data-tab");
+
+      // Get all tab contents
+      const tabContents = document.querySelectorAll(".tab-content");
+
+      // Remove active class from all contents
+      tabContents.forEach((content) => content.classList.remove("active"));
+
+      // Add active class to target content
+      const targetTab = document.getElementById(tabName + "-tab");
+      if (targetTab) {
+        targetTab.classList.add("active");
+      }
+
+      // Clear error message
+      const errorDiv = document.getElementById("form-error");
+      if (errorDiv) {
+        errorDiv.style.display = "none";
+        errorDiv.textContent = "";
+      }
+
+      // Switch images
+      if (tabName === "login") {
+        if (loginImage) loginImage.classList.add("active");
+        if (registerImage) registerImage.classList.remove("active");
+        // Update title
+        if (modalTitle) modalTitle.textContent = "Login";
+      } else if (tabName === "register") {
+        if (loginImage) loginImage.classList.remove("active");
+        if (registerImage) registerImage.classList.add("active");
+        // Update title
+        if (modalTitle) modalTitle.textContent = "Register";
+      }
+    });
+  });
+
+  // Prevent closing modal when clicking inside content
+  if (modal) {
+    const modalContent = modal.querySelector(".modal-content");
+    if (modalContent) {
+      modalContent.addEventListener("click", function (e) {
+        e.stopPropagation();
+      });
+    }
+  }
+
+  // Reinitialize Feather Icons after DOM changes
+  if (typeof feather !== "undefined") {
+    feather.replace();
+  }
 }
 
 // Check user login status on page load
@@ -302,8 +312,18 @@ function checkUserLogin() {
     .then((data) => {
       if (data.is_logged_in) {
         displayUserProfile(data.user_name, data.user_email);
+        // If admin, inject Admin link into navbar; otherwise ensure it's hidden
+        if (data.role === "admin") {
+          addAdminNavLink();
+        } else {
+          removeAdminNavLink();
+        }
+        // For logged-in users, add My Submissions link to account dropdown
+        addUserSubmissionsDropdownItem();
       } else {
         displayLoginButton();
+        // Not logged in: ensure Admin link isn't shown
+        removeAdminNavLink();
       }
     })
     .catch((error) => console.error("Error checking login:", error));
@@ -490,6 +510,9 @@ function setupAnimalCardListeners() {
 
 // Initialize on page load
 document.addEventListener("DOMContentLoaded", function () {
+  // Setup modal listeners
+  setupModalListeners();
+
   // Check login status
   checkUserLogin();
 
@@ -532,3 +555,59 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 });
+
+// Adds an Admin link to the navbar if not already present
+function addAdminNavLink() {
+  const nav = document.querySelector(".navbar-nav");
+  if (!nav) return;
+  // Avoid duplicating the link
+  const existing = Array.from(nav.querySelectorAll("a")).find(
+    (a) => a.textContent.trim().toLowerCase() === "admin"
+  );
+  if (existing) return;
+
+  const link = document.createElement("a");
+  // Point to guarded Admin panel entry
+  link.href = getPhpPath("Admin PetResQ/index.php");
+  link.textContent = "Admin";
+  nav.appendChild(link);
+}
+
+// Removes Admin link if present (for non-admin users)
+function removeAdminNavLink() {
+  const nav = document.querySelector(".navbar-nav");
+  if (!nav) return;
+  const adminLink = Array.from(nav.querySelectorAll("a")).find(
+    (a) => a.textContent.trim().toLowerCase() === "admin"
+  );
+  if (adminLink) {
+    adminLink.remove();
+  }
+}
+
+// Adds a My Submissions link for logged-in users
+function addUserSubmissionsDropdownItem() {
+  const dropdown = document.getElementById("profile-dropdown");
+  if (!dropdown) return;
+  // Avoid duplicate by checking existing items
+  const exists = Array.from(dropdown.querySelectorAll(".dropdown-item")).find(
+    (a) => a.textContent.trim().toLowerCase() === "my submissions"
+  );
+  if (exists) return;
+
+  // Insert before the logout item
+  const logoutItem = document.getElementById("logout-btn");
+  const item = document.createElement("a");
+  item.href = getPhpPath("user/submissions.php");
+  item.className = "dropdown-item";
+  item.textContent = "My Submissions";
+  if (logoutItem && logoutItem.parentNode === dropdown) {
+    dropdown.insertBefore(item, logoutItem);
+    // Add divider between My Submissions and Logout
+    const divider = document.createElement("hr");
+    divider.className = "dropdown-divider";
+    dropdown.insertBefore(divider, logoutItem);
+  } else {
+    dropdown.appendChild(item);
+  }
+}

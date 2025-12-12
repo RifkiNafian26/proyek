@@ -366,56 +366,50 @@ textarea {
 }
 
 /* Step 1: Start (Profile Info) */
-.profile-info-box {
-  /* make the profile/email box match header color */
-  background-color: #5f6f52; /* requested color */
-  color: #ffffff; /* keep text readable */
-  padding: 20px;
-  border-radius: 8px;
-  /* limit width so the username box isn't overly long */
+.user-info-card {
+  display: flex;
+  align-items: center;
+  background-color: #5f6f52;
+  border: none;
+  padding: 28px 36px;
+  border-radius: 18px;
+  margin-bottom: 30px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
   max-width: 540px;
   width: 100%;
   margin-left: auto;
   margin-right: auto;
-  text-align: left; /* keep label/content left-aligned inside the box */
-  margin-bottom: 20px;
 }
 
-/* Keep text from overflowing for long email/username strings */
-.profile-info-box p {
-  word-break: break-word;
-  overflow-wrap: anywhere;
-}
-
-.profile-header {
-  display: flex;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-.profile-pic {
-  width: 88px;
-  height: 88px;
+.user-avatar-lg {
+  width: 108px;
+  height: 108px;
   border-radius: 50%;
-  margin-right: 20px;
-  border: 4px solid #ffffff; /* white ring looks tidy inside green profile box */
+  overflow: hidden;
+  margin-right: 28px;
+  border: 6px solid #ffffff;
+  background-color: transparent;
+  flex-shrink: 0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.user-avatar-lg img {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
   display: block;
 }
 
-.profile-details p {
-  margin: 5px 0;
+.user-details p {
+  margin: 6px 0;
+  font-size: 18px;
+  color: #ffffff;
+  line-height: 1.4;
 }
 
-.profile-info-box label {
-  display: block;
-  margin-bottom: 15px;
-}
-
-.profile-info-box input[type="checkbox"] {
-  width: auto;
-  margin-right: 10px;
+.user-details strong {
+  color: #ffffff;
+  font-weight: 700;
 }
 
 .instruction {
@@ -834,7 +828,7 @@ h3 {
 
 /* Footer */
 .faq-footer {
-  background-color: var(--color-background-dark);
+  background-color: var(--color-primary);
   color: var(--color-text-light);
   text-align: center;
   padding: 30px 0;
@@ -906,6 +900,11 @@ h3 {
   color: #ffffff; /* white text */
   line-height: 1;
   white-space: nowrap;
+}
+
+.profile-button a {
+  text-decoration: none;
+  color: #ffffff;
 }
 
 /* Centered content container used to align terms/intro with profile box */

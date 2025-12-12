@@ -1,0 +1,393 @@
+/* Reset & Variabel */
+:root {
+  --bg-color: #fefae0;
+  --accent-green: #6b705c;
+  --accent-green-dark: #565a49;
+  --footer-bg: #383838;
+  --text-color: #1a1a1a;
+
+  /* DEFINISI FONT BARU */
+  --font-heading: "Kavoon", cursive;
+  --font-body: "Kreon", serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--bg-color);
+  font-family: var(--font-body); /* Default font: Kreon */
+  color: var(--text-color);
+  line-height: 1.6;
+  font-weight: 400; /* Berat standar Kreon */
+}
+
+/* --- Header / Navbar --- */
+/* Uses global navbar from ../css/style.css; local overrides removed to match globally */
+
+/* --- Main Content --- */
+main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px 50px 80px;
+  margin-top: 70px; /* account for fixed global navbar height */
+}
+
+/* Hero Section */
+.hero {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+  margin-bottom: 60px;
+}
+
+.hero-image-container {
+  flex: 1;
+  max-width: 600px;
+  height: 350px;
+  overflow: hidden;
+  border-radius: 5px;
+}
+
+.hero-image-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+}
+
+.hero-title h1 {
+  font-family: var(--font-heading); /* Dog Care Guides menggunakan Kavoon */
+  font-size: 4rem;
+  color: var(--accent-green);
+  line-height: 1.1;
+  text-transform: capitalize;
+}
+
+/* Grid Layout */
+.guides-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px 60px;
+}
+
+.guide-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.pill-title {
+  background-color: var(--accent-green);
+  color: white;
+  padding: 10px 25px;
+  border-radius: 25px;
+  font-weight: 600; /* Kreon Bold untuk judul card */
+  font-size: 1.15rem;
+  margin-bottom: 15px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+  text-align: center;
+  width: 100%;
+}
+
+.guide-item p {
+  font-size: 1rem;
+  color: #222;
+  text-align: justify;
+  font-weight: 400; /* Kreon Regular */
+}
+
+/* --- Footer --- */
+footer {
+  background-color: var(--footer-bg);
+  color: white;
+  padding: 40px 60px;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.footer-left {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+}
+
+.footer-logo {
+  font-family: "Kreon", sans-serif;
+  color: white;
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.footer-right {
+  flex: 1;
+  max-width: 500px;
+}
+
+.footer-right h3 {
+  font-family: "Kreon", sans-serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: white;
+  margin: 0 0 20px 0;
+}
+
+.contact-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  margin-bottom: 15px;
+  font-size: 0.9rem;
+  color: white;
+  line-height: 1.5;
+}
+
+.contact-item i {
+  color: #fefae0;
+  margin-top: 3px;
+  min-width: 18px;
+  flex-shrink: 0;
+}
+
+.contact-item span {
+  color: white;
+}
+
+/* --- Responsive (Mobile) --- */
+@media (max-width: 768px) {
+  header {
+    padding: 15px 20px;
+  }
+  nav {
+    display: none;
+  }
+  .hero {
+    flex-direction: column;
+    text-align: center;
+  }
+  .hero-title h1 {
+    font-size: 3rem;
+  }
+  .guides-grid {
+    grid-template-columns: 1fr;
+  }
+  footer {
+    padding: 30px 20px;
+  }
+
+  .footer-content {
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  .footer-logo {
+    font-size: 2rem;
+  }
+
+  .footer-right h3 {
+    font-size: 1.4rem;
+  }
+
+  .contact-item {
+    font-size: 0.85rem;
+  }
+}
+
+/* Notification styles removed; global navbar handles profile & notifications */
+
+/* Class untuk memunculkan dropdown via JS */
+.notification-dropdown.active {
+  display: block;
+}
+
+/* Header Notifikasi (Warna Hijau Pill) */
+.notif-header {
+  background-color: #56644d; /* Hijau gelap sesuai gambar */
+  color: white;
+  font-family: var(--font-body); /* Font Kavoon */
+  text-align: center;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25); /* Shadow header */
+}
+
+/* List Item Layout */
+.notif-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid transparent; /* Spacer */
+}
+
+/* Konten Teks */
+.notif-content {
+  display: flex;
+  flex-direction: column;
+  font-family: var(--font-body); /* Font Kreon */
+  line-height: 1.2;
+  color: #1a1a1a;
+}
+
+.notif-content .name {
+  font-weight: 700; /* Bold nama user */
+  font-size: 1rem;
+  margin-bottom: 2px;
+}
+
+.notif-content .msg {
+  font-weight: 400;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+/* Responsif untuk layar kecil */
+@media (max-width: 768px) {
+  .notification-dropdown {
+    width: 300px;
+    right: -50px; /* Geser sedikit agar muat di layar hp */
+  }
+}
+
+/* --- Care Guides Dropdown Styling --- */
+
+/* Wrapper agar posisi dropdown relatif terhadap menu ini */
+.nav-item-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+/* Container kotak dropdown */
+.care-options {
+  display: none; /* Sembunyi default */
+  position: absolute;
+  top: 50px; /* Jarak dari teks Care Guides */
+  left: 50%;
+  transform: translateX(-50%); /* Agar rata tengah */
+  background-color: var(--bg-color); /* Warna krem */
+  padding: 15px;
+  border-radius: 15px;
+  width: 180px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  flex-direction: column;
+  gap: 10px; /* Jarak antar tombol */
+  z-index: 1000;
+}
+
+/* Saat aktif (diklik) */
+.care-options.active {
+  display: flex;
+}
+
+/* Tombol Pilihan (Dog, Cat, Rabbit) */
+.care-btn {
+  background-color: var(--accent-green); /* Hijau */
+  color: white;
+  font-family: var(--font-body); /* Font Kavoon */
+  font-size: 1.1rem;
+  text-align: center;
+  padding: 10px 0;
+  border-radius: 10px;
+  text-decoration: none;
+  transition: transform 0.2s, background-color 0.2s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Efek Hover pada tombol pilihan */
+.care-btn:hover {
+  background-color: var(--accent-green-dark);
+  transform: scale(1.02);
+}
+
+/* Responsif Mobile */
+@media (max-width: 768px) {
+  .care-options {
+    left: 0;
+    transform: none;
+    width: 100%;
+    position: relative;
+    top: 10px;
+  }
+}
+
+/* --- Search Bar Styling --- */
+
+/* Kita perlu memastikan Header memiliki posisi relative agar search bar bisa diposisikan absolute di dalamnya */
+header {
+  position: relative;
+  /* Tambahkan sedikit padding bawah agar search bar tidak menabrak konten di bawahnya */
+  padding-bottom: 30px;
+}
+
+.search-box {
+  position: absolute;
+  bottom: -20px; /* Jarak dari bawah header */
+  right: 50px; /* Sejajar dengan padding kanan header */
+  background-color: #56644d; /* Warna hijau tua sesuai gambar */
+  padding: 5px 10px 5px 15px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  width: 280px; /* Lebar search bar */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.search-box input {
+  background: transparent;
+  border: none;
+  color: white;
+  font-family: var(--font-body); /* Font Kreon */
+  font-size: 0.9rem;
+  width: 100%;
+  outline: none; /* Hilangkan garis biru saat diklik */
+}
+
+/* Warna text placeholder (teks samar "Find an Animal...") */
+.search-box input::placeholder {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.search-box .search-btn {
+  background: transparent;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 5px;
+  margin-left: 5px;
+}
+
+/* Efek saat tombol search dihover */
+.search-box .search-btn:hover {
+  color: #ddd;
+}
+
+/* Penyesuaian Responsif untuk HP */
+@media (max-width: 768px) {
+  header {
+    flex-direction: column;
+    gap: 20px;
+    padding-bottom: 60px; /* Ruang lebih luas di HP */
+  }
+
+  .search-box {
+    position: absolute;
+    bottom: 10px;
+    right: 50%;
+    transform: translateX(50%); /* Tengah secara horizontal */
+    width: 90%; /* Lebar hampir penuh di layar kecil */
+  }
+}

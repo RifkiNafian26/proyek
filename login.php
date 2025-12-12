@@ -53,8 +53,11 @@ if (mysqli_num_rows($result) == 1) {
         $_SESSION['user_id'] = $row['id_user'];
         $_SESSION['user_email'] = $row['email'];
         $_SESSION['user_name'] = $row['nama'];
+        if (isset($row['role']) && $row['role'] !== '') {
+            $_SESSION['role'] = $row['role'];
+        }
         
-        echo json_encode(['success' => true, 'message' => 'Login successful']);
+        echo json_encode(['success' => true, 'message' => 'Login successful', 'role' => $_SESSION['role'] ?? null]);
     } else {
         echo json_encode(['success' => false, 'message' => 'Invalid email or password']);
     }

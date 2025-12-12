@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PetResQ Admin Panel</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+  </head>
+  <body>
+    <!-- Logout Modal -->
+    <div id="logout-modal" class="modal">
+      <div class="modal-content-small">
+        <div class="modal-image-box">
+          <img
+            src="../icon/dog-svgrepo-com.svg"
+            alt="Dog Icon"
+            style="width: 100px"
+          />
+        </div>
+        <div class="modal-text-box">
+          <p class="modal-title-petresq">PetResQ</p>
+          <p class="modal-subtitle-petresq">Logout from MinQ??</p>
+          <p>Are you sure you want to logout from the admin panel?</p>
+          <div class="modal-actions-petresq">
+            <button class="btn btn-cancel modal-cancel">Cancel</button>
+            <button class="btn btn-submit" id="confirm-logout">Logout</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Create Report Modal -->
+    <div id="create-report-modal" class="modal">
+      <div class="modal-content-report">
+        <form id="report-form">
+          <h4>+ Create New Report</h4>
+
+          <div class="form-group-report">
+            <label>Date Range</label>
+            <div class="date-range-inputs">
+              <input type="date" id="report-start-date" required />
+              <input type="date" id="report-end-date" required />
+            </div>
+          </div>
+
+          <div class="form-group-report">
+            <label for="report-type">Report Type</label>
+            <select id="report-type" required>
+              <option value="Daily">Daily</option>
+              <option value="Weekly">Weekly</option>
+            </select>
+          </div>
+
+          <div class="form-group-report">
+            <label for="report-description">Description</label>
+            <textarea
+              id="report-description"
+              placeholder="Enter report details or parameters"
+              required
+            ></textarea>
+          </div>
+
+          <div class="modal-actions-report">
+            <button type="button" class="btn btn-cancel modal-cancel">
+              Cancel
+            </button>
+            <button type="submit" class="btn btn-submit">
+              Generate Report
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Report Detail Modal -->
+    <div id="report-detail-modal" class="modal">
+      <div class="modal-content-report-detail">
+        <h3>Report Details <span id="detail-report-id"></span></h3>
+        <div class="detail-grid">
+          <p><strong>Type:</strong> <span id="detail-type"></span></p>
+          <p><strong>Date Range:</strong> <span id="detail-range"></span></p>
+          <p>
+            <strong>Created On:</strong> <span id="detail-created-date"></span>
+          </p>
+          <p>
+            <strong>Status:</strong>
+            <span id="detail-status" style="font-weight: bold"></span>
+          </p>
+        </div>
+        <div class="form-group-report">
+          <label for="detail-description">Description:</label>
+          <textarea
+            id="detail-description"
+            readonly
+            style="height: 150px; background: #f0f0e3"
+          ></textarea>
+        </div>
+        <div class="modal-actions-report-detail">
+          <button type="button" class="btn btn-submit modal-cancel">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Submission Detail Modal -->
+    <div id="submission-detail-modal" class="modal">
+      <div class="modal-content-submission-detail">
+        <h3>Submission Details <span id="submission-detail-id"></span></h3>
+        <div class="submission-info-grid">
+          <div class="info-row">
+            <strong>Adopter Name:</strong>
+            <span id="submission-adopter-name"></span>
+          </div>
+          <div class="info-row">
+            <strong>Email:</strong>
+            <span id="submission-adopter-email"></span>
+          </div>
+          <div class="info-row">
+            <strong>Phone:</strong>
+            <span id="submission-adopter-phone"></span>
+          </div>
+          <div class="info-row">
+            <strong>Animal Requested:</strong>
+            <span id="submission-animal-name"></span>
+          </div>
+          <div class="info-row">
+            <strong>Submission Date:</strong>
+            <span id="submission-date"></span>
+          </div>
+          <div class="info-row">
+            <strong>Status:</strong>
+            <span id="submission-status-display"></span>
+          </div>
+          <div class="info-row">
+            <strong>Address:</strong>
+            <span id="submission-address"></span>
+          </div>
+          <div class="info-row">
+            <strong>Garden:</strong>
+            <span id="submission-garden"></span>
+          </div>
+          <div class="info-row">
+            <strong>Living Situation:</strong>
+            <span id="submission-living"></span>
+          </div>
+        </div>
+        <div class="form-group-report">
+          <label>Reason for Adoption:</label>
+          <textarea
+            id="submission-reason"
+            readonly
+            style="height: 120px; background: #f9f9f5"
+          ></textarea>
+        </div>
+        <div class="form-group-report">
+          <label>Additional Details:</label>
+          <div
+            id="submission-extra-details"
+            style="
+              background: #f9f9f5;
+              padding: 12px;
+              border-radius: 8px;
+              font-size: 0.95em;
+              line-height: 1.6;
+            "
+          >
+            <!-- populated dynamically -->
+          </div>
+        </div>
+        <div class="modal-actions-submission">
+          <button type="button" class="btn btn-cancel modal-cancel">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Admin Dashboard -->
+    <div id="admin-dashboard" class="dashboard-container">
+      <nav class="sidebar">
+        <div class="logo" data-page="dashboard" style="cursor: pointer">
+          <img
+            src="../icon/cat-svgrepo-com.svg"
+            alt="PetResQ Logo"
+            style="width: 40px"
+          />
+          <h1>PetResQ</h1>
+        </div>
+        <ul class="nav-menu">
+          <li data-page="dashboard" class="active">
+            <i class="fas fa-home"></i> Dashboard
+          </li>
+          <li data-page="manage-users">
+            <i class="fas fa-users"></i> Manage Users
+          </li>
+          <li data-page="manage-animals">
+            <i class="fas fa-paw"></i> Manage Animals
+          </li>
+          <li data-page="system-reports">
+            <i class="fas fa-file-alt"></i> System Reports
+          </li>
+          <li data-page="submissions">
+            <i class="fas fa-clipboard-check"></i> Submissions
+          </li>
+          <li id="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</li>
+        </ul>
+        <div class="sidebar-heart">
+          <i class="fas fa-heart"></i>
+          <p>Heart with Animals</p>
+        </div>
+      </nav>
+
+      <main class="main-content">
+        <header class="topbar">
+          <h2>Welcome MinQ!!</h2>
+          <div class="search-box">
+            <input type="text" placeholder="Search..." />
+            <i class="fas fa-search"></i>
+          </div>
+          <div class="admin-profile">
+            <i class="fas fa-bell"></i>
+            <button class="btn btn-admin">Admin</button>
+          </div>
+        </header>
+
+        <div id="page-content" class="page-content"></div>
+      </main>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>

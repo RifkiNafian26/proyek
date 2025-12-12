@@ -1,39 +1,37 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>PetResQ</title>
-
-    <!-- Fonts -->
+    <title>PetResQ - Rabbit Care Guides</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Kreon:wght@300..700&family=Poppins:wght@100;300;400;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Kavoon&family=Kreon:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     />
-
-    <!-- Feather Icon -->
-    <script src="https://unpkg.com/feather-icons"></script>
-
-    <!-- My Style -->
-    <link rel="stylesheet" href="css/style.css?v=2" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="../css/style.css?v=2" />
+    <link rel="stylesheet" href="style.css" />
   </head>
   <body>
     <!-- Navbar start -->
     <nav class="navbar">
-      <a href="index.php" class="navbar-logo">Pet<span>ResQ</span></a>
+      <a href="../index.html" class="navbar-logo">Pet<span>ResQ</span></a>
 
       <div class="navbar-nav">
-        <a href="index.php">Home</a>
-        <a href="adopt/adopt.php">Adopt</a>
-        <a href="rehome/rehome.html">Rehome</a>
+        <a href="../index.html">Home</a>
+        <a href="../adopt/adopt.php">Adopt</a>
+        <a href="../rehome/rehome.html">Rehome</a>
         <div class="navbar-dropdown">
-          <a href="#care-guides" class="care-guides-link">Care Guides</a>
+          <a href="#care-guides" class="care-guides-link active">Care Guides</a>
           <div class="dropdown-menu">
-            <a href="careguides/Dog Care Guides.html">Dog</a>
-            <a href="careguides/Cat Care Guides.html">Cat</a>
-            <a href="careguides/Rabbit Care Guides.html">Rabbit</a>
+            <a href="Dog Care Guides.html">Dog</a>
+            <a href="Dog Care Guides.html">Dog</a>
+            <a href="Cat Care Guides.html">Cat</a>
           </div>
         </div>
       </div>
@@ -67,7 +65,6 @@
           </div>
         </button>
 
-        <!-- Profile Dropdown Menu -->
         <div class="profile-dropdown" id="profile-dropdown">
           <div class="dropdown-header">
             <div class="dropdown-user-name" id="dropdown-name"></div>
@@ -80,17 +77,106 @@
     </nav>
     <!-- Navbar end -->
 
-    <!-- Login/Register Modal -->
+    <main>
+      <section class="hero">
+        <div class="hero-image-container">
+          <img
+            src="https://www.youbeauty.com/wp-content/uploads/2022/01/Cruelty-Free-Mean_H.jpg"
+            alt="Rabbit"
+          />
+        </div>
+        <div class="hero-title">
+          <h1>Rabbit Care<br />Guides</h1>
+        </div>
+      </section>
+
+      <section class="guides-grid">
+        <div class="guide-item">
+          <div class="pill-title">Fresh Hay & Veggies Meals</div>
+          <p>
+            Make sure your rabbit always has unlimited fresh hay to support
+            digestion and dental health, provide clean water daily, and offer a
+            balanced mix of safe vegetables and high-quality rabbit pellets
+            while avoiding harmful foods like chocolate, iceberg lettuce, and
+            anything sugary or processed.
+          </p>
+        </div>
+        <div class="guide-item">
+          <div class="pill-title">Hopping, Exploring & Enrichment Fun</div>
+          <p>
+            Help your rabbit stay happy and active by giving them plenty of
+            space to hop, run, and explore, offering toys such as tunnels, chew
+            sticks, cardboard boxes, and puzzle feeders to stimulate their
+            curiosity and natural behavior while giving them supervised time
+            outside their enclosure every day.
+          </p>
+        </div>
+        <div class="guide-item">
+          <div class="pill-title">Soft Fur & Safe Nails</div>
+          <p>
+            Keep your rabbit comfortable by gently grooming their fur
+            (especially if they’re long-haired), trimming their nails as needed,
+            and maintaining a clean environment by spot-cleaning the enclosure
+            daily, changing bedding regularly, and providing a litter box with
+            rabbit-safe litter for hygiene and comfort.
+          </p>
+        </div>
+        <div class="guide-item">
+          <div class="pill-title">Safe Home, Gentle Handling & Vet Care</div>
+          <p>
+            Protect your rabbit’s health by scheduling regular vet visits,
+            ensuring vaccinations and parasite prevention, handling them
+            carefully and calmly to avoid stress or injury, and providing a safe
+            indoor space free from hazards like wires, toxic plants, or rough
+            handling.
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="footer-content">
+        <div class="footer-left">
+          <div class="footer-logo">PetResQ</div>
+        </div>
+        <div class="footer-right">
+          <h3>Contact Us</h3>
+          <div class="contact-item">
+            <i class="fas fa-map-marker-alt"></i>
+            <span
+              >Jl. Pendidikan No.15, Cibiru Wetan, Kec. Cileunyi, Kabupaten
+              Bandung.</span
+            >
+          </div>
+          <div class="contact-item">
+            <i class="fas fa-phone-alt"></i>
+            <span>+62 898-6099-362</span>
+          </div>
+          <div class="contact-item">
+            <i class="fas fa-envelope"></i>
+            <span>kampus_cibiru@upi.edu</span>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script src="https://unpkg.com/feather-icons"></script>
+    <script src="../js/script.js"></script>
+    <script>
+      feather.replace();
+    </script>
+
+    <!-- Auth Modal (Login/Register) -->
     <div class="modal" id="auth-modal">
       <div class="modal-content modal-horizontal">
         <!-- Foto Hewan Login -->
         <div class="modal-image modal-image-login active">
-          <img src="icon/login2.jpg" alt="Login" />
+          <img src="../icon/login2.jpg" alt="Login" />
         </div>
 
         <!-- Foto Hewan Register -->
         <div class="modal-image modal-image-register">
-          <img src="icon/register.jpg" alt="Register" />
+          <img src="../icon/register.jpg" alt="Register" />
         </div>
 
         <!-- Form Container -->
@@ -100,10 +186,10 @@
             <button class="close-btn" id="close-modal">&times;</button>
           </div>
 
-          <!-- Login Form -->
           <!-- Error Message Display -->
           <div class="form-error" id="form-error" style="display: none"></div>
 
+          <!-- Login Form -->
           <form class="tab-content active" id="login-tab" method="POST">
             <div class="form-group">
               <label for="login-email">Email</label>
@@ -203,91 +289,5 @@
         </div>
       </div>
     </div>
-
-    <!-- Banner start -->
-    <div class="banner">
-      <div class="bannerdetail">
-        <form action="#" class="search-box">
-          <input
-            type="text"
-            id="search-input"
-            placeholder="Find an Animal to Adopt..."
-          />
-          <button type="submit"><i data-feather="search"></i></button>
-        </form>
-      </div>
-
-      <div class="bannercontent">
-        <h1>Rescue. Rehabilitate. Rehome.</h1>
-        <p>Your trusted partner in pet adoption and care.</p>
-      </div>
-    </div>
-    <!-- Banner end -->
-
-    <!-- Animal Choose Section -->
-    <div id="animals" class="sectionanimals">
-      <h3>Animal You Can Adopt</h3>
-      <div class="card-container">
-        <div class="card">
-          <img src="icon/dog-svgrepo-com.svg" alt="Dog" />
-          <p>DOG</p>
-        </div>
-
-        <div class="card">
-          <img src="icon/cat-svgrepo-com.svg" alt="Cat Icon" />
-          <p>CAT</p>
-        </div>
-
-        <div class="card">
-          <img src="icon/rabbit-3-svgrepo-com.svg" alt="Rabbit" />
-          <p>RABBIT</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Impact Section -->
-    <div id="Impact" class="impact-section">
-      <div class="impact-content">
-        <div class="impact-text">
-          <h3>IMPACT<br />THAT CAN<br />BE MADE</h3>
-        </div>
-        <div class="impact-box"></div>
-      </div>
-    </div>
-
-    <!-- Footer -->
-    <footer>
-      <div class="footer-content">
-        <div class="footer-left">
-          <div class="footer-logo">PetResQ</div>
-        </div>
-        <div class="footer-right">
-          <h3>Contact Us</h3>
-          <div class="contact-item">
-            <i class="fas fa-map-marker-alt"></i>
-            <span
-              >Jl. Pendidikan No.15, Cibiru Wetan, Kec. Cileunyi, Kabupaten
-              Bandung.</span
-            >
-          </div>
-          <div class="contact-item">
-            <i class="fas fa-phone-alt"></i>
-            <span>+62 898-6099-362</span>
-          </div>
-          <div class="contact-item">
-            <i class="fas fa-envelope"></i>
-            <span>kampus_cibiru@upi.edu</span>
-          </div>
-        </div>
-      </div>
-    </footer>
-
-    <!-- Feather Icons -->
-    <script>
-      feather.replace();
-    </script>
-
-    <!-- My Javascript -->
-    <script src="js/script.js"></script>
   </body>
 </html>

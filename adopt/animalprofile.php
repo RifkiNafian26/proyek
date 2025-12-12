@@ -356,7 +356,7 @@ if (!empty($animal['main_photo'])) {
               <div class="adoption-question">
                 If you are interested to adopt
               </div>
-              <a href="../sistemadopt/index.html" class="btn-get-started">Get started</a>
+              <button class="btn-get-started" id="adoptStartBtn">Get started</button>
             </div>
           </div>
         </div>
@@ -365,8 +365,27 @@ if (!empty($animal['main_photo'])) {
     <!-- Main Animal Profile Page end -->
 
     <!-- Footer -->
-    <footer class="footer">
-      <p>&copy; 2025 PetResQ. All rights reserved.</p>
+    <footer>
+      <div class="footer-content">
+        <div class="footer-left">
+          <div class="footer-logo">PetResQ</div>
+        </div>
+        <div class="footer-right">
+          <h3>Contact Us</h3>
+          <div class="contact-item">
+            <i class="fas fa-map-marker-alt"></i>
+            <span>Jl. Pendidikan No.15, Cibiru Wetan, Kec. Cileunyi, Kabupaten Bandung.</span>
+          </div>
+          <div class="contact-item">
+            <i class="fas fa-phone-alt"></i>
+            <span>+62 898-6099-362</span>
+          </div>
+          <div class="contact-item">
+            <i class="fas fa-envelope"></i>
+            <span>kampus_cibiru@upi.edu</span>
+          </div>
+        </div>
+      </div>
     </footer>
 
     <!-- Feather Icons -->
@@ -387,5 +406,59 @@ if (!empty($animal['main_photo'])) {
 
     <!-- My Javascript -->
     <script src="../js/script.js"></script>
+
+    <script>
+      // Wait for DOM to be ready and script.js to be loaded
+      document.addEventListener('DOMContentLoaded', function() {
+        // Setup modal listeners from script.js
+        if (typeof setupModalListeners === 'function') {
+          setupModalListeners();
+        }
+
+        // Handle Get Started button with login check
+        const adoptStartBtn = document.getElementById('adoptStartBtn');
+        if (adoptStartBtn) {
+          adoptStartBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Check if user is logged in
+            fetch('../check_session.php')
+              .then(response => response.json())
+              .then(data => {
+                console.log('Login check on button click:', data);
+                if (data.is_logged_in) {
+                  // User is logged in, proceed to adoption form
+                  console.log('User logged in, redirecting to sistem adopt...');
+                  try {
+                    const petId = (window.animalData && window.animalData.id_hewan) ? window.animalData.id_hewan : (new URLSearchParams(window.location.search).get('id') || '');
+                    const url = new URL('../sistemadopt/index.html', window.location.href);
+                    if (petId) url.searchParams.set('id_hewan', petId);
+                    window.location.href = url.toString();
+                  } catch (e) {
+                    // Fallback if URL API not available
+                    const petId = (window.animalData && window.animalData.id_hewan) ? window.animalData.id_hewan : '';
+                    window.location.href = '../sistemadopt/index.html' + (petId ? ('?id_hewan=' + encodeURIComponent(petId)) : '');
+                  }
+                } else {
+                  // User not logged in, show login modal
+                  console.log('User not logged in, showing modal...');
+                  const authModal = document.getElementById('auth-modal');
+                  if (authModal) {
+                    authModal.classList.add('active');
+                  }
+                }
+              })
+              .catch(error => {
+                console.error('Error checking login:', error);
+                // Fallback: show login modal
+                const authModal = document.getElementById('auth-modal');
+                if (authModal) {
+                  authModal.classList.add('active');
+                }
+              });
+          });
+        }
+      });
+    </script>
   </body>
 </html>

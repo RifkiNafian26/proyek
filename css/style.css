@@ -40,6 +40,7 @@ html {
   transition: all 0.3s ease;
   background-color: var(--bg);
   border-bottom: 1px solid var(--primary);
+  overflow: visible; /* allow dropdown to overflow below navbar */
 }
 
 .navbar .navbar-logo {
@@ -60,6 +61,7 @@ html {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
+  overflow: visible; /* ensure dropdown visibility */
 }
 
 .navbar .navbar-nav a {
@@ -70,7 +72,7 @@ html {
   font-size: 1.2rem;
   padding: 0.5rem 1rem;
   white-space: nowrap;
-  margin: 0 0.50rem;
+  margin: 0 0.5rem;
 }
 
 .navbar .navbar-nav a:hover {
@@ -101,8 +103,93 @@ html {
   position: relative;
 }
 
+/* Keep active indicator stable on hover/focus */
+.navbar .navbar-nav a.active:hover,
+.navbar .navbar-nav a.active:focus {
+  color: white;
+  background-color: var(--primary);
+  transform: none;
+}
+
 .navbar .navbar-nav a.active::after {
   display: none;
+}
+
+/* Navbar Dropdown */
+.navbar .navbar-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.navbar .navbar-dropdown .care-guides-link {
+  position: relative;
+}
+
+.navbar .navbar-dropdown .dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  min-width: 150px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(-50%) translateY(-10px);
+  transition: all 0.3s ease;
+  z-index: 10000; /* render above page content */
+  margin-top: 8px;
+}
+
+.navbar .navbar-dropdown:hover .dropdown-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+.navbar .navbar-dropdown .dropdown-menu a {
+  display: flex; /* center content vertically */
+  align-items: center; /* vertical centering */
+  justify-content: center; /* horizontal centering */
+  text-align: center; /* center text alignment */
+  color: #5f6f52;
+  padding: 12px 20px;
+  text-decoration: none;
+  font-size: 1rem;
+  white-space: nowrap;
+  margin: 0;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.navbar .navbar-dropdown .dropdown-menu a:first-child {
+  border-radius: 8px 8px 0 0;
+}
+
+.navbar .navbar-dropdown .dropdown-menu a:last-child {
+  border-radius: 0 0 8px 8px;
+}
+
+.navbar .navbar-dropdown .dropdown-menu a:hover {
+  background-color: #f5f5f5;
+  color: #e1bf6a;
+  transform: none;
+}
+
+/* Active indicator on Care Guides parent when a guide page is active */
+.navbar .navbar-dropdown > .care-guides-link.active,
+.navbar .navbar-dropdown.active > .care-guides-link {
+  background-color: var(--primary);
+  color: #fefae0;
+  border-radius: 8px;
+  padding: 0.5rem 1.2rem;
+}
+
+/* Ensure hover does not override active state */
+.navbar .navbar-dropdown > .care-guides-link.active:hover {
+  background-color: var(--primary);
+  color: #fefae0;
 }
 
 .navbar .navbar-extra {
@@ -347,28 +434,6 @@ html {
   color: #4a5a3f;
 }
 
-.aboutsection {
-  max-width: 1000px;
-  margin: 3rem auto;
-  padding: 2rem;
-  border-radius: 8px;
-  text-align: center;
-}
-
-.aboutsection h2 {
-  color: #5f6f52;
-  font-size: 2rem;
-  margin-bottom: 1rem;
-  text-align: center;
-}
-
-.aboutsection p {
-  color: #4a5a3f;
-  font-size: 1.1rem;
-  line-height: 1.6;
-  text-align: center;
-}
-
 .sectionanimals {
   max-width: 600px;
   margin: 3rem auto;
@@ -386,50 +451,61 @@ html {
   text-align: center;
 }
 
-.sectionreview {
-  text-align: center;
+.impact-section {
+  background-color: #fefae0;
+  padding: 60px 40px;
   margin-top: 40px;
 }
 
-.sectionreview h3 {
-  color: #5f6f52;
-  font-size: 32px;
-  margin-bottom: 1.5rem;
-  text-align: center;
-}
-
-.reviewcontainer {
+.impact-content {
+  max-width: 1200px;
+  margin: 0 auto;
   display: flex;
-  justify-content: center;
-  gap: 30px;
-  margin-top: 30px;
-  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 60px;
 }
 
-.review-card {
-  width: 220px;
-  height: 140px;
-  background: linear-gradient(145deg, #e7e4ca, #f3f0d8);
+.impact-text {
+  flex: 0 0 auto;
+}
+
+.impact-text h3 {
+  color: #000;
+  font-family: "Kreon", sans-serif;
+  font-size: 3rem;
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.impact-box {
+  flex: 1;
+  min-height: 200px;
+  background-color: #6e7b59;
   border-radius: 20px;
-  box-shadow: inset 8px 8px 15px rgba(0, 0, 0, 0.1),
-    inset -8px -8px 15px rgba(255, 255, 255, 0.7);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
-.review-button {
-  margin-top: 20px;
-  padding: 10px 20px;
-  background-color: #5f6f52;
-  color: #fefae0;
-  border: none;
-  border-radius: 8px;
-  font-size: 16px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
+@media (max-width: 768px) {
+  .impact-section {
+    padding: 40px 20px;
+  }
 
-.review-button:hover {
-  background: #5d684c;
-  transform: scale(1.05);
+  .impact-content {
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  .impact-text h3 {
+    font-size: 2.2rem;
+  }
+
+  .impact-box {
+    min-height: 150px;
+  }
 }
 
 .card-container {
@@ -481,12 +557,90 @@ html {
   line-height: 1.6;
 }
 
-.footer {
-  background-color: #5f6f52;
+footer {
+  background-color: #383838;
+  color: white;
+  padding: 40px 60px;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.footer-left {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+}
+
+.footer-logo {
+  font-family: "Kreon", sans-serif;
+  color: white;
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.footer-right {
+  flex: 1;
+  max-width: 500px;
+}
+
+.footer-right h3 {
+  font-family: "Kreon", sans-serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: white;
+  margin: 0 0 20px 0;
+}
+
+.contact-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  margin-bottom: 15px;
+  font-size: 0.9rem;
+  color: white;
+  line-height: 1.5;
+}
+
+.contact-item i {
   color: #fefae0;
-  text-align: center;
-  padding: 2rem;
-  margin-top: 3rem;
+  margin-top: 3px;
+  min-width: 18px;
+  flex-shrink: 0;
+}
+
+.contact-item span {
+  color: white;
+}
+
+/* Responsive Footer */
+@media (max-width: 768px) {
+  footer {
+    padding: 30px 20px;
+  }
+
+  .footer-content {
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  .footer-logo {
+    font-size: 2rem;
+  }
+
+  .footer-right h3 {
+    font-size: 1.4rem;
+  }
+
+  .contact-item {
+    font-size: 0.85rem;
+  }
 }
 
 /* Modal */
@@ -571,7 +725,7 @@ html {
   border-radius: 0 8px 8px 0;
   background-color: var(--bg);
   overflow-y: auto;
-  max-height: 600px;
+  max-height: 80vh;
 }
 
 @keyframes slideUp {
@@ -712,6 +866,58 @@ html {
 }
 
 .form-group.checkbox label {
+  margin: 0;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.85rem;
+}
+
+/* Modal Form Styles */
+.modal-form-container .form-group {
+  margin-bottom: 0.9rem;
+}
+
+.modal-form-container .form-group label {
+  display: block;
+  margin-bottom: 0.4rem;
+  color: var(--primary);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.modal-form-container .form-group input[type="text"],
+.modal-form-container .form-group input[type="email"],
+.modal-form-container .form-group input[type="password"] {
+  width: 100%;
+  padding: 0.6rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-family: "Poppins", sans-serif;
+  transition: border-color 0.3s ease;
+}
+
+.modal-form-container .form-group input[type="text"]:focus,
+.modal-form-container .form-group input[type="email"]:focus,
+.modal-form-container .form-group input[type="password"]:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(95, 111, 82, 0.1);
+}
+
+.modal-form-container .form-group.checkbox {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.modal-form-container .form-group.checkbox input[type="checkbox"] {
+  margin-right: 0.5rem;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.modal-form-container .form-group.checkbox label {
   margin: 0;
   cursor: pointer;
   font-weight: 500;

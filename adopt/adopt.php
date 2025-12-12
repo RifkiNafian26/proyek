@@ -33,7 +33,14 @@ require_once '../config.php';
         <a href="../index.html">Home</a>
         <a href="adopt.php">Adopt</a>
         <a href="../rehome/rehome.html">Rehome</a>
-        <a href="#care-guides">Care Guides</a>
+        <div class="navbar-dropdown">
+          <a href="#care-guides" class="care-guides-link">Care Guides</a>
+          <div class="dropdown-menu">
+            <a href="../careguides/Dog Care Guides.html">Dog</a>
+            <a href="../careguides/Cat Care Guides.html">Cat</a>
+            <a href="../careguides/Rabbit Care Guides.html">Rabbit</a>
+          </div>
+        </div>
         <a href="#about">About</a>
       </div>
 
@@ -489,8 +496,27 @@ require_once '../config.php';
     <!-- Main Adopt Page end -->
 
     <!-- Footer -->
-    <footer class="footer">
-      <p>&copy; 2025 PetResQ. All rights reserved.</p>
+    <footer>
+      <div class="footer-content">
+        <div class="footer-left">
+          <div class="footer-logo">PetResQ</div>
+        </div>
+        <div class="footer-right">
+          <h3>Contact Us</h3>
+          <div class="contact-item">
+            <i class="fas fa-map-marker-alt"></i>
+            <span>Jl. Pendidikan No.15, Cibiru Wetan, Kec. Cileunyi, Kabupaten Bandung.</span>
+          </div>
+          <div class="contact-item">
+            <i class="fas fa-phone-alt"></i>
+            <span>+62 898-6099-362</span>
+          </div>
+          <div class="contact-item">
+            <i class="fas fa-envelope"></i>
+            <span>kampus_cibiru@upi.edu</span>
+          </div>
+        </div>
+      </div>
     </footer>
 
     <!-- Feather Icons -->

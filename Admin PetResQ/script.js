@@ -1,4 +1,182 @@
 // =========================================================
+// --- LOGIN SYSTEM FUNCTIONS ---
+// =========================================================
+
+function setupModalListeners() {
+  const modal = document.getElementById("auth-modal");
+  const closeBtn = document.getElementById("close-modal");
+  const userProfile = document.getElementById("user-profile");
+  const switchTabs = document.querySelectorAll(".switch-tab");
+
+  if (userProfile) {
+    userProfile.addEventListener("click", () => {
+      const profileDropdown = document.getElementById("profile-dropdown");
+      if (profileDropdown && profileDropdown.classList.contains("active")) {
+        profileDropdown.classList.remove("active");
+      } else {
+        modal.classList.add("active");
+      }
+    });
+  }
+
+  if (closeBtn) {
+    closeBtn.addEventListener("click", () => {
+      modal.classList.remove("active");
+    });
+  }
+
+  switchTabs.forEach((tab) => {
+    tab.addEventListener("click", (e) => {
+      e.preventDefault();
+      const targetTab = tab.getAttribute("data-tab");
+      const loginTab = document.getElementById("login-tab");
+      const registerTab = document.getElementById("register-tab");
+      const modalTitle = document.getElementById("modal-title");
+
+      if (targetTab === "login") {
+        loginTab.classList.add("active");
+        registerTab.classList.remove("active");
+        document.querySelector(".modal-image-login").classList.add("active");
+        document
+          .querySelector(".modal-image-register")
+          .classList.remove("active");
+        modalTitle.textContent = "Login";
+      } else {
+        registerTab.classList.add("active");
+        loginTab.classList.remove("active");
+        document.querySelector(".modal-image-register").classList.add("active");
+        document.querySelector(".modal-image-login").classList.remove("active");
+        modalTitle.textContent = "Register";
+      }
+    });
+  });
+
+  modal.addEventListener("click", (e) => {
+    if (e.target === modal) {
+      modal.classList.remove("active");
+    }
+  });
+}
+
+function handleFormSubmit(formId, phpFile) {
+  const form = document.getElementById(formId);
+  if (!form) return;
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    const formData = new FormData(form);
+    const errorDiv = document.getElementById("form-error");
+
+    fetch("../" + phpFile, {
+      method: "POST",
+      body: formData,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) {
+          setTimeout(() => {
+            location.reload();
+          }, 500);
+        } else {
+          if (errorDiv) {
+            errorDiv.textContent = data.message;
+            errorDiv.style.display = "block";
+          }
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        if (errorDiv) {
+          errorDiv.textContent = "An error occurred. Please try again.";
+          errorDiv.style.display = "block";
+        }
+      });
+  });
+}
+
+function checkUserLogin() {
+  fetch("../check_session.php")
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.is_logged_in) {
+        displayUserProfile(data.user_name, data.user_email);
+        if (data.role === "admin") {
+          initializeDashboard();
+        } else {
+          document.body.innerHTML = "<h1>Access Denied: Admin only</h1>";
+        }
+      } else {
+        displayLoginButton();
+      }
+    })
+    .catch((error) => console.error("Error checking login:", error));
+}
+
+function displayUserProfile(userName, userEmail) {
+  const userProfile = document.getElementById("user-profile");
+  if (!userProfile) return;
+
+  const userName_span = userProfile.querySelector(".user-name");
+  const userInitial = userProfile.querySelector(".user-initial");
+  const profileIcon = userProfile.querySelector(".profile-icon");
+
+  if (profileIcon) profileIcon.style.display = "none";
+  if (userName_span) userName_span.style.display = "none";
+
+  if (userInitial) {
+    userInitial.textContent = userName;
+    userInitial.style.display = "inline-block";
+  }
+
+  const dropdownName = document.getElementById("dropdown-name");
+  const dropdownEmail = document.getElementById("dropdown-email");
+  if (dropdownName) dropdownName.textContent = userName;
+  if (dropdownEmail) dropdownEmail.textContent = userEmail;
+
+  const modal = document.getElementById("auth-modal");
+  if (modal) {
+    modal.classList.remove("active");
+  }
+
+  const newUserProfile = userProfile.cloneNode(true);
+  userProfile.parentNode.replaceChild(newUserProfile, userProfile);
+
+  newUserProfile.addEventListener("click", () => {
+    const profileDropdown = document.getElementById("profile-dropdown");
+    if (profileDropdown) {
+      profileDropdown.classList.toggle("active");
+    }
+  });
+}
+
+function displayLoginButton() {
+  const userProfile = document.getElementById("user-profile");
+  if (!userProfile) return;
+
+  const userName_span = userProfile.querySelector(".user-name");
+  const userInitial = userProfile.querySelector(".user-initial");
+  const profileIcon = userProfile.querySelector(".profile-icon");
+
+  if (profileIcon) profileIcon.style.display = "block";
+  if (userName_span) userName_span.style.display = "inline";
+
+  if (userInitial) {
+    userInitial.style.display = "none";
+  }
+
+  const userProfile_new = userProfile.cloneNode(true);
+  userProfile.parentNode.replaceChild(userProfile_new, userProfile);
+
+  userProfile_new.addEventListener("click", () => {
+    const modal = document.getElementById("auth-modal");
+    if (modal) {
+      modal.classList.add("active");
+    }
+  });
+}
+
+// =========================================================
 // --- INITIAL DUMMY DATA (DIKOSONGKAN) ---
 // =========================================================
 let mockReports = [];
@@ -24,13 +202,38 @@ function initializeDashboard() {
   const logoutModal = document.getElementById("logout-modal");
   const reportForm = document.getElementById("report-form");
 
+  // Navbar logout button
+  const navbarLogoutBtn = document.getElementById("navbar-logout-btn");
+  if (navbarLogoutBtn) {
+    navbarLogoutBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      const logoutPath = "../logout.php";
+      window.location.href = logoutPath;
+    });
+  }
+
+  // User profile dropdown - already handled in checkUserLogin
+  const profileDropdown = document.getElementById("profile-dropdown");
+  document.addEventListener("click", (e) => {
+    if (
+      profileDropdown &&
+      !document.getElementById("user-profile")?.contains(e.target) &&
+      !profileDropdown.contains(e.target)
+    ) {
+      profileDropdown.classList.remove("active");
+    }
+  });
+
+  // Feather icons
+  feather.replace();
+
   // Klik Logo PetResQ kembali ke dashboard
   document.querySelector(".logo").addEventListener("click", () => {
     navigateTo("dashboard");
   });
 
   // Setup listener untuk modal
-  const modals = document.querySelectorAll(".modal");
+  const modals = document.querySelectorAll(".modal:not(#auth-modal)");
   modals.forEach((modal) => {
     modal.addEventListener("click", (e) => {
       if (
@@ -54,8 +257,8 @@ function initializeDashboard() {
   if (confirmLogoutBtn) {
     confirmLogoutBtn.addEventListener("click", function () {
       if (logoutModal) logoutModal.style.display = "none";
-      alert("Logged out! Reload page to continue.");
-      location.reload();
+      const logoutPath = "../logout.php";
+      window.location.href = logoutPath;
     });
   }
 
@@ -197,73 +400,104 @@ function initializeDashboard() {
 
   // --- FUNGSI SUBMISSION ---
   window.showSubmissionDetail = function (submissionId) {
-    const submission = mockSubmissions.find((s) => s.id === submissionId);
-    if (!submission) return;
-
-    document.getElementById(
-      "submission-detail-id"
-    ).textContent = `#${submission.id.toString().padStart(3, "0")}`;
-    document.getElementById("submission-adopter-name").textContent =
-      submission.adopterName;
-    document.getElementById("submission-adopter-email").textContent =
-      submission.adopterEmail;
-    document.getElementById("submission-adopter-phone").textContent =
-      submission.adopterPhone;
-    document.getElementById("submission-animal-name").textContent =
-      submission.animalName;
-    // Address + location info for modal
-    const addrEl = document.getElementById("submission-address");
-    if (addrEl) {
-      addrEl.textContent = `${submission.address || ""}${
-        submission.city ? ", " + submission.city : ""
-      }${submission.postcode ? " (" + submission.postcode + ")" : ""}`;
-    }
-    document.getElementById("submission-date").textContent = new Date(
-      submission.date
-    ).toLocaleDateString("id-ID", {
-      day: "numeric",
-      month: "long",
-      year: "numeric",
-    });
-
-    const statusSpan = document.getElementById("submission-status-display");
-    statusSpan.textContent = submission.status;
-    statusSpan.className =
-      submission.status === "Approved"
-        ? "status-approved"
-        : submission.status === "Rejected"
-        ? "status-rejected"
-        : "status-pending";
-
-    document.getElementById("submission-reason").value =
-      submission.reason || "";
-    const gardenEl = document.getElementById("submission-garden");
-    if (gardenEl) gardenEl.textContent = submission.hasGarden ? "Yes" : "No";
-    const livingEl = document.getElementById("submission-living");
-    if (livingEl) livingEl.textContent = submission.living || "-";
-
-    // Populate additional details key-value list
-    const extraBox = document.getElementById("submission-extra-details");
-    if (extraBox) {
-      extraBox.innerHTML = "";
-      const details = submission.details || {};
-      const keys = Object.keys(details);
-      if (keys.length === 0) {
-        extraBox.textContent = "No additional details.";
-      } else {
-        const rows = keys
-          .map((k) => {
-            const val = details[k];
-            const label = k.replace(/_/g, " ");
-            return `<div><strong>${label}:</strong> ${String(val)}</div>`;
-          })
-          .join("");
-        extraBox.innerHTML = rows;
+    try {
+      const submission = mockSubmissions.find((s) => s.id === submissionId);
+      if (!submission) {
+        console.warn("Submission not found:", submissionId);
+        return;
       }
-    }
 
-    submissionDetailModal.style.display = "flex";
+      const modalEl = document.getElementById("submission-detail-modal");
+      if (!modalEl) {
+        console.error("Submission detail modal not found in DOM");
+        return;
+      }
+
+      document.getElementById(
+        "submission-detail-id"
+      ).textContent = `#${submission.id.toString().padStart(3, "0")}`;
+      document.getElementById("submission-adopter-name").textContent =
+        submission.adopterName || "-";
+      document.getElementById("submission-adopter-email").textContent =
+        submission.adopterEmail || "-";
+      document.getElementById("submission-adopter-phone").textContent =
+        submission.adopterPhone || "-";
+      document.getElementById("submission-animal-name").textContent =
+        submission.animalName || "-";
+
+      const addrEl = document.getElementById("submission-address");
+      if (addrEl) {
+        addrEl.textContent = `${submission.address || ""}${
+          submission.postcode ? " (" + submission.postcode + ")" : ""
+        }`;
+      }
+
+      document.getElementById("submission-date").textContent = submission.date
+        ? new Date(submission.date).toLocaleDateString("id-ID", {
+            day: "numeric",
+            month: "long",
+            year: "numeric",
+          })
+        : "-";
+
+      const statusSpan = document.getElementById("submission-status-display");
+      statusSpan.textContent = submission.status || "Pending";
+      statusSpan.className =
+        submission.status === "Approved"
+          ? "status-approved"
+          : submission.status === "Rejected"
+          ? "status-rejected"
+          : "status-pending";
+
+      const reasonEl = document.getElementById("submission-reason");
+      if (reasonEl) reasonEl.value = submission.reason || "";
+
+      const gardenEl = document.getElementById("submission-garden");
+      if (gardenEl) gardenEl.textContent = submission.hasGarden ? "Yes" : "No";
+      const livingEl = document.getElementById("submission-living");
+      if (livingEl) livingEl.textContent = submission.living || "-";
+
+      const extraBox = document.getElementById("submission-extra-details");
+      if (extraBox) {
+        extraBox.innerHTML = "";
+        const details = submission.details || {};
+        const keys = Object.keys(details);
+        if (keys.length === 0) {
+          extraBox.textContent = "No additional details.";
+        } else {
+          const rows = keys
+            .map((k) => {
+              const val = details[k];
+              const label = k.replace(/_/g, " ");
+              return `<div><strong>${label}:</strong> ${String(val)}</div>`;
+            })
+            .join("");
+          extraBox.innerHTML = rows;
+        }
+      }
+
+      // Ensure modal renders above everything and is visible
+      modalEl.style.display = "flex";
+      modalEl.style.zIndex = 1000;
+      modalEl.classList.add("active");
+      // Focus the modal for accessibility
+      if (modalEl.focus) modalEl.focus();
+    } catch (err) {
+      console.error("showSubmissionDetail error:", err);
+    }
   };
+
+  // Global ESC to close any open modal
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      document.querySelectorAll(".modal").forEach((m) => {
+        if (m.style.display === "flex") {
+          m.style.display = "none";
+          m.classList.remove("active");
+        }
+      });
+    }
+  });
 
   window.approveSubmission = function (submissionId) {
     const submission = mockSubmissions.find((s) => s.id === submissionId);
@@ -380,9 +614,9 @@ function initializeDashboard() {
         }
 
         return `
-                <div class="submission-card" onclick="showSubmissionDetail(${
-                  submission.id
-                })">
+          <div class="submission-card" style="cursor:pointer;" onclick="showSubmissionDetail(${
+            submission.id
+          })">
                     <div class="submission-card-header">
                         <div class="submission-id">#${submission.id
                           .toString()
@@ -492,7 +726,6 @@ function initializeDashboard() {
                             <span class="chip">Name</span>
                             <span class="chip">Email</span>
                             <span class="chip">Status</span>
-                            <span class="chip">Registered</span>
                             <span class="chip">Action</span>
                         </div>
                         
@@ -505,13 +738,12 @@ function initializeDashboard() {
                                                 <th>Name</th>
                                                 <th>Email</th>
                                                 <th>Status</th>
-                                                <th>Registered</th>
                                                 <th style="text-align:center;">Action</th>
                                             </tr>
                                         </thead>
                                         <tbody id="users-table-body">
                                             <tr class="empty-row">
-                                                <td colspan="5" style="text-align: center; color: #888; padding: 40px; background: transparent; border-radius: 6px;">
+                          <td colspan="4" style="text-align: center; color: #888; padding: 40px; background: transparent; border-radius: 6px;">
                                                     <i class="fas fa-users" style="font-size: 2em; display: block; margin-bottom: 10px;"></i>
                                                     Data user akan dimuat di sini setelah koneksi database.
                                                 </td>
@@ -844,6 +1076,26 @@ function initializeDashboard() {
           renderRehomeSubmissions("all");
         });
     }
+
+    if (pageId === "manage-users") {
+      const tbody = document.getElementById("users-table-body");
+      if (tbody) {
+        tbody.innerHTML = `
+          <tr class="empty-row">
+            <td colspan="5" style="text-align:center; color:#888; padding:20px;">
+              <i class="fas fa-spinner fa-spin"></i> Loading users...
+            </td>
+          </tr>`;
+      }
+      loadUsersFromBackend()
+        .then(() => {
+          renderManageUsers();
+        })
+        .catch((err) => {
+          console.warn("Failed to load users:", err);
+          renderManageUsers(); // Render any existing mockUsers (possibly empty)
+        });
+    }
   }
 
   // --- LOGIKA PERUBAHAN BULAN ---
@@ -1051,7 +1303,10 @@ function initializeDashboard() {
 // --- AUTO START DASHBOARD ---
 // =========================================================
 document.addEventListener("DOMContentLoaded", () => {
-  initializeDashboard();
+  setupModalListeners();
+  handleFormSubmit("login-tab", "login.php");
+  handleFormSubmit("register-tab", "register.php");
+  checkUserLogin();
 });
 
 // =========================================================
@@ -1096,7 +1351,7 @@ let mockRehomeSubmissions = [];
 
 async function loadRehomeSubmissionsFromBackend() {
   try {
-    const resp = await fetch("/PetResQ/admin/rehome_submissions.php", {
+    const resp = await fetch("/PetResQ/admin/rehome_submissions_api.php", {
       credentials: "include",
     });
     if (!resp.ok) throw new Error("Failed to load rehome submissions");
@@ -1158,7 +1413,9 @@ function renderRehomeSubmissions(filter = "all") {
           : "status-pending";
 
       return `
-        <div class="submission-card">
+        <div class="submission-card" style="cursor:pointer;" onclick="openRehomeDetail(${
+          submission.id
+        })">
           <div class="submission-card-header">
             <div class="submission-id">#${submission.id
               .toString()
@@ -1209,3 +1466,130 @@ function renderRehomeSubmissions(filter = "all") {
 }
 
 window.renderRehomeSubmissions = renderRehomeSubmissions;
+
+// Open rehome submission detail in admin detail page
+window.openRehomeDetail = function (id) {
+  if (!id) return;
+  window.location.href =
+    "/PetResQ/admin/rehome_detail.php?id=" + encodeURIComponent(id);
+};
+
+// =========================================================
+// --- BACKEND INTEGRATION: LOAD & RENDER USERS ---
+// =========================================================
+async function loadUsersFromBackend() {
+  try {
+    const resp = await fetch("/PetResQ/admin/users_api.php", {
+      credentials: "include",
+    });
+    if (!resp.ok) throw new Error("Failed to load users");
+    const json = await resp.json();
+    if (json && Array.isArray(json.data)) {
+      mockUsers = json.data.map((u) => ({
+        id: u.id,
+        name: u.name,
+        email: u.email,
+        role: u.role || "user",
+        status: u.status || "active",
+        registered: u.registered || null,
+      }));
+      console.log("Loaded users:", mockUsers.length);
+    }
+  } catch (e) {
+    console.warn("Users API error:", e);
+    // Leave mockUsers as-is
+  }
+}
+
+function renderManageUsers() {
+  const tbody = document.getElementById("users-table-body");
+  if (!tbody) return;
+
+  if (!mockUsers || mockUsers.length === 0) {
+    tbody.innerHTML = `
+      <tr class="empty-row">
+        <td colspan="5" style="text-align: center; color: #888; padding: 40px; background: transparent; border-radius: 6px;">
+          <i class="fas fa-users" style="font-size: 2em; display: block; margin-bottom: 10px;"></i>
+          Tidak ada data user.
+        </td>
+      </tr>`;
+    return;
+  }
+
+  const rows = mockUsers
+    .map((u) => {
+      const statusClass =
+        u.status === "inactive"
+          ? "status-rejected"
+          : u.role === "admin"
+          ? "status-approved"
+          : "status-pending"; // default visual
+
+      return `
+        <tr>
+          <td>${u.name || "-"}</td>
+          <td>${u.email || "-"}</td>
+          <td><span class="${statusClass}">${
+        u.role ? u.role.toUpperCase() : u.status.toUpperCase()
+      }</span></td>
+          <td style="text-align:center;">
+            <button class="btn btn-submit" title="Delete Account" onclick="deleteUser(${
+              u.id
+            })">Delete Account</button>
+          </td>
+        </tr>`;
+    })
+    .join("");
+
+  tbody.innerHTML = rows;
+
+  // Update summary numbers if present
+  const totalUsersEl = document.querySelector(
+    ".small-summary-card.first .small-number"
+  );
+  if (totalUsersEl) totalUsersEl.textContent = mockUsers.length;
+  const totalOwnersEl = document.querySelector(
+    ".summary-panel .small-summary-card:nth-child(2) .small-number"
+  );
+  if (totalOwnersEl)
+    totalOwnersEl.textContent = mockUsers.filter(
+      (u) => u.role === "owner"
+    ).length;
+  const totalAdoptersEl = document.querySelector(
+    ".summary-panel .small-summary-card:nth-child(3) .small-number"
+  );
+  if (totalAdoptersEl)
+    totalAdoptersEl.textContent = mockUsers.filter(
+      (u) => u.role === "adopter"
+    ).length;
+}
+
+window.renderManageUsers = renderManageUsers;
+
+// --- DELETE USER ---
+window.deleteUser = function (userId) {
+  if (!userId || isNaN(userId)) return;
+  if (!confirm("Are you sure you want to delete this account?")) return;
+  fetch("/PetResQ/admin/delete_user.php", {
+    method: "POST",
+    credentials: "include",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: new URLSearchParams({ id: userId }),
+  })
+    .then((r) => r.json())
+    .then((json) => {
+      if (json && json.success) {
+        // Refresh list
+        loadUsersFromBackend().then(() => {
+          renderManageUsers();
+          alert("Account deleted.");
+        });
+      } else {
+        alert(json.message || "Failed to delete account");
+      }
+    })
+    .catch((err) => {
+      console.warn("Delete user error:", err);
+      alert("Network/Server error while deleting account");
+    });
+};

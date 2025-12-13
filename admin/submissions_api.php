@@ -21,19 +21,18 @@ if ($role !== 'admin') {
 
 // Fetch adoption submissions with useful joins
 $sql = "SELECT id,
-           full_name AS adopter_name,
-           email AS adopter_email,
-           phone AS adopter_phone,
-           story AS adopter_reason,
-           status AS app_status,
-           submitted_at,
-           hewan_id,
-           address_line1,
-           city,
-           postcode,
-           has_garden,
-           living_situation,
-           details_json
+        full_name AS adopter_name,
+        email AS adopter_email,
+        phone AS adopter_phone,
+        story AS adopter_reason,
+        status AS app_status,
+        submitted_at,
+        hewan_id,
+        address_line1,
+        postcode,
+        has_garden,
+        living_situation,
+        details_json
     FROM adoption_applications
     ORDER BY submitted_at DESC
     LIMIT 200";
@@ -69,7 +68,8 @@ if ($res) {
             'status' => $statusOut,
             'reason' => $row['adopter_reason'] ?? '',
             'address' => $row['address_line1'] ?? '',
-            'city' => $row['city'] ?? '',
+            // 'city' column removed from schema; keep empty for compatibility
+            'city' => '',
             'postcode' => $row['postcode'] ?? '',
             'hasGarden' => isset($row['has_garden']) ? (int)$row['has_garden'] : 0,
             'living' => $row['living_situation'] ?? '',
@@ -79,8 +79,35 @@ if ($res) {
     echo json_encode(['data' => $items]);
     exit;
 } else {
-    http_response_code(500);
-    echo json_encode(['error' => 'Query failed', 'details' => mysqli_error($conn)]);
+    // Fallback: attempt minimal query to avoid hard failure
+    $fallback = mysqli_query($conn, "SELECT id, full_name, email, status, submitted_at FROM adoption_applications ORDER BY submitted_at DESC LIMIT 200");
+    if ($fallback) {
+        while ($row = mysqli_fetch_assoc($fallback)) {
+            $status = isset($row['status']) ? strtolower($row['status']) : 'submitted';
+            $statusOut = ($status === 'approved') ? 'Approved' : (($status === 'rejected') ? 'Rejected' : 'Pending');
+            $items[] = [
+                'id' => isset($row['id']) ? (int)$row['id'] : 0,
+                'adopterName' => $row['full_name'] ?? '',
+                'adopterEmail' => $row['email'] ?? '',
+                'adopterPhone' => '',
+                'animalName' => 'Unknown',
+                'date' => $row['submitted_at'] ?? '',
+                'status' => $statusOut,
+                'reason' => '',
+                'address' => '',
+                'city' => '',
+                'postcode' => '',
+                'hasGarden' => 0,
+                'living' => '',
+                'details' => []
+            ];
+        }
+        echo json_encode(['data' => $items, 'warning' => 'Partial data; full query failed', 'details' => mysqli_error($conn)]);
+        exit;
+    }
+    // As a last resort, return empty data with error detail instead of 500
+    http_response_code(200);
+    echo json_encode(['data' => [], 'error' => 'Query failed', 'details' => mysqli_error($conn)]);
     exit;
 }
 ?>

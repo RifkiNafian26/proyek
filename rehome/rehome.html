@@ -18,15 +18,7 @@
     <!-- My Style -->
     <link rel="stylesheet" href="../css/style.css?v=2" />
     <link rel="stylesheet" href="stylerehome.css" />
-              return response.json().then(json => {
-                // If not OK, throw with server message for clarity
-                if (!response.ok) {
-                  const msg = json?.message || 'Server error';
-                  const detail = json?.detail ? `\nDetail: ${json.detail}` : '';
-                  throw new Error(`${msg}${detail}`);
-                }
-                return json;
-              }).catch(err => {
+  </head>
   <body>
     <!-- Navbar start -->
     <nav class="navbar">
@@ -521,7 +513,12 @@
             <div class="image-upload-box">
               <i class="fas fa-file-upload"></i>
               <p>Document 1</p>
-              <input type="file" id="pet_documents" accept="image/*,.pdf" multiple />
+              <input
+                type="file"
+                id="pet_documents"
+                accept="image/*,.pdf"
+                multiple
+              />
             </div>
             <div class="image-upload-box">
               <i class="fas fa-file-upload"></i>
@@ -1077,7 +1074,9 @@
                   .then((json) => {
                     if (!response.ok) {
                       const msg = json?.message || "Server error";
-                      const detail = json?.detail ? "\nDetail: " + json.detail : "";
+                      const detail = json?.detail
+                        ? "\nDetail: " + json.detail
+                        : "";
                       throw new Error(msg + detail);
                     }
                     return json;
@@ -1088,7 +1087,9 @@
                       raw = await response.text();
                     } catch {}
                     const hint = raw ? "\nRaw: " + raw.substring(0, 500) : "";
-                    throw new Error("Failed to parse JSON response: " + err.message + hint);
+                    throw new Error(
+                      "Failed to parse JSON response: " + err.message + hint
+                    );
                   });
               })
               .then((data) => {

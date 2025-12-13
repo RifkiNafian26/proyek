@@ -109,6 +109,8 @@ function checkUserLogin() {
   fetch("/PetResQ/check_session.php", { credentials: "include" })
     .then((response) => response.json())
     .then((data) => {
+      // Expose simple login flag for navbar gating
+      window.isLoggedIn = !!data.is_logged_in;
       if (data.is_logged_in) {
         displayUserProfile(data.user_name, data.user_email);
         if (data.role === "admin") {
@@ -1393,6 +1395,52 @@ document.addEventListener("DOMContentLoaded", () => {
   handleFormSubmit("login-tab", "login.php");
   handleFormSubmit("register-tab", "register.php");
   checkUserLogin();
+  // Gate Rehome link globally: intercept any anchor to rehome page
+  // Capture-phase interceptor to beat other handlers
+  document.addEventListener(
+    "click",
+    (e) => {
+      const a = e.target.closest("a");
+      if (!a) return;
+      const rawHref = a.getAttribute("href") || "";
+      // Resolve to absolute to check pathname reliably
+      let isRehome = false;
+      try {
+        const u = new URL(rawHref, window.location.href);
+        isRehome =
+          u.pathname.toLowerCase().includes("/rehome/rehome") ||
+          u.pathname.toLowerCase().endsWith("/rehome");
+      } catch (_) {
+        // Fallback to regex on raw string
+        isRehome =
+          /rehome\/rehome\.html$/i.test(rawHref) ||
+          /rehome\/rehome\.php$/i.test(rawHref) ||
+          /\/rehome\/?$/i.test(rawHref);
+      }
+      if (isRehome && !window.isLoggedIn) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        e.stopPropagation();
+        const modal = document.getElementById("auth-modal");
+        if (modal) {
+          const loginTab = document.getElementById("login-tab");
+          const registerTab = document.getElementById("register-tab");
+          const modalTitle = document.getElementById("modal-title");
+          if (loginTab && registerTab) {
+            loginTab.classList.add("active");
+            registerTab.classList.remove("active");
+          }
+          const imgLogin = document.querySelector(".modal-image-login");
+          const imgRegister = document.querySelector(".modal-image-register");
+          if (imgLogin) imgLogin.classList.add("active");
+          if (imgRegister) imgRegister.classList.remove("active");
+          if (modalTitle) modalTitle.textContent = "Login";
+          modal.classList.add("active");
+        }
+      }
+    },
+    true
+  );
 });
 
 // =========================================================

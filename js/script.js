@@ -310,6 +310,8 @@ function checkUserLogin() {
   fetch(sessionPath)
     .then((response) => response.json())
     .then((data) => {
+      // Expose a simple flag for gating navigation
+      window.isLoggedIn = !!data.is_logged_in;
       if (data.is_logged_in) {
         displayUserProfile(data.user_name, data.user_email);
         // If admin, inject Admin link into navbar; otherwise ensure it's hidden
@@ -554,6 +556,47 @@ document.addEventListener("DOMContentLoaded", function () {
       if (dropdown) dropdown.classList.remove("active");
     });
   }
+
+  // Gate Rehome navigation for non-logged-in users
+  document.addEventListener(
+    "click",
+    function (e) {
+      const anchor = e.target.closest("a");
+      if (!anchor) return;
+      const rawHref = anchor.getAttribute("href") || "";
+      let isRehome = false;
+      try {
+        const url = new URL(rawHref, window.location.href);
+        const path = url.pathname.toLowerCase();
+        isRehome = path.includes("/rehome/rehome");
+      } catch (_) {
+        isRehome = /rehome\/rehome\.(html|php)$/i.test(rawHref);
+      }
+      if (isRehome && !window.isLoggedIn) {
+        e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+        const modal = document.getElementById("auth-modal");
+        if (modal) {
+          // Ensure login tab is active
+          const loginTab = document.getElementById("login-tab");
+          const registerTab = document.getElementById("register-tab");
+          const modalTitle = document.getElementById("modal-title");
+          if (loginTab && registerTab) {
+            loginTab.classList.add("active");
+            registerTab.classList.remove("active");
+          }
+          const imgLogin = document.querySelector(".modal-image-login");
+          const imgRegister = document.querySelector(".modal-image-register");
+          if (imgLogin) imgLogin.classList.add("active");
+          if (imgRegister) imgRegister.classList.remove("active");
+          if (modalTitle) modalTitle.textContent = "Login";
+          modal.classList.add("active");
+        }
+      }
+    },
+    true
+  );
 });
 
 // Adds an Admin link to the navbar if not already present

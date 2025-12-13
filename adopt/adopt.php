@@ -41,7 +41,6 @@ require_once '../config.php';
             <a href="../careguides/Rabbit Care Guides.html">Rabbit</a>
           </div>
         </div>
-        <a href="#about">About</a>
       </div>
 
       <div class="navbar-extra" aria-label="Top right taskbar">

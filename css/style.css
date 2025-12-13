@@ -76,7 +76,7 @@ html {
 }
 
 .navbar .navbar-nav a:hover {
-  color: #e1bf6a;
+  color: #C4661F;
   transform: translateY(-2px);
 }
 
@@ -173,7 +173,7 @@ html {
 
 .navbar .navbar-dropdown .dropdown-menu a:hover {
   background-color: #f5f5f5;
-  color: #e1bf6a;
+  color: #C4661F;
   transform: none;
 }
 
@@ -213,7 +213,7 @@ html {
 
 .navbar .navbar-extra a:hover {
   background-color: rgba(95, 111, 82, 0.06);
-  color: #e1bf6a;
+  color: #C4661F;
   transform: translateY(-2px);
 }
 
@@ -467,26 +467,41 @@ html {
 }
 
 .impact-text {
-  flex: 0 0 auto;
+    flex: 0 0 auto;
+    text-shadow: 
+        1px 1px 0 #000, 
+        2px 2px 0 #000;
 }
 
 .impact-text h3 {
-  color: #000;
-  font-family: "Kreon", sans-serif;
-  font-size: 3rem;
-  font-weight: 700;
-  line-height: 1.2;
-  margin: 0;
-  text-transform: uppercase;
-  letter-spacing: 2px;
+    color: #000;
+    font-family: "Kreon", sans-serif;
+    font-size: 3rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 2px;
 }
 
 .impact-box {
-  flex: 1;
-  min-height: 200px;
-  background-color: #6e7b59;
-  border-radius: 20px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    flex: 1;
+    min-height: 200px;
+    background-color: #5F6F52; 
+    border-radius: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    padding: 30px; 
+    display: flex;
+    align-items: center;
+}
+
+.impact-box p {
+    color: white;
+    font-family: "Kreon", serif;
+    margin: 0;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    font-weight: 400;
 }
 
 @media (max-width: 768px) {

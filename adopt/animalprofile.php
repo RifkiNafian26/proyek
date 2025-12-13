@@ -74,7 +74,6 @@ if (!empty($animal['main_photo'])) {
         <a href="adopt.php">Adopt</a>
         <a href="../rehome/rehome.html">Rehome</a>
         <a href="#care-guides">Care Guides</a>
-        <a href="#about">About</a>
       </div>
 
       <div class="navbar-extra" aria-label="Top right taskbar">
@@ -347,9 +346,6 @@ if (!empty($animal['main_photo'])) {
                 <p><?php echo nl2br(htmlspecialchars($animal['description'])); ?></p>
               </div>
             </div>
-
-            <!-- Contact Owner -->
-            <button class="btn-contact">Start chat</button>
 
             <!-- Adoption CTA -->
             <div class="adoption-cta">

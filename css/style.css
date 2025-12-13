@@ -443,7 +443,7 @@ html {
   padding: 2rem;
   border-radius: 25px;
   text-align: center;
-  background-color: #fff;
+  background-color: #ffff;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
@@ -456,55 +456,47 @@ html {
 
 .impact-section {
   background-color: #fefae0;
-  padding: 60px 40px;
-  margin-top: 40px;
+  margin-bottom: 3rem;
+}
+
+.impact-blur {
+  display: flex;
+  justify-content: center;
+  background-color:rgba(95, 111, 82, 0.10000000149011612);
+  position: relative;
+  padding: 30px;
+  backdrop-filter: blur(15px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);;
 }
 
 .impact-content {
-  max-width: 1200px;
-  margin: 0 auto;
+  width: 1000px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 60px;
+  gap: 30px;
 }
 
-.impact-text {
-    flex: 0 0 auto;
-    text-shadow: 
-        1px 1px 0 #000, 
-        2px 2px 0 #000;
-}
-
-.impact-text h3 {
-    color: #000;
-    font-family: "Kreon", sans-serif;
-    font-size: 3rem;
-    font-weight: 700;
-    line-height: 1.2;
-    margin: 0;
-    text-transform: uppercase;
-    letter-spacing: 2px;
+.impact-title {
+    font-size: 32px;
+    font-weight: bold;
+    line-height: 1.1;
+    color: #333;
+    font-family: Kreon, serif; 
+    text-shadow: 1px 1px 0 #000, -1px -1px 0 #000;
 }
 
 .impact-box {
-    flex: 1;
-    min-height: 200px;
-    background-color: #5F6F52; 
-    border-radius: 20px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    padding: 30px; 
-    display: flex;
-    align-items: center;
+  flex-basis: 70%;
+  background-color: #5f6f52; /* Warna hijau zaitun */
+  padding: 25px;
+  border-radius: 10px;
 }
 
-.impact-box p {
-    color: white;
-    font-family: "Kreon", serif;
-    margin: 0;
-    font-size: 1.1rem;
+.impact-text {
+    color: #f0f0f0;
+    font-size: 16px;
     line-height: 1.6;
-    font-weight: 400;
 }
 
 @media (max-width: 768px) {

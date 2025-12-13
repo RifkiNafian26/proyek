@@ -16,7 +16,7 @@ if ($id === 0) {
 }
 
 // Fetch submission
-$query = "SELECT rs.*, u.nama_user, u.email_user 
+$query = "SELECT rs.*, u.nama, u.email 
           FROM rehome_submissions rs
           JOIN user u ON rs.user_id = u.id_user
           WHERE rs.id = ?";

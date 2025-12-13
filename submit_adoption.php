@@ -1,5 +1,8 @@
 <?php
-header('Content-Type: application/json');
+// Ensure clean JSON output without PHP notices/warnings
+error_reporting(E_ERROR | E_PARSE);
+ini_set('display_errors', '0');
+header('Content-Type: application/json; charset=utf-8');
 session_start();
 
 if (!isset($_SESSION['user_id'])) {
@@ -9,6 +12,11 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 require_once __DIR__ . '/config.php';
+if (!isset($conn) || !$conn) {
+    http_response_code(500);
+    echo json_encode(['ok' => false, 'error' => 'DB connection failed']);
+    exit;
+}
 
 // Accept JSON or form-encoded payloads
 $contentType = isset($_SERVER['CONTENT_TYPE']) ? strtolower($_SERVER['CONTENT_TYPE']) : '';
@@ -54,11 +62,12 @@ $other_animals = trim($data['other_animals'] ?? '');
 $vaccinated = trim($data['vaccinated'] ?? '');
 $experience = trim($data['experience'] ?? '');
 
+// Relax validation slightly: adults can be 0, allow optional fields to be '-'
 if ($address === '' || $postcode === '' || $telephone === '' || $garden === '' ||
     $living === '' || $household_setting === '' || $household_activity === '' ||
-    ($adults === null || $adults <= 0) || $allergies === '' || $other_animals === '' || $vaccinated === '') {
+    $allergies === '' || $other_animals === '' || $vaccinated === '') {
     http_response_code(400);
-    echo json_encode([ 'ok' => false, 'error' => 'Missing required fields' ]);
+    echo json_encode(['ok' => false, 'error' => 'Missing required fields']);
     exit;
 }
 
@@ -66,6 +75,7 @@ $applicant_user_id = (int)$_SESSION['user_id'];
 $full_name = $_SESSION['user_name'] ?? '';
 $email = $_SESSION['user_email'] ?? '';
 $has_garden = (strtolower($garden) === 'yes') ? 1 : 0;
+$status = 'submitted';
 
 // Bundle all extra details to JSON for flexibility
 $details = [
@@ -87,12 +97,19 @@ $details = [
 $details_json = json_encode($details, JSON_UNESCAPED_UNICODE);
 
 // Insert application (now with hewan_id)
-$sql = "INSERT INTO adoption_applications
-    (applicant_user_id, assigned_admin_user_id, hewan_id, full_name, email, phone,
-     address_line1, city, postcode, has_garden, living_situation, story, details_json)
-    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
+$withHewan = ($hewan_id !== null && $hewan_id > 0);
+if ($withHewan) {
+    $sql = "INSERT INTO adoption_applications
+        (applicant_user_id, assigned_admin_user_id, hewan_id, full_name, email, phone,
+         address_line1, postcode, has_garden, living_situation, story, details_json, status, submitted_at)
+        VALUES (?,?,?,?,?,?,?,?,?,?,?,?, ?, NOW())";
+} else {
+    $sql = "INSERT INTO adoption_applications
+        (applicant_user_id, assigned_admin_user_id, full_name, email, phone,
+         address_line1, postcode, has_garden, living_situation, story, details_json, status, submitted_at)
+        VALUES (?,?,?,?,?,?,?,?,?,?,?, ?, NOW())";
+}
 $stmt = mysqli_prepare($conn, $sql);
-$city = $data['city'] ?? null; // optional
 $story = $experience; // reuse
 // Determine admin recipients dynamically (notify ALL admins)
 $adminIds = [];
@@ -108,33 +125,52 @@ if (empty($adminIds)) {
 }
 if (!$stmt) {
     http_response_code(500);
-    echo json_encode([ 'ok' => false, 'error' => 'DB prepare failed', 'details' => mysqli_error($conn) ]);
+    echo json_encode(['ok' => false, 'error' => 'DB prepare failed', 'details' => mysqli_error($conn)]);
     exit;
 }
 // Pick an assigned admin (or leave NULL) — also notify all admins separately
 $assignedAdmin = isset($adminIds[0]) ? (int)$adminIds[0] : null;
 
-mysqli_stmt_bind_param(
-    $stmt,
-    'iiisssssissss',
-    $applicant_user_id,
-    $assignedAdmin,
-    $hewan_id,
-    $full_name,
-    $email,
-    $telephone,
-    $address,
-    $city,
-    $postcode,
-    $has_garden,
-    $living,
-    $story,
-    $details_json
-);
+if ($withHewan) {
+    mysqli_stmt_bind_param(
+        $stmt,
+        'iiissssisssss',
+        $applicant_user_id,
+        $assignedAdmin,
+        $hewan_id,
+        $full_name,
+        $email,
+        $telephone,
+        $address,
+        $postcode,
+        $has_garden,
+        $living,
+        $story,
+        $details_json,
+        $status
+    );
+} else {
+    mysqli_stmt_bind_param(
+        $stmt,
+        'iissssisssss',
+        $applicant_user_id,
+        $assignedAdmin,
+        $full_name,
+        $email,
+        $telephone,
+        $address,
+        $postcode,
+        $has_garden,
+        $living,
+        $story,
+        $details_json,
+        $status
+    );
+}
 
 if (!mysqli_stmt_execute($stmt)) {
     http_response_code(500);
-    echo json_encode([ 'ok' => false, 'error' => 'DB insert failed', 'details' => mysqli_error($conn) ]);
+    echo json_encode(['ok' => false, 'error' => 'DB insert failed', 'details' => mysqli_error($conn)]);
     exit;
 }
 
@@ -160,3 +196,4 @@ if (isset($noteError)) {
     $resp['notification_warning'] = $noteError;
 }
 echo json_encode($resp);
+exit;

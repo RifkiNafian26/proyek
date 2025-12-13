@@ -2,6 +2,16 @@
 // --- LOGIN SYSTEM FUNCTIONS ---
 // =========================================================
 
+// Global shim to avoid ReferenceError if later code fails before definition
+if (
+  typeof window !== "undefined" &&
+  typeof window.openAnimalDetail !== "function"
+) {
+  window.openAnimalDetail = function () {
+    console.warn("openAnimalDetail is currently unavailable.");
+  };
+}
+
 function setupModalListeners() {
   const modal = document.getElementById("auth-modal");
   const closeBtn = document.getElementById("close-modal");
@@ -68,7 +78,7 @@ function handleFormSubmit(formId, phpFile) {
     const formData = new FormData(form);
     const errorDiv = document.getElementById("form-error");
 
-    fetch("../" + phpFile, {
+    fetch("/PetResQ/" + phpFile, {
       method: "POST",
       body: formData,
     })
@@ -96,7 +106,7 @@ function handleFormSubmit(formId, phpFile) {
 }
 
 function checkUserLogin() {
-  fetch("../check_session.php")
+  fetch("/PetResQ/check_session.php", { credentials: "include" })
     .then((response) => response.json())
     .then((data) => {
       if (data.is_logged_in) {
@@ -184,6 +194,47 @@ let mockUsers = [];
 let mockAnimals = [];
 let mockSubmissions = [];
 
+// --- ANIMAL DETAIL (OPEN IN MODAL) ---
+function openAnimalDetail(id) {
+  const modalEl = document.getElementById("animal-detail-modal");
+  if (!modalEl || !id) return;
+  const targetId = typeof id === "number" ? id : Number(id);
+  const animal = mockAnimals.find((x) => {
+    const xid = typeof x.id === "number" ? x.id : Number(x.id);
+    return xid === targetId;
+  });
+  if (!animal) return;
+
+  const setText = (elId, val) => {
+    const el = document.getElementById(elId);
+    if (el) el.textContent = val ?? "-";
+  };
+
+  const titleEl = document.getElementById("animal-detail-title");
+  if (titleEl) titleEl.textContent = `#${targetId.toString().padStart(3, "0")}`;
+  setText("animal-detail-name", animal.name);
+  setText("animal-detail-type", animal.category);
+  setText("animal-detail-breed", animal.breed);
+  setText("animal-detail-color", animal.color);
+  setText("animal-detail-age", animal.age != null ? animal.age : "-");
+  const statusEl = document.getElementById("animal-detail-status");
+  if (statusEl) statusEl.innerHTML = formatStatus(animal.status);
+  // uploader removed
+
+  const photoWrap = document.getElementById("animal-detail-photo");
+  if (photoWrap) {
+    photoWrap.innerHTML = animal.photo
+      ? `<img src="${animal.photo}" alt="${animal.name}" style="width:120px; height:120px; object-fit:cover; border-radius:10px; border:1px solid #ddd;" onerror="this.style.display='none'">`
+      : `<span style="color:#999;">No photo</span>`;
+  }
+
+  // Ensure modal renders above everything and is visible
+  modalEl.style.display = "flex";
+  modalEl.style.zIndex = 1000;
+  modalEl.classList.add("active");
+  if (modalEl.focus) modalEl.focus();
+}
+window.openAnimalDetail = openAnimalDetail;
 // =========================================================
 // --- FUNGSI UTAMA DASHBOARD ---
 // =========================================================
@@ -783,83 +834,46 @@ function initializeDashboard() {
             </div>
         `,
     "manage-animals": `
-            <h3>Manage Animals</h3>
-            <div style="margin-bottom: 12px; color: #444;">Showing ${
-              mockAnimals.length
-            } of ${mockAnimals.length} animals</div>
-            
-            <div class="content-body">
-                <div class="user-table-section">
-                    <div class="manage-users-panel">
-                        <div class="table-chips" role="list">
-                            <span class="chip">Photo</span>
-                            <span class="chip">Animal Name</span>
-                            <span class="chip">Category</span>
-                            <span class="chip">Upload By</span>
-                            <span class="chip">Action</span>
-                        </div>
-                        
-                        <div class="manage-users-inner">
-                            <div class="table-box">
-                                <div class="table-container" style="padding: 0; box-shadow: none; background: transparent;">
-                                    <table class="data-table user-table">
-                                        <thead>
-                                            <tr>
-                                                <th>Photo</th>
-                                                <th>Animal Name</th>
-                                                <th>Category</th>
-                                                <th>Upload By</th>
-                                                <th style="text-align:center;">Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="animals-table-body">
-                                            <tr class="empty-row">
-                                                <td colspan="5" style="text-align: center; color: #888; padding: 40px; background: transparent; border-radius: 6px;">
-                                                    <i class="fas fa-paw" style="font-size: 2em; display: block; margin-bottom: 10px; color: var(--color-primary-dark);"></i>
-                                                    Data hewan akan dimuat di sini setelah koneksi database.
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="pagination-pill">
-                            <div class="pill">Showing 1-5 of ${
-                              mockAnimals.length
-                            } animals &nbsp;&nbsp; Prev 1 2 3 ...</div>
-                        </div>
-                    </div>
-                </div>
+        <h3>Manage Animals</h3>
+        <div style="margin-bottom: 12px; color: #444;">Total ${
+          mockAnimals.length
+        } animals</div>
 
-                <div class="summary-panel">
-                    <div class="small-summary-card first">
-                        <div class="small-number">${mockAnimals.length}</div>
-                        <div class="small-label">Total Animals</div>
-                    </div>
-                    <div class="small-summary-card">
-                        <div class="small-number">${
-                          mockAnimals.filter((a) => a.category === "Dog").length
-                        }</div>
-                        <div class="small-label">Total Dogs</div>
-                    </div>
-                    <div class="small-summary-card">
-                        <div class="small-number">${
-                          mockAnimals.filter((a) => a.category === "Cat").length
-                        }</div>
-                        <div class="small-label">Total Cats</div>
-                    </div>
-                    <div class="small-summary-card">
-                        <div class="small-number">${
-                          mockAnimals.filter((a) => a.category === "Rabbit")
-                            .length
-                        }</div>
-                        <div class="small-label">Total Rabbits</div>
-                    </div>
-                </div>
+        <div class="content-body">
+          <div class="cards-grid" id="animals-cards">
+            <!-- cards rendered via renderManageAnimals() -->
+          </div>
+
+          <div class="pagination-pill">
+            <div class="pill">Showing all (${mockAnimals.length})</div>
+          </div>
+
+          <div class="summary-panel">
+            <div class="small-summary-card first">
+              <div class="small-number">${mockAnimals.length}</div>
+              <div class="small-label">Total Animals</div>
             </div>
-        `,
+            <div class="small-summary-card">
+              <div class="small-number">${
+                mockAnimals.filter((a) => a.category === "Dog").length
+              }</div>
+              <div class="small-label">Total Dogs</div>
+            </div>
+            <div class="small-summary-card">
+              <div class="small-number">${
+                mockAnimals.filter((a) => a.category === "Cat").length
+              }</div>
+              <div class="small-label">Total Cats</div>
+            </div>
+            <div class="small-summary-card">
+              <div class="small-number">${
+                mockAnimals.filter((a) => a.category === "Rabbit").length
+              }</div>
+              <div class="small-label">Total Rabbits</div>
+            </div>
+          </div>
+        </div>
+      `,
     "system-reports": `
             <div class="metrics-row">
                 <div class="metric-box" style="background-color: var(--color-primary-light);">
@@ -1096,6 +1110,39 @@ function initializeDashboard() {
           renderManageUsers(); // Render any existing mockUsers (possibly empty)
         });
     }
+
+    if (pageId === "manage-animals") {
+      const tbody = document.getElementById("animals-table-body");
+      const grid = document.getElementById("animals-cards");
+      if (grid) {
+        grid.innerHTML =
+          '<div style="grid-column:1 / -1; text-align:center; color:#777; padding:16px;"><i class="fas fa-spinner fa-spin"></i> Loading animals...</div>';
+      } else if (tbody) {
+        tbody.innerHTML = `
+          <tr class="empty-row">
+            <td colspan="5" style="text-align:center; color:#888; padding:20px;">
+              <i class="fas fa-spinner fa-spin"></i> Loading animals...
+            </td>
+          </tr>`;
+      }
+      loadAnimalsFromBackend()
+        .then(() => {
+          if (typeof renderManageAnimals === "function") {
+            renderManageAnimals();
+          } else {
+            // Fallback renderer if definition not reached due to earlier error
+            safeRenderManageAnimals();
+          }
+        })
+        .catch((err) => {
+          console.warn("Failed to load animals:", err);
+          if (typeof renderManageAnimals === "function") {
+            renderManageAnimals();
+          } else {
+            safeRenderManageAnimals();
+          }
+        });
+    }
   }
 
   // --- LOGIKA PERUBAHAN BULAN ---
@@ -1217,71 +1264,110 @@ function initializeDashboard() {
   }
 
   // --- LOGIKA KALENDER UTAMA ---
-  function renderCalendar(date) {
-    const year = date.getFullYear();
-    const month = date.getMonth();
-    const activeDay = date.getDate();
+  function renderManageAnimals() {
+    const grid = document.getElementById("animals-cards");
+    if (!grid) return;
 
-    const monthName = new Date(year, month).toLocaleString("en-US", {
-      month: "long",
-    });
-    const daysInMonth = new Date(year, month + 1, 0).getDate();
-
-    const calendarGrid = document.getElementById("calendar-grid");
-    const currentMonthYear = document.getElementById("current-month-year");
-
-    if (!calendarGrid || !currentMonthYear) return;
-
-    currentMonthYear.textContent = `${monthName} ${year}`;
-
-    const dayHeaders = ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"];
-    let html = '<table class="calendar-table"><thead><tr>';
-    dayHeaders.forEach((day) => {
-      html += `<th>${day}</th>`;
-    });
-    html += "</tr></thead><tbody><tr>";
-
-    let dayOfMonth = 1;
-    const startOffset = new Date(year, month, 1).getDay();
-
-    for (let i = 0; i < startOffset; i++) {
-      html += `<td class="empty-cell"></td>`;
+    if (!mockAnimals || mockAnimals.length === 0) {
+      grid.innerHTML = `
+        <div class="empty-card">
+          <i class=\"fas fa-paw\" style=\"font-size: 2em; display: block; margin-bottom: 10px;\"></i>
+          Tidak ada data hewan.
+        </div>`;
+      return;
     }
 
-    const datesWithReports = mockReports
-      .filter((r) =>
-        r.date.startsWith(`${year}-${(month + 1).toString().padStart(2, "0")}`)
+    const cards = mockAnimals
+      .map((a) => {
+        const photo = a.photo
+          ? `<img src="${a.photo}" alt="${a.name}" class="animal-photo" onerror="this.style.display='none'">`
+          : `<div class="animal-photo placeholder"><i class='fas fa-image'></i></div>`;
+        return `
+          <div class="animal-card">
+            <div class="animal-card-header">
+              ${photo}
+              <div class="animal-title">
+                <div class="animal-name">${a.name || "-"}</div>
+                <div class="animal-type">${a.category || "-"}</div>
+              </div>
+            </div>
+            <div class="animal-card-body">
+              <div class="animal-meta"><strong>Breed:</strong> ${
+                a.breed || "-"
+              }</div>
+              <div class="animal-meta"><strong>Color:</strong> ${
+                a.color || "-"
+              }</div>
+              <div class="animal-meta"><strong>Age:</strong> ${
+                a.age != null ? a.age : "-"
+              }</div>
+              <div class="animal-meta"><strong>Status:</strong> ${formatStatus(
+                a.status
+              )}</div>
+            </div>
+            <div class="animal-card-actions">
+              <button type="button" class="btn-link" onclick="openAnimalDetail(${
+                a.id
+              })">View</button>
+            </div>
+          </div>`;
+      })
+      .join("");
+
+    grid.innerHTML = cards;
+    // expose globally for inline references
+    window.renderManageAnimals = renderManageAnimals;
+  }
+
+  // Minimal fallback renderer used if the main function isn't defined yet
+  function safeRenderManageAnimals() {
+    const grid = document.getElementById("animals-cards");
+    if (!grid) return;
+    if (!mockAnimals || mockAnimals.length === 0) {
+      grid.innerHTML = `
+        <div class="empty-card">
+          <i class='fas fa-paw' style='font-size: 2em; display: block; margin-bottom: 10px;'></i>
+          Tidak ada data hewan.
+        </div>`;
+      return;
+    }
+    grid.innerHTML = mockAnimals
+      .map(
+        (a) => `
+        <div class="animal-card">
+          <div class="animal-card-header">
+            ${
+              a.photo
+                ? `<img src='${a.photo}' alt='${a.name}' class='animal-photo' onerror="this.style.display='none'">`
+                : `<div class='animal-photo placeholder'><i class='fas fa-image'></i></div>`
+            }
+            <div class="animal-title">
+              <div class="animal-name">${a.name || "-"}</div>
+              <div class="animal-type">${a.category || "-"}</div>
+            </div>
+          </div>
+          <div class="animal-card-body">
+            <div class="animal-meta"><strong>Breed:</strong> ${
+              a.breed || "-"
+            }</div>
+            <div class="animal-meta"><strong>Color:</strong> ${
+              a.color || "-"
+            }</div>
+            <div class="animal-meta"><strong>Age:</strong> ${
+              a.age != null ? a.age : "-"
+            }</div>
+            <div class="animal-meta"><strong>Status:</strong> ${formatStatus(
+              a.status
+            )}</div>
+          </div>
+          <div class="animal-card-actions">
+            <button type="button" class="btn-link" onclick="openAnimalDetail(${
+              typeof a.id === "number" ? a.id : Number(a.id)
+            })">View</button>
+          </div>
+        </div>`
       )
-      .map((r) => parseInt(r.date.substring(8, 10)));
-
-    for (let i = startOffset; dayOfMonth <= daysInMonth; i++) {
-      if (i % 7 === 0 && dayOfMonth > 1) {
-        html += "</tr><tr>";
-      }
-
-      const isSelectedDay =
-        dayOfMonth === activeDay && date.getMonth() === month;
-      const hasReport = datesWithReports.includes(dayOfMonth);
-
-      let className = "date-cell";
-      if (isSelectedDay) {
-        className += " selected-day";
-      }
-      if (hasReport) {
-        className += " has-report";
-      }
-
-      html += `<td class="${className}">${dayOfMonth}</td>`;
-      dayOfMonth++;
-    }
-
-    while ((dayOfMonth + startOffset - 1) % 7 !== 0) {
-      html += `<td class="empty-cell"></td>`;
-      dayOfMonth++;
-    }
-
-    html += "</tr></tbody></table>";
-    calendarGrid.innerHTML = html;
+      .join("");
   }
 
   // --- LISTENER SIDEBAR ---
@@ -1467,11 +1553,58 @@ function renderRehomeSubmissions(filter = "all") {
 
 window.renderRehomeSubmissions = renderRehomeSubmissions;
 
-// Open rehome submission detail in admin detail page
+// Open rehome submission detail in modal (same modal as adopt submissions)
 window.openRehomeDetail = function (id) {
-  if (!id) return;
-  window.location.href =
-    "/PetResQ/admin/rehome_detail.php?id=" + encodeURIComponent(id);
+  const modalEl = document.getElementById("submission-detail-modal");
+  if (!modalEl || !id) return;
+
+  const submission = mockRehomeSubmissions.find((s) => s.id === id);
+  if (!submission) return;
+
+  // Populate modal fields (map rehome fields to available UI slots)
+  const setText = (id, val) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = val ?? "-";
+  };
+
+  setText("submission-adopter-name", submission.ownerName);
+  setText("submission-adopter-email", submission.ownerEmail);
+  setText("submission-adopter-phone", "-");
+  setText(
+    "submission-animal-name",
+    `${submission.petName || "-"} (${submission.petType || "-"})`
+  );
+  setText(
+    "submission-date",
+    new Date(submission.date).toLocaleDateString("id-ID", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    })
+  );
+  setText("submission-status-display", submission.status);
+  setText("submission-address", submission.city);
+  setText("submission-garden", "-");
+  setText("submission-living", "-");
+
+  const reasonEl = document.getElementById("submission-reason");
+  if (reasonEl) {
+    reasonEl.value = "-";
+  }
+
+  const extraEl = document.getElementById("submission-extra-details");
+  if (extraEl) {
+    extraEl.innerHTML = `
+      <div><strong>Breed:</strong> ${submission.breed || "-"}</div>
+      <div><strong>Gender:</strong> ${submission.gender || "-"}</div>
+      <div><strong>Age:</strong> ${
+        submission.age != null ? submission.age + " years" : "-"
+      }</div>
+      <div><strong>Postcode:</strong> ${submission.postcode || "-"}</div>
+    `;
+  }
+
+  modalEl.style.display = "flex";
 };
 
 // =========================================================
@@ -1593,3 +1726,105 @@ window.deleteUser = function (userId) {
       alert("Network/Server error while deleting account");
     });
 };
+
+// =========================================================
+// --- BACKEND INTEGRATION: LOAD & RENDER ANIMALS ---
+// =========================================================
+async function loadAnimalsFromBackend() {
+  try {
+    // Primary: admin animals API
+    const resp = await fetch("/PetResQ/admin/animals_api.php", {
+      credentials: "include",
+    });
+    if (!resp.ok) {
+      console.warn("Animals API non-OK status:", resp.status, resp.statusText);
+    }
+    let json = null;
+    if (resp.ok) {
+      try {
+        json = await resp.json();
+      } catch (parseErr) {
+        console.warn("Animals API JSON parse error:", parseErr);
+      }
+    }
+    if (json && Array.isArray(json.data)) {
+      mockAnimals = json.data.map((a) => ({
+        id: a.id_hewan,
+        name: a.namaHewan,
+        category: a.jenis,
+        breed: a.breed,
+        color: a.color,
+        age: a.age,
+        status: a.status,
+        photo: normalizePhotoPath(a.main_photo),
+        // Some schemas don't provide uploader info; fall back gracefully
+        uploader: a.uploader || a.uploaded_by || a.owner_name || "-",
+      }));
+      console.log("Loaded animals:", mockAnimals.length);
+      if (mockAnimals.length) return;
+    }
+  } catch (e) {
+    console.warn("Animals API error:", e);
+    // Leave mockAnimals as-is
+  }
+
+  // Fallback: use public adopt endpoint which returns available animals
+  try {
+    const resp2 = await fetch("/PetResQ/adopt/get_animals.php");
+    if (!resp2.ok) throw new Error("Fallback get_animals failed");
+    const list = await resp2.json();
+    if (Array.isArray(list)) {
+      mockAnimals = list.map((a) => ({
+        id: a.id_hewan,
+        name: a.namaHewan,
+        category: a.jenis,
+        breed: a.breed,
+        color: a.color,
+        age: a.age,
+        status: a.status,
+        photo: normalizePhotoPath(a.main_photo),
+        uploader: a.uploader || a.uploaded_by || a.owner_name || "-",
+      }));
+      console.log("Loaded animals via fallback:", mockAnimals.length);
+    }
+  } catch (e2) {
+    console.warn("Fallback animals load error:", e2);
+  }
+}
+
+// (Removed legacy table renderer to avoid conflicts; cards renderer is used above)
+
+// Normalize photo path to avoid 404s from relative filenames
+function normalizePhotoPath(p) {
+  if (!p) return "";
+  try {
+    // Already absolute URL or absolute path
+    if (
+      p.startsWith("http://") ||
+      p.startsWith("https://") ||
+      p.startsWith("/")
+    ) {
+      return p;
+    }
+    // If it already contains uploads/, prefix workspace base
+    if (p.includes("/uploads/") || p.startsWith("uploads/")) {
+      return `/PetResQ/${p.replace(/^\/?/, "")}`;
+    }
+    // Default: assume file name located under /PetResQ/uploads/
+    return `/PetResQ/uploads/${p}`;
+  } catch (_) {
+    return p;
+  }
+}
+function formatStatus(status) {
+  const s = status || "-";
+  if (s === "Available")
+    return `<span class="status-badge status-Available">Available</span>`;
+  if (s === "Pending")
+    return `<span class="status-badge status-Pending">Pending</span>`;
+  if (s === "Adopted")
+    return `<span class="status-badge status-Adopted">Adopted</span>`;
+  return `<span class="status-badge">${s}</span>`;
+}
+
+// (moved earlier)

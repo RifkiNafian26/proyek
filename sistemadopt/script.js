@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Check user login status and populate start section
   function checkUserLogin() {
-    fetch("../php/check_session.php")
+    fetch("/PetResQ/check_session.php", { credentials: "include" })
       .then((response) => response.json())
       .then((data) => {
         if (data.is_logged_in) {
@@ -292,10 +292,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   async function submitApplication(sendButton) {
     const payload = buildApplicationPayload();
-    const sessionPath =
-      typeof getPhpPath === "function"
-        ? getPhpPath("submit_adoption.php")
-        : "../submit_adoption.php";
+    const submitPath = "/PetResQ/submit_adoption.php";
 
     const original = sendButton.innerHTML;
     sendButton.disabled = true;
@@ -303,14 +300,24 @@ document.addEventListener("DOMContentLoaded", () => {
       '<i class="fa-solid fa-spinner fa-spin"></i> Sending...';
 
     try {
-      const res = await fetch(sessionPath, {
+      const res = await fetch(submitPath, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify(payload),
       });
-      const j = await res.json().catch(() => ({}));
-      if (!res.ok || !j.ok) {
-        throw new Error(j.error || `Submit failed (${res.status})`);
+      let j = null;
+      let bodyText = "";
+      try {
+        j = await res.json();
+      } catch (e) {
+        bodyText = await res.text().catch(() => "");
+      }
+      if (!res.ok || !j?.ok) {
+        const serverMsg = j?.error || bodyText || "";
+        throw new Error(
+          serverMsg ? serverMsg : `Submit failed (${res.status})`
+        );
       }
       // Success → go to Thank You step
       currentStep = 8;

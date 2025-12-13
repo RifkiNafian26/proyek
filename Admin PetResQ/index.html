@@ -377,6 +377,51 @@
       </div>
     </div>
 
+    <!-- Animal Detail Modal -->
+    <div id="animal-detail-modal" class="modal">
+      <div class="modal-content-submission-detail">
+        <h3>Animal Details <span id="animal-detail-title"></span></h3>
+        <div class="submission-info-grid">
+          <div class="info-row">
+            <strong>Name:</strong>
+            <span id="animal-detail-name"></span>
+          </div>
+          <div class="info-row">
+            <strong>Type:</strong>
+            <span id="animal-detail-type"></span>
+          </div>
+          <div class="info-row">
+            <strong>Breed:</strong>
+            <span id="animal-detail-breed"></span>
+          </div>
+          <div class="info-row">
+            <strong>Color:</strong>
+            <span id="animal-detail-color"></span>
+          </div>
+          <div class="info-row">
+            <strong>Age:</strong>
+            <span id="animal-detail-age"></span>
+          </div>
+          <div class="info-row">
+            <strong>Status:</strong>
+            <span id="animal-detail-status"></span>
+          </div>
+        </div>
+        <div class="form-group-report">
+          <label>Photo:</label>
+          <div
+            id="animal-detail-photo"
+            style="display: flex; align-items: center; gap: 12px"
+          ></div>
+        </div>
+        <div class="modal-actions-submission">
+          <button type="button" class="btn btn-cancel modal-cancel">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+
     <!-- Admin Dashboard -->
     <div id="admin-dashboard" class="dashboard-container">
       <nav class="sidebar">
@@ -406,7 +451,7 @@
           </li>
           <li data-page="rehome-submissions">
             <i class="fas fa-clipboard-check"></i> Rehome Submissions
-          </li> 
+          </li>
         </ul>
         <div class="sidebar-heart">
           <i class="fas fa-heart"></i>

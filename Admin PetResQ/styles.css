@@ -299,6 +299,232 @@ h4 {
   min-height: 100vh;
 }
 
+/* ========================================================= */
+/* --- MANAGE ANIMALS TABLE TIDY STYLES --- */
+/* ========================================================= */
+.data-table.user-table {
+  table-layout: fixed;
+  width: 100%;
+  font-size: 13px;
+}
+
+.data-table.user-table th,
+.data-table.user-table td {
+  padding: 8px 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+}
+
+/* Ellipsis helper classes for specific columns */
+.cell--name {
+  max-width: 160px;
+}
+.cell--type {
+  max-width: 120px;
+}
+.cell--breed {
+  max-width: 160px;
+}
+.cell--color {
+  max-width: 120px;
+}
+.cell--actions {
+  max-width: 120px;
+}
+
+/* Status badges */
+.status-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  border: 1px solid var(--color-border);
+  background: #f8f8f2;
+  color: #444;
+}
+.status-Available {
+  background: #e8f5e9;
+  color: #2e7d32;
+  border-color: #c8e6c9;
+}
+.status-Pending {
+  background: #fff8e1;
+  color: #f57f17;
+  border-color: #ffe0b2;
+}
+.status-Adopted {
+  background: #e3f2fd;
+  color: #1565c0;
+  border-color: #bbdefb;
+}
+
+/* Chips row above table */
+.table-chips {
+  display: grid;
+  grid-template-columns: 70px 160px 120px 160px 120px 80px 120px 140px 120px;
+  gap: 6px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.chip {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 8px;
+  background: #f2efe2;
+  color: #5b5b4a;
+  font-size: 12px;
+  border: 1px solid var(--color-border);
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Summary small cards numbers */
+.small-summary-card .small-number {
+  font-weight: 700;
+}
+
+/* Pagination pill */
+.pagination-pill .pill {
+  display: inline-block;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: #f2efe2;
+  border: 1px solid var(--color-border);
+  color: #5b5b4a;
+  font-size: 12px;
+}
+
+/* ========================================================= */
+/* --- MANAGE ANIMALS: LAYOUT WITH RIGHT SUMMARY PANEL --- */
+/* ========================================================= */
+.content-body {
+  display: flex; /* switch to flex to avoid centering issues */
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.cards-grid {
+  flex: 1 1 auto; /* take remaining space on the left */
+}
+
+.summary-panel {
+  position: sticky;
+  top: 80px; /* below navbar */
+  display: grid;
+  gap: 10px;
+  width: 280px;
+  margin-left: auto; /* push summary to the far right */
+}
+
+.small-summary-card {
+  background: #fff;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  box-shadow: 0 4px 10px var(--color-shadow);
+  padding: 12px;
+  width: 100%;
+}
+.small-summary-card .small-label {
+  font-size: 12px;
+  color: #666;
+}
+
+/* ========================================================= */
+/* --- MANAGE ANIMALS: CARD LAYOUT --- */
+/* ========================================================= */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 14px;
+}
+
+.animal-card {
+  background: #fff;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  box-shadow: 0 4px 10px var(--color-shadow);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.animal-card-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.animal-photo {
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  background: #fafafa;
+}
+.animal-photo.placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #999;
+}
+
+.animal-title {
+  display: flex;
+  flex-direction: column;
+}
+.animal-name {
+  font-weight: 700;
+  color: var(--color-primary-dark);
+}
+.animal-type {
+  font-size: 12px;
+  color: #666;
+}
+
+.animal-card-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 12px;
+}
+.animal-meta {
+  font-size: 13px;
+}
+
+.animal-card-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* Link-styled button for card actions */
+.btn-link {
+  background: none;
+  border: none;
+  color: var(--color-primary-dark);
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
+  font-weight: 600;
+}
+.btn-link:hover {
+  text-decoration: none;
+}
+
+.empty-card {
+  background: #fff;
+  border: 1px dashed var(--color-border);
+  border-radius: 12px;
+  padding: 24px;
+  color: #777;
+  text-align: center;
+}
+
 /* Sidebar Navigation - UKURAN TETAP */
 .sidebar {
   width: 280px;

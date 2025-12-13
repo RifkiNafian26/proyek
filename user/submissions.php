@@ -13,7 +13,7 @@ $email = $_SESSION['user_email'] ?? '';
 // Fetch user's adoption applications
 $apps = [];
 $sql = "SELECT a.id, a.hewan_id, a.status, a.submitted_at,
-               a.address_line1, a.city, a.postcode, a.living_situation,
+               a.address_line1, a.postcode, a.living_situation,
                h.namaHewan AS pet_name
         FROM adoption_applications a
         LEFT JOIN hewan h ON h.id_hewan = a.hewan_id
